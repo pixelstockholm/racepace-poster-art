@@ -155,19 +155,31 @@ function HomePage() {
             </Link>
           </div>
           <div className="lg:col-span-7 grid grid-cols-3 gap-6">
-            {(["cream", "midnight", "ember"] as const).map((theme) => (
-              <PosterPreview
-                key={theme}
-                config={{
-                  name: "Alex Müller",
-                  race: theme === "midnight" ? "Tokyo Marathon" : theme === "ember" ? "Boston Marathon" : "Stockholm Marathon",
-                  date: theme === "midnight" ? "2025-03-02" : theme === "ember" ? "2025-04-21" : "2025-05-31",
-                  time: theme === "midnight" ? "03:18:07" : theme === "ember" ? "03:11:42" : "03:24:17",
-                  theme,
-                }}
-              />
-            ))}
+            {(["cream", "midnight", "ember"] as const).map((theme) => {
+              const meta =
+                theme === "midnight"
+                  ? { race: "Tokyo Marathon", date: "2025-03-02", time: "03:18:07", routeId: "tokyo", location: "Tokyo, Japan" }
+                  : theme === "ember"
+                    ? { race: "Boston Marathon", date: "2025-04-21", time: "03:11:42", routeId: "boston", location: "Boston, USA" }
+                    : { race: "Stockholm Marathon", date: "2025-05-31", time: "03:24:17", routeId: "stockholm", location: "Stockholm, Sweden" };
+              return (
+                <PosterPreview
+                  key={theme}
+                  config={{
+                    name: "Alex Müller",
+                    race: meta.race,
+                    date: meta.date,
+                    time: meta.time,
+                    theme,
+                    routePath: getRoutePath(meta.routeId),
+                    location: meta.location,
+                    distanceKm: 42.195,
+                  }}
+                />
+              );
+            })}
           </div>
+
         </div>
       </section>
     </main>
