@@ -56,18 +56,18 @@ interface Props {
   className?: string;
 }
 
-// Per-city neighborhood lists shown on the left side as small editorial labels.
+// Per-city neighborhood lists — curated, real, not filler.
 const NEIGHBORHOODS: Record<string, string[]> = {
-  berlin:     ["Tiergarten", "Charlottenburg", "Mitte", "Kreuzberg", "Prenzlauer Berg"],
-  nyc:        ["Staten Island", "Brooklyn", "Queens", "Bronx", "Manhattan"],
-  london:     ["Westminster", "The Mall", "Tower Bridge", "Canary Wharf", "Greenwich"],
-  boston:     ["Hopkinton", "Ashland", "Heartbreak Hill", "Brookline", "Copley Square"],
-  chicago:    ["Lincoln Park", "River North", "The Loop", "Pilsen", "Chinatown"],
+  berlin:     ["Tiergarten", "Mitte", "Kreuzberg", "Charlottenburg", "Brandenburg Gate"],
+  nyc:        ["Staten Island", "Brooklyn", "Queens", "Bronx", "Manhattan", "Central Park"],
+  london:     ["Greenwich", "Tower Bridge", "Canary Wharf", "Westminster", "The Mall"],
+  boston:     ["Hopkinton", "Ashland", "Heartbreak Hill", "Brookline", "Boylston Street"],
+  chicago:    ["Grant Park", "River North", "The Loop", "Lincoln Park", "Chinatown"],
   tokyo:      ["Shinjuku", "Asakusa", "Ginza", "Tokyo Bay", "Nihonbashi"],
   paris:      ["Bois de Vincennes", "Bastille", "Seine", "Eiffel", "Champs-Élysées"],
   stockholm:  ["Södermalm", "Djurgården", "Kungsholmen", "Östermalm", "Gamla Stan"],
   valencia:   ["Ciutat Vella", "Russafa", "Cabanyal", "Turia", "Ciudad de las Artes"],
-  amsterdam:  ["Olympisch", "Vondelpark", "Amstel", "Centrum", "Oud-Zuid"],
+  amsterdam:  ["Olympisch Stadion", "Vondelpark", "Amstel", "Centrum", "Oud-Zuid"],
   copenhagen: ["Nørrebro", "Frederiksberg", "Christianshavn", "Islands Brygge", "Vesterbro"],
   vienna:     ["Innere Stadt", "Ringstraße", "Prater", "Leopoldstadt", "Wieden"],
   sydney:     ["North Sydney", "The Rocks", "CBD", "Domain", "Opera House"],
