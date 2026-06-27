@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { getSkylinePath } from "@/lib/raceSkylines";
+
 import { getRaceIdentity, type RaceIdentity } from "@/lib/raceIdentities";
 
 export type PosterTheme = "midnight" | "ember" | "forest" | "cream" | "noir" | "sky";
