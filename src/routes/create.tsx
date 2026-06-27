@@ -276,7 +276,7 @@ function CreatePage() {
                     <span
                       aria-hidden
                       className="h-8 w-8 inline-block border border-black/10"
-                      style={{ backgroundColor: t.bg }}
+                      style={{ backgroundColor: t.paper }}
                     />
                     <span className="text-sm">{t.label}</span>
                   </button>
