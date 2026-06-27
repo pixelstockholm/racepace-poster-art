@@ -29,18 +29,21 @@ import { getRoutePath } from "@/lib/raceRoutes";
 import { fetchPosterProduct, useCartStore, type ShopifyVariant } from "@/lib/shopify";
 
 export const Route = createFileRoute("/create")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    race: typeof search.race === "string" ? search.race : undefined,
+  }),
   head: () => ({
     meta: [
-      { title: "Design your poster — Racepace" },
+      { title: "Personalize your poster — Racepace" },
       {
         name: "description",
         content:
-          "Customize your marathon poster: name, race, finishing time, color theme and size. Live preview as you design.",
+          "Add your name, finishing time and date to a Racepace marathon poster. Live preview as you customize.",
       },
-      { property: "og:title", content: "Design your poster — Racepace" },
+      { property: "og:title", content: "Personalize your poster — Racepace" },
       {
         property: "og:description",
-        content: "Design a premium personalized marathon poster in minutes.",
+        content: "Personalize a premium marathon poster in minutes.",
       },
     ],
   }),
@@ -48,13 +51,17 @@ export const Route = createFileRoute("/create")({
 });
 
 function CreatePage() {
+  const { race: raceParam } = Route.useSearch();
+  const initialRaceId =
+    raceParam && findRaceById(raceParam) ? raceParam : "berlin";
+
   // Form state
-  const [raceId, setRaceId] = useState<string>("berlin");
+  const [raceId, setRaceId] = useState<string>(initialRaceId);
   const [customRace, setCustomRace] = useState<string>("");
   const [useCustom, setUseCustom] = useState(false);
   const [name, setName] = useState("");
   const [time, setTime] = useState("03:24:17");
-  const [date, setDate] = useState(findRaceById("berlin")?.date ?? "");
+  const [date, setDate] = useState(findRaceById(initialRaceId)?.date ?? "");
   const [theme, setTheme] = useState<PosterTheme>("cream");
   const [size, setSize] = useState<string>("A2");
   const [racePickerOpen, setRacePickerOpen] = useState(false);

@@ -12,8 +12,8 @@ export function SiteHeader() {
           Racepace
         </Link>
         <nav className="hidden md:flex items-center gap-10 text-sm tracking-wide">
-          <Link to="/create" className="hover:text-primary transition-colors" activeProps={{ className: "text-primary" }}>
-            Create
+          <Link to="/shop" className="hover:text-primary transition-colors" activeProps={{ className: "text-primary" }}>
+            Shop
           </Link>
           <Link to="/about" className="hover:text-primary transition-colors" activeProps={{ className: "text-primary" }}>
             About
@@ -27,10 +27,10 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-6">
           <Link
-            to="/create"
+            to="/shop"
             className="hidden md:inline text-sm tracking-widest uppercase border-b border-foreground pb-0.5 hover:border-primary hover:text-primary transition-colors"
           >
-            Design yours
+            Browse posters
           </Link>
           <CartDrawer />
         </div>
