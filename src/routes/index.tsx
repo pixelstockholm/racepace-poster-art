@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImage from "@/assets/hero-poster-room.jpg";
 import featuredImage from "@/assets/featured-posters.jpg";
 import { PosterPreview } from "@/components/PosterPreview";
+import { getRoutePath } from "@/lib/raceRoutes";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
