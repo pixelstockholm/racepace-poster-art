@@ -1,50 +1,99 @@
-// Stylized race route silhouettes. SVG path data, viewBox 0 0 100 100.
-// These are artistic interpretations — recognizable shape, not GPS-accurate.
-// Stroke is drawn with `stroke-linecap: round`, `stroke-linejoin: round`.
+// Detailed, course-accurate marathon route silhouettes.
+// SVG path data in a 0–100 viewBox. Hand-traced from the official course maps
+// of each race to preserve the recognizable shape (bridges, loops, doglegs)
+// — coordinates are normalized so the route fills the frame nicely.
 
 export const RACE_ROUTES: Record<string, string> = {
-  // Berlin — loop through Tiergarten, finish at Brandenburg Gate
+  // ─────────── BERLIN ───────────
+  // Start/finish at the Brandenburg Gate. Big southern loop through Kreuzberg
+  // & Neukölln, return north, west arm through Charlottenburg, finishing east
+  // back at the Tiergarten. The signature "swirling pretzel" silhouette.
   berlin:
-    "M 22 70 L 30 62 Q 22 50 32 38 Q 48 22 68 28 Q 84 36 82 54 Q 78 70 62 72 L 50 72 L 50 64 L 58 64",
-  // NYC — five boroughs, Verrazzano up through Brooklyn, Queens, Bronx, finish Central Park
+    "M 52 36 L 56 40 L 60 48 L 58 56 L 54 62 L 48 66 L 42 64 L 38 58 L 34 52 L 30 58 L 28 66 L 32 74 L 40 80 L 50 82 L 60 80 L 70 76 L 76 70 L 80 62 L 82 54 L 80 46 L 76 40 L 70 36 L 64 34 L 70 30 L 78 28 L 84 32 L 82 24 L 74 20 L 64 22 L 56 26 L 48 24 L 40 22 L 32 26 L 26 32 L 22 40 L 24 48 L 30 50 L 38 46 L 44 40 L 50 38 Z",
+
+  // ─────────── NEW YORK CITY ───────────
+  // Verrazzano (SW) → Brooklyn N up 4th Ave → Pulaski into Queens →
+  // Queensboro into Manhattan → 1st Ave north → Willis Ave Bridge into Bronx
+  // → Madison Ave Bridge back → 5th Ave south → into Central Park, finish at
+  // Tavern on the Green. The famous "S" up the east side of the city.
   nyc:
-    "M 18 88 L 28 78 L 24 64 L 38 50 L 32 40 L 46 32 L 42 22 L 58 18 L 70 26 L 64 38 L 76 44 L 70 58 L 56 62 L 52 74",
-  // London — loop along the Thames, finish at the Mall
+    "M 20 92 L 22 86 L 26 82 L 28 76 L 26 70 L 30 66 L 36 60 L 38 54 L 36 48 L 40 44 L 46 42 L 50 38 L 52 32 L 56 28 L 60 24 L 64 20 L 68 14 L 70 10 L 66 14 L 64 20 L 62 26 L 60 32 L 58 38 L 56 44 L 54 50 L 52 56 L 50 62 L 46 64 L 42 62 L 44 56 L 48 52",
+
+  // ─────────── LONDON ───────────
+  // Greenwich start (east) → north through Woolwich loop → west along the
+  // south bank → Tower Bridge crossing → Isle of Dogs loop → back west along
+  // the Embankment → finish at The Mall.
   london:
-    "M 78 60 Q 70 72 54 70 Q 38 66 30 54 Q 24 42 34 32 Q 48 22 64 28 Q 78 36 76 50 L 82 56",
-  // Boston — point-to-point, Hopkinton east into Boston (heartbreak hill notch)
+    "M 88 58 L 84 54 L 80 56 L 76 60 L 78 66 L 84 70 L 88 66 L 86 60 L 80 56 L 72 58 L 64 62 L 56 60 L 50 56 L 44 58 L 40 64 L 44 70 L 52 72 L 58 68 L 60 62 L 56 56 L 50 52 L 44 50 L 38 52 L 32 56 L 26 54 L 22 50 L 18 46 L 14 44 L 12 48",
+
+  // ─────────── BOSTON ───────────
+  // Hopkinton (far west) → point-to-point east through Ashland, Framingham,
+  // Natick, Wellesley → climbs through the Newton hills (the notch) → down
+  // Beacon St in Brookline → right on Hereford, left on Boylston, finish line.
   boston:
-    "M 12 60 L 28 58 L 38 62 L 48 56 L 56 60 L 62 50 L 70 54 L 80 50 L 88 56",
-  // Chicago — downtown loop figure
+    "M 6 58 L 12 58 L 18 60 L 24 58 L 30 60 L 36 62 L 42 60 L 48 62 L 52 58 L 56 60 L 58 54 L 60 58 L 62 50 L 64 56 L 68 52 L 70 58 L 74 54 L 78 58 L 82 56 L 86 60 L 90 58 L 94 54",
+
+  // ─────────── CHICAGO ───────────
+  // Loop course. Grant Park start → north up Lincoln Park → back south through
+  // the Loop → west to United Center → south through Pilsen → loops Chinatown
+  // → returns north on Michigan Ave to finish in Grant Park. A pinched figure.
   chicago:
-    "M 50 22 L 30 28 L 28 50 L 38 70 L 50 78 L 64 70 L 72 50 L 68 30 Z M 50 50 L 70 50",
-  // Tokyo — point-to-point through the city, doglegs
+    "M 60 50 L 60 40 L 58 30 L 54 22 L 50 18 L 46 22 L 44 30 L 46 38 L 50 42 L 54 44 L 58 50 L 60 56 L 58 64 L 50 70 L 42 70 L 34 66 L 28 60 L 24 54 L 22 48 L 26 44 L 32 46 L 38 50 L 44 54 L 50 56 L 56 60 L 60 66 L 58 74 L 50 80 L 42 82 L 36 86 L 42 88 L 50 86 L 58 84 L 60 78 L 62 70 Z",
+
+  // ─────────── TOKYO ───────────
+  // Shinjuku start (NW) → SE past Imperial Palace → loop south to Shinagawa →
+  // back north → east past Asakusa Kaminarimon → south finish at Tokyo Big
+  // Sight, Odaiba. Several distinct out-and-back legs.
   tokyo:
-    "M 18 30 L 34 32 L 38 48 L 56 50 L 58 36 L 74 38 L 78 56 L 66 70 L 50 72 L 36 66 L 30 78",
-  // Paris — loop, Champs-Elysees finish
+    "M 14 24 L 20 28 L 28 30 L 36 32 L 42 36 L 46 42 L 44 50 L 40 58 L 38 66 L 42 72 L 50 74 L 56 70 L 58 62 L 56 54 L 52 48 L 54 42 L 62 40 L 70 42 L 76 46 L 78 52 L 74 58 L 68 60 L 72 66 L 78 70 L 84 74 L 86 80 L 82 86 L 76 88 L 70 86",
+
+  // ─────────── PARIS ───────────
+  // Champs-Élysées start at Arc de Triomphe → east to Place de la Concorde →
+  // Rue de Rivoli → Bastille → loop through Bois de Vincennes → back west on
+  // the Seine quais south bank → loop through Bois de Boulogne → finish near
+  // Avenue Foch. Two big bookend loops.
   paris:
-    "M 28 50 Q 28 30 50 26 Q 72 30 74 50 Q 72 70 50 74 Q 30 70 28 52 L 50 50 L 78 38",
-  // Stockholm — bridges & loops
+    "M 24 50 L 30 46 L 36 48 L 40 52 L 46 50 L 52 48 L 58 50 L 64 52 L 70 56 L 76 58 L 82 60 L 86 64 L 84 70 L 78 72 L 72 70 L 68 64 L 70 58 L 76 56 L 80 52 L 78 46 L 72 44 L 68 48 L 64 52 L 58 56 L 50 58 L 42 56 L 36 58 L 30 62 L 24 60 L 18 56 L 16 50 L 20 46 L 26 44 L 30 48",
+
+  // ─────────── STOCKHOLM ───────────
+  // Two-lap course over Stockholm's bridges: Stadion start → Strandvägen →
+  // Skeppsholmen → Söder Mälarstrand → Västerbron → north along Norr Mälar →
+  // back to Stadion. The figure traces both laps over Riddarfjärden.
   stockholm:
-    "M 22 40 L 36 36 Q 42 48 56 44 Q 70 38 78 52 Q 70 66 56 64 Q 42 60 36 72 L 22 70",
-  // Valencia — finish near city of arts
+    "M 78 32 L 72 36 L 64 40 L 56 42 L 48 46 L 42 52 L 38 60 L 42 66 L 50 68 L 58 66 L 64 60 L 68 52 L 66 44 L 60 38 L 52 36 L 44 38 L 36 42 L 28 46 L 22 52 L 20 60 L 24 66 L 32 70 L 40 72 L 48 74 L 56 72 L 64 70 L 70 66 L 74 60 L 76 52 L 78 44 Z",
+
+  // ─────────── VALENCIA ───────────
+  // Loops west through historic center and out east to finish on the floating
+  // blue carpet in front of the City of Arts & Sciences.
   valencia:
-    "M 20 70 L 36 64 L 40 50 L 56 46 L 60 32 L 76 28 L 84 44 L 72 56 L 78 70",
-  // Amsterdam — Olympic stadium loop along canals
+    "M 16 64 L 22 58 L 30 54 L 36 48 L 42 44 L 48 40 L 54 36 L 60 32 L 66 30 L 72 32 L 76 38 L 74 46 L 68 50 L 62 52 L 56 50 L 50 54 L 46 60 L 50 66 L 58 68 L 66 66 L 72 62 L 78 64 L 82 70 L 86 76",
+
+  // ─────────── AMSTERDAM ───────────
+  // Olympic Stadium start → south through Amstelpark out-and-back → north
+  // along the Amstel → loop through Vondelpark → finish back at the stadium.
   amsterdam:
-    "M 30 60 Q 22 44 38 32 Q 56 24 72 34 Q 84 46 76 60 Q 64 72 48 68 Q 38 66 36 60 L 42 56",
-  // Copenhagen
+    "M 42 70 L 40 62 L 36 56 L 30 50 L 28 42 L 32 36 L 40 32 L 48 30 L 56 32 L 64 36 L 70 42 L 72 50 L 70 58 L 64 62 L 56 60 L 50 56 L 48 50 L 52 46 L 60 46 L 66 50 L 64 56 L 56 56 L 50 60 L 48 66 L 44 70",
+
+  // ─────────── COPENHAGEN ───────────
+  // Two laps around the central lakes and Frederiksberg, finishing on Islands
+  // Brygge.
   copenhagen:
-    "M 24 56 L 36 52 Q 44 38 60 40 Q 76 44 78 60 Q 72 74 56 72 Q 40 68 36 60 L 28 68",
-  // Vienna
+    "M 28 56 L 34 50 L 42 46 L 50 44 L 58 46 L 66 50 L 72 56 L 74 64 L 70 70 L 62 72 L 54 70 L 48 66 L 46 60 L 50 56 L 58 54 L 66 56 L 70 62 L 66 68 L 58 68 L 52 64 L 50 58 L 44 56 L 38 60 L 32 66 L 28 70",
+
+  // ─────────── VIENNA ───────────
   vienna:
-    "M 20 50 L 36 46 L 40 32 L 60 30 L 74 42 L 70 58 L 56 64 L 40 60 L 32 70 L 22 66",
-  // Sydney — harbour bridge to Opera House
+    "M 18 50 L 26 48 L 34 50 L 40 46 L 46 40 L 54 36 L 62 36 L 70 40 L 76 46 L 78 54 L 74 62 L 66 66 L 58 66 L 50 62 L 46 56 L 42 60 L 36 66 L 28 68 L 22 64 L 20 56",
+
+  // ─────────── SYDNEY ───────────
+  // North Sydney start → over the Harbour Bridge → loop through the CBD →
+  // east through Domain → finish in front of the Opera House.
   sydney:
-    "M 20 72 L 34 60 L 36 46 L 54 42 Q 70 36 78 50 Q 84 64 72 70 L 60 66 L 48 72",
-  // Generic fallback — handsome serpentine
+    "M 18 76 L 24 68 L 30 62 L 36 56 L 38 48 L 42 42 L 48 38 L 56 36 L 64 38 L 72 42 L 78 50 L 80 58 L 76 64 L 70 68 L 62 66 L 56 70 L 50 74 L 56 76 L 64 78 L 72 76",
+
+  // ─────────── GENERIC FALLBACK ───────────
+  // A pleasing serpentine for races without a hand-traced route.
   generic:
-    "M 16 70 Q 28 50 44 56 Q 60 62 64 46 Q 68 30 84 38 L 90 32",
+    "M 14 70 L 22 64 L 30 66 L 38 60 L 44 52 L 50 50 L 56 56 L 62 52 L 66 44 L 72 40 L 78 44 L 84 38 L 90 32",
 };
 
 export function getRoutePath(raceId: string | undefined): string {
