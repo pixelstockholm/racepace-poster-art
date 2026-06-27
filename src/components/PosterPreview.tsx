@@ -99,6 +99,33 @@ export function PosterPreview({ config, className }: Props) {
       }
     : themeFallback;
 
+  const raceLines = splitRaceName(config.race);
+  const displayName = (config.name?.trim() || "Your Name").toUpperCase();
+  const displayTime = config.time?.trim() || "00:00:00";
+  const displayDate = formatDate(config.date);
+  const year = yearOf(config.date);
+  const distanceKm = config.distanceKm ?? 42.195;
+  const distanceLabel = `${distanceKm.toFixed(3).replace(/\.?0+$/, "")} KM`;
+  const locationLine = (config.location || "").toUpperCase();
+  const tagline = identity?.tagline ?? "";
+  const cityName = (() => {
+    if (config.location) {
+      const c = config.location.split(",")[0]?.trim();
+      if (c) return c.toUpperCase();
+    }
+    return (raceLines[0] || "CITY").toUpperCase();
+  })();
+  const countryLine = config.location && config.location.includes(",")
+    ? config.location.split(",").slice(1).join(",").trim().toUpperCase()
+    : "";
+  const editionNo = (() => {
+    const seed = `${config.raceId ?? config.race}-${year}`;
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+    return String((h % 90) + 10).padStart(2, "0");
+  })();
+
+
   // Newspaper paper tone — slightly warm off-white regardless of identity.
   const paper = "#F2ECDC";
   const ink = "#16130E";
