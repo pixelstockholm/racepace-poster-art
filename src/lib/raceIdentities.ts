@@ -1,0 +1,55 @@
+// City-specific poster palettes + a one-line local reference.
+// Inspired by vintage travel posters & limited-edition screen prints.
+// Each palette: paper (bg), ink (primary type), accent (route + flourish),
+// support (secondary tint), mark (start/finish dot).
+
+export interface RaceIdentity {
+  paper: string;
+  ink: string;
+  accent: string;
+  support: string;
+  mark: string;
+  tagline: string; // small italic line under year (local reference)
+}
+
+export const RACE_IDENTITIES: Record<string, RaceIdentity> = {
+  berlin:     { paper: "#E9E2D0", ink: "#0E1A12", accent: "#C8102E", support: "#1F3A2E", mark: "#0E1A12", tagline: "Brandenburger Tor — Tiergarten loop" },
+  nyc:        { paper: "#0B1B2B", ink: "#F2EDE1", accent: "#F58220", support: "#3A6EA5", mark: "#F2EDE1", tagline: "Five boroughs · Verrazzano to Central Park" },
+  london:     { paper: "#0A2540", ink: "#F2EDE1", accent: "#E0B83C", support: "#9C2A2A", mark: "#F2EDE1", tagline: "Thames-side · finish on The Mall" },
+  boston:     { paper: "#EFE7D6", ink: "#0C1F3A", accent: "#BF1B2C", support: "#0C1F3A", mark: "#BF1B2C", tagline: "Hopkinton to Boylston Street" },
+  chicago:    { paper: "#E5DCC6", ink: "#0F1B2D", accent: "#B22234", support: "#5B8DB7", mark: "#0F1B2D", tagline: "The Loop · 29 neighborhoods" },
+  tokyo:      { paper: "#F2EDE1", ink: "#0B0B0C", accent: "#BC002D", support: "#1F2937", mark: "#BC002D", tagline: "Shinjuku to Tokyo Station" },
+  paris:      { paper: "#0E2A47", ink: "#F4EBD8", accent: "#E94F37", support: "#C9A227", mark: "#F4EBD8", tagline: "Champs-Élysées · Bois de Vincennes" },
+  stockholm:  { paper: "#E8E3D5", ink: "#0B1F3A", accent: "#FECC02", support: "#0B5394", mark: "#0B1F3A", tagline: "Bridges across the archipelago" },
+  valencia:   { paper: "#F2E6CF", ink: "#1A1A1A", accent: "#E25822", support: "#1F6F8B", mark: "#1A1A1A", tagline: "Ciudad de las Artes y las Ciencias" },
+  amsterdam:  { paper: "#EFE6D2", ink: "#0E1A12", accent: "#A12B2F", support: "#2E5E3E", mark: "#0E1A12", tagline: "Olympisch Stadion · canal ring" },
+  copenhagen: { paper: "#E8E1CF", ink: "#0F1F2E", accent: "#C8102E", support: "#1F4E79", mark: "#0F1F2E", tagline: "Nørrebro · Christianshavn · Frederiksberg" },
+  oslo:       { paper: "#0F1F2E", ink: "#EFE7D6", accent: "#D6453B", support: "#7AA6C4", mark: "#EFE7D6", tagline: "Bygdøy peninsula · Akershus" },
+  helsinki:   { paper: "#E5E9EE", ink: "#0B1F3A", accent: "#1F4FA8", support: "#0B1F3A", mark: "#0B1F3A", tagline: "Töölö Bay · Olympic Stadium" },
+  reykjavik:  { paper: "#0E1B26", ink: "#EFE7D6", accent: "#3FA796", support: "#E2B45F", mark: "#EFE7D6", tagline: "Laugardalur · the long blue summer" },
+  barcelona:  { paper: "#F1E6CC", ink: "#1A1A1A", accent: "#C8102E", support: "#1F4FA8", mark: "#1A1A1A", tagline: "Avinguda Diagonal · Sagrada Família" },
+  rome:       { paper: "#EDE2C8", ink: "#1F1A14", accent: "#9C2A2A", support: "#3E5B3B", mark: "#1F1A14", tagline: "Via dei Fori Imperiali · Colosseo" },
+  milan:      { paper: "#EFE7D6", ink: "#0C1F3A", accent: "#A41E22", support: "#0C1F3A", mark: "#A41E22", tagline: "Duomo · Sforzesco · San Siro" },
+  frankfurt:  { paper: "#0E1A2C", ink: "#EFE7D6", accent: "#E0B83C", support: "#5B8DB7", mark: "#EFE7D6", tagline: "Mainufer · Römerberg" },
+  munich:     { paper: "#E8E3D5", ink: "#0B1F3A", accent: "#0F62A6", support: "#0B1F3A", mark: "#0F62A6", tagline: "Olympiapark · Englischer Garten" },
+  vienna:     { paper: "#F1E8D2", ink: "#1A1A1A", accent: "#C8102E", support: "#3E5B3B", mark: "#1A1A1A", tagline: "Ringstraße · Prater" },
+  dublin:     { paper: "#E8E1CC", ink: "#0E2418", accent: "#169B62", support: "#FF883E", mark: "#0E2418", tagline: "Phoenix Park · Liffey crossings" },
+  edinburgh:  { paper: "#0E1F2E", ink: "#EFE7D6", accent: "#0F4C92", support: "#E0B83C", mark: "#EFE7D6", tagline: "Holyrood Park · the Royal Mile" },
+  manchester: { paper: "#EFE7D6", ink: "#1A1A1A", accent: "#D11D24", support: "#1F2937", mark: "#1A1A1A", tagline: "Old Trafford · Sir Matt Busby Way" },
+  lisbon:     { paper: "#F4E8D0", ink: "#1A1A1A", accent: "#1F6F8B", support: "#E2B45F", mark: "#1A1A1A", tagline: "Tagus estuary · 25 de Abril Bridge" },
+  athens:     { paper: "#F0E7D2", ink: "#0E2A47", accent: "#0E5BAA", support: "#C8102E", mark: "#0E2A47", tagline: "Marathon to the Panathenaic Stadium" },
+  istanbul:   { paper: "#0E1B26", ink: "#EFE7D6", accent: "#E2473B", support: "#E0B83C", mark: "#EFE7D6", tagline: "Bosphorus crossing · two continents" },
+  prague:     { paper: "#EFE6D2", ink: "#1A1A1A", accent: "#9C2A2A", support: "#0C1F3A", mark: "#1A1A1A", tagline: "Old Town · Charles Bridge" },
+  budapest:   { paper: "#EFE7D6", ink: "#0E1A12", accent: "#A41E22", support: "#1F6F4A", mark: "#0E1A12", tagline: "Danube embankment · Chain Bridge" },
+  warsaw:     { paper: "#EFE7D6", ink: "#0E1A2C", accent: "#DC143C", support: "#0E1A2C", mark: "#DC143C", tagline: "Vistula riverbank · Old Town" },
+  toronto:    { paper: "#0B1B2B", ink: "#F2EDE1", accent: "#D6453B", support: "#7AA6C4", mark: "#F2EDE1", tagline: "Waterfront · Bay Street finish" },
+  sydney:     { paper: "#0E2A47", ink: "#F4EBD8", accent: "#F58220", support: "#3FA796", mark: "#F4EBD8", tagline: "Harbour Bridge to the Opera House" },
+  melbourne:  { paper: "#EFE7D6", ink: "#0C1F3A", accent: "#0C1F3A", support: "#D6453B", mark: "#0C1F3A", tagline: "MCG finish · St Kilda Road" },
+  capetown:   { paper: "#F0E5CC", ink: "#0E2418", accent: "#E25822", support: "#1F6F4A", mark: "#0E2418", tagline: "Atlantic seaboard · Table Mountain" },
+  "marathon-du-medoc": { paper: "#F1E5D0", ink: "#3E0F18", accent: "#7A1E2B", support: "#3E5B3B", mark: "#3E0F18", tagline: "Châteaux of the Médoc · in costume" },
+};
+
+export function getRaceIdentity(raceId: string | undefined): RaceIdentity | null {
+  if (!raceId) return null;
+  return RACE_IDENTITIES[raceId] ?? null;
+}
