@@ -88,7 +88,7 @@ export function PosterPreview({ config, className }: Props) {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          fontSize: "0.62rem",
+          fontSize: "0.6rem",
           letterSpacing: "0.28em",
           textTransform: "uppercase",
           color: theme.muted,
@@ -103,24 +103,24 @@ export function PosterPreview({ config, className }: Props) {
         style={{
           fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
           fontWeight: 500,
-          fontSize: "clamp(1.4rem, 3.6vw, 2.4rem)",
+          fontSize: "clamp(1.2rem, 3vw, 2rem)",
           lineHeight: 1.0,
           letterSpacing: "-0.02em",
-          marginTop: "1.1rem",
+          marginTop: "0.9rem",
           wordBreak: "break-word",
         }}
       >
         {displayRace}
       </div>
 
-      {/* Route — HERO */}
+      {/* Route — HERO. Takes the dominant share of the poster. */}
       <div
         style={{
           flex: 1,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          margin: "1.6rem 0 1.4rem",
+          margin: "1.4rem -2% 1.2rem",
           minHeight: 0,
         }}
       >
@@ -130,23 +130,15 @@ export function PosterPreview({ config, className }: Props) {
           style={{ width: "100%", height: "100%", display: "block" }}
           aria-hidden
         >
-          {/* faint guide grid */}
-          <g stroke={theme.muted} strokeWidth="0.15" opacity="0.25">
-            <line x1="0" y1="50" x2="100" y2="50" />
-            <line x1="50" y1="0" x2="50" y2="100" />
-          </g>
-          {/* route */}
           <path
             d={config.routePath}
             fill="none"
             stroke={theme.routeStroke}
-            strokeWidth="1.6"
+            strokeWidth="2.6"
             strokeLinecap="round"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
-            style={{ filter: "none" }}
           />
-          {/* start + finish markers — derive from first/last path point heuristically */}
           {(() => {
             const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
             if (!m || m.length < 4) return null;
@@ -156,8 +148,8 @@ export function PosterPreview({ config, className }: Props) {
             const ey = parseFloat(m[m.length - 1]);
             return (
               <g>
-                <circle cx={sx} cy={sy} r="1.4" fill={theme.bg} stroke={theme.routeStroke} strokeWidth="1" />
-                <circle cx={ex} cy={ey} r="2" fill={theme.accent} />
+                <circle cx={sx} cy={sy} r="1.8" fill={theme.bg} stroke={theme.routeStroke} strokeWidth="1.2" />
+                <circle cx={ex} cy={ey} r="2.6" fill={theme.accent} />
               </g>
             );
           })()}
@@ -167,58 +159,15 @@ export function PosterPreview({ config, className }: Props) {
       {/* hairline */}
       <div style={{ height: 1, backgroundColor: theme.muted, opacity: 0.4 }} />
 
-      {/* Bottom meta grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "0.6rem 1rem",
-          paddingTop: "1rem",
-        }}
-      >
-        <div>
-          <div
-            style={{
-              fontSize: "0.55rem",
-              letterSpacing: "0.24em",
-              textTransform: "uppercase",
-              color: theme.muted,
-              marginBottom: "0.25rem",
-            }}
-          >
-            Finisher
-          </div>
-          <div style={{ fontSize: "0.85rem", fontWeight: 500, letterSpacing: "0.02em" }}>
-            {displayName}
-          </div>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          <div
-            style={{
-              fontSize: "0.55rem",
-              letterSpacing: "0.24em",
-              textTransform: "uppercase",
-              color: theme.muted,
-              marginBottom: "0.25rem",
-            }}
-          >
-            Date
-          </div>
-          <div style={{ fontSize: "0.85rem", fontWeight: 500, letterSpacing: "0.02em" }}>
-            {displayDate || "—"}
-          </div>
-        </div>
-      </div>
-
-      {/* Finish time — dominant */}
-      <div style={{ marginTop: "1.1rem" }}>
+      {/* Finish time — large, but the route remains the visual lead */}
+      <div style={{ marginTop: "1rem" }}>
         <div
           style={{
             fontSize: "0.55rem",
             letterSpacing: "0.24em",
             textTransform: "uppercase",
             color: theme.muted,
-            marginBottom: "0.35rem",
+            marginBottom: "0.3rem",
           }}
         >
           Finish Time · {distance}
@@ -228,7 +177,7 @@ export function PosterPreview({ config, className }: Props) {
             fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
             fontFeatureSettings: '"tnum" 1',
             fontVariantNumeric: "tabular-nums",
-            fontSize: "clamp(2.4rem, 7vw, 4.4rem)",
+            fontSize: "clamp(1.9rem, 5.6vw, 3.4rem)",
             fontWeight: 500,
             letterSpacing: "-0.035em",
             lineHeight: 0.95,
@@ -239,13 +188,56 @@ export function PosterPreview({ config, className }: Props) {
         </div>
       </div>
 
+      {/* Runner + date footer */}
+      <div
+        style={{
+          marginTop: "1rem",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "0.6rem 1rem",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: "0.52rem",
+              letterSpacing: "0.24em",
+              textTransform: "uppercase",
+              color: theme.muted,
+              marginBottom: "0.25rem",
+            }}
+          >
+            Finisher
+          </div>
+          <div style={{ fontSize: "0.78rem", fontWeight: 500, letterSpacing: "0.02em" }}>
+            {displayName}
+          </div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div
+            style={{
+              fontSize: "0.52rem",
+              letterSpacing: "0.24em",
+              textTransform: "uppercase",
+              color: theme.muted,
+              marginBottom: "0.25rem",
+            }}
+          >
+            Date
+          </div>
+          <div style={{ fontSize: "0.78rem", fontWeight: 500, letterSpacing: "0.02em" }}>
+            {displayDate || "—"}
+          </div>
+        </div>
+      </div>
+
       {/* wordmark */}
       <div
         style={{
-          marginTop: "1.2rem",
+          marginTop: "1rem",
           display: "flex",
           justifyContent: "space-between",
-          fontSize: "0.55rem",
+          fontSize: "0.52rem",
           letterSpacing: "0.32em",
           textTransform: "uppercase",
           color: theme.muted,
@@ -254,6 +246,7 @@ export function PosterPreview({ config, className }: Props) {
         <span>Racepace</span>
         <span>Finisher Series</span>
       </div>
+
     </div>
   );
 }
