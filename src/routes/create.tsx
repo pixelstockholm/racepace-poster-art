@@ -352,8 +352,17 @@ function CreatePage() {
                   date,
                   time,
                   theme,
+                  routePath: getRoutePath(useCustom ? undefined : raceId),
+                  location: useCustom
+                    ? undefined
+                    : (() => {
+                        const r = findRaceById(raceId);
+                        return r ? `${r.city}, ${r.country}` : undefined;
+                      })(),
+                  distanceKm: 42.195,
                 }}
               />
+
             </div>
           </div>
           <p className="mt-4 text-xs text-muted-foreground text-center">
