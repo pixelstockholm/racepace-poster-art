@@ -129,6 +129,26 @@ export function PosterPreview({ config, className }: Props) {
     return pts.join(" → ");
   }, [neighborhoods, tagline]);
 
+  // Auto-fit the route inside the SVG by computing its bounding box.
+  const routeBox = useMemo(() => {
+    const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
+    if (!m || m.length < 4) return { vb: "0 0 100 100", endX: 50, endY: 50 };
+    const nums = m.map(parseFloat);
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (let i = 0; i < nums.length - 1; i += 2) {
+      const x = nums[i], y = nums[i + 1];
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+    const w = maxX - minX, h = maxY - minY;
+    const pad = Math.max(w, h) * 0.06;
+    return {
+      vb: `${minX - pad} ${minY - pad} ${w + pad * 2} ${h + pad * 2}`,
+      endX: nums[nums.length - 2],
+      endY: nums[nums.length - 1],
+    };
+  }, [config.routePath]);
+
   // Archival warm paper, ink, accent
   const paper = "#F1EBDD";
   const ink = "#16130E";
