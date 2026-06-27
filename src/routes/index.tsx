@@ -39,12 +39,19 @@ const FEATURED = [
 function HomePage() {
   return (
     <main className="bg-paper text-ink">
-      {/* SECTION 1 — HERO */}
+      {/* SECTION 1 — HERO (full-bleed photo, overlaid text) */}
       <section className="relative bg-paper">
-        <div className="relative min-h-[calc(100vh-4rem)] grid lg:grid-cols-2">
-          {/* Text column */}
-          <div className="relative z-10 flex flex-col justify-center px-6 lg:px-16 xl:px-24 py-20 lg:py-0 bg-paper">
-            <h1 className="font-serif text-4xl md:text-6xl lg:text-[4.25rem] xl:text-[5rem] leading-[1.02] tracking-tight text-ink max-w-xl">
+        <div className="relative w-full h-[calc(100vh-4rem)] min-h-[640px] overflow-hidden">
+          <img
+            src={heroImage}
+            alt="A framed marathon poster hanging in a sunlit Scandinavian living room."
+            width={1920}
+            height={1280}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Text overlay sits on the empty wall on the left */}
+          <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-12 lg:px-20 xl:px-28 max-w-[58%]">
+            <h1 className="font-serif text-4xl md:text-6xl lg:text-[4.5rem] xl:text-[5.25rem] leading-[1.02] tracking-tight text-ink max-w-2xl">
               Marathon posters designed to belong in <em className="italic font-serif">your</em> home.
             </h1>
             <p className="mt-8 max-w-md text-base md:text-lg text-ink/70 leading-relaxed">
@@ -65,20 +72,8 @@ function HomePage() {
               </Link>
             </div>
           </div>
-          {/* Image column */}
-          <div className="relative lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-            <img
-              src={heroImage}
-              alt="A framed Stockholm marathon poster hanging in a sunlit Scandinavian living room."
-              width={1920}
-              height={1280}
-              className="w-full h-full object-cover min-h-[60vh] lg:min-h-full"
-            />
-          </div>
-        </div>
-        {/* Bottom tagline strip */}
-        <div className="relative z-10 bg-paper">
-          <div className="px-6 lg:px-16 xl:px-24 pb-8 lg:pb-10 pt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.62rem] tracking-[0.28em] uppercase text-ink/60">
+          {/* Bottom-left tagline strip */}
+          <div className="absolute left-0 right-0 bottom-0 z-10 px-6 md:px-12 lg:px-20 xl:px-28 pb-8 lg:pb-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.62rem] tracking-[0.28em] uppercase text-ink/60">
             <span>Signature Edition</span>
             <span className="text-ink/30">|</span>
             <span>Editorial Design</span>
