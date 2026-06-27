@@ -135,7 +135,7 @@ export function PosterPreview({ config, className }: Props) {
       if (y < minY) minY = y; if (y > maxY) maxY = y;
     }
     const w = maxX - minX, h = maxY - minY;
-    const pad = Math.max(w, h) * 0.08;
+    const pad = Math.max(w, h) * 0.03;
     return {
       vb: `${minX - pad} ${minY - pad} ${w + pad * 2} ${h + pad * 2}`,
       startX: nums[0],
