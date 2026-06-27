@@ -40,39 +40,50 @@ function HomePage() {
   return (
     <main className="bg-paper text-ink">
       {/* SECTION 1 — HERO */}
-      <section className="relative">
-        <img
-          src={heroImage}
-          alt="A framed marathon poster hanging in a sunlit Scandinavian living room."
-          width={1920}
-          height={1280}
-          className="w-full h-[78vh] md:h-[88vh] object-cover"
-        />
-        <div className="absolute inset-0 flex items-end">
-          <div className="w-full bg-gradient-to-t from-paper/80 via-paper/0 to-transparent pt-32 pb-10 md:pb-14">
-            <div className="mx-auto max-w-7xl px-6 lg:px-10">
-              <p className="text-[0.62rem] tracking-[0.32em] uppercase text-ink/70">Racepace</p>
-              <h1 className="font-serif mt-4 text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight max-w-xl text-ink">
-                Marathon posters designed to belong in your home.
-              </h1>
-              <p className="mt-4 max-w-md text-sm md:text-[0.95rem] text-ink/70 leading-relaxed">
-                Personalized editions inspired by the cities that shaped your race.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-                <Link
-                  to="/create"
-                  className="inline-flex items-center justify-center h-11 px-8 bg-ink text-paper text-[0.68rem] tracking-[0.24em] uppercase hover:opacity-90 transition-opacity"
-                >
-                  Create Yours
-                </Link>
-                <Link
-                  to="/shop"
-                  className="text-[0.68rem] tracking-[0.24em] uppercase border-b border-ink pb-1 hover:opacity-70 transition-opacity"
-                >
-                  Browse Posters
-                </Link>
-              </div>
+      <section className="relative bg-paper">
+        <div className="relative min-h-[calc(100vh-4rem)] grid lg:grid-cols-2">
+          {/* Text column */}
+          <div className="relative z-10 flex flex-col justify-center px-6 lg:px-16 xl:px-24 py-20 lg:py-0 bg-paper">
+            <h1 className="font-serif text-4xl md:text-6xl lg:text-[4.25rem] xl:text-[5rem] leading-[1.02] tracking-tight text-ink max-w-xl">
+              Marathon posters designed to belong in <em className="italic font-serif">your</em> home.
+            </h1>
+            <p className="mt-8 max-w-md text-base md:text-lg text-ink/70 leading-relaxed">
+              Personalized editions inspired by the cities that shaped your race.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Link
+                to="/create"
+                className="inline-flex items-center justify-center h-12 px-9 bg-ink text-paper text-[0.7rem] tracking-[0.26em] uppercase hover:opacity-90 transition-opacity"
+              >
+                Create Yours
+              </Link>
+              <Link
+                to="/shop"
+                className="inline-flex items-center justify-center h-12 px-9 border border-ink text-ink text-[0.7rem] tracking-[0.26em] uppercase hover:bg-ink hover:text-paper transition-colors"
+              >
+                Browse Posters
+              </Link>
             </div>
+          </div>
+          {/* Image column */}
+          <div className="relative lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+            <img
+              src={heroImage}
+              alt="A framed Stockholm marathon poster hanging in a sunlit Scandinavian living room."
+              width={1920}
+              height={1280}
+              className="w-full h-full object-cover min-h-[60vh] lg:min-h-full"
+            />
+          </div>
+        </div>
+        {/* Bottom tagline strip */}
+        <div className="relative z-10 bg-paper">
+          <div className="px-6 lg:px-16 xl:px-24 pb-8 lg:pb-10 pt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.62rem] tracking-[0.28em] uppercase text-ink/60">
+            <span>Signature Edition</span>
+            <span className="text-ink/30">|</span>
+            <span>Editorial Design</span>
+            <span className="text-ink/30">|</span>
+            <span>Timeless Quality</span>
           </div>
         </div>
       </section>
