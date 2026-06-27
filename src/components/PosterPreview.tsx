@@ -263,9 +263,9 @@ export function PosterPreview({ config, className }: Props) {
         <div
           style={{
             position: "relative",
-            flex: "1 1 auto",
-            margin: "0.7rem -1.5% 0.4rem",
-            minHeight: "62%",
+            flex: "1 1 0",
+            minHeight: 0,
+            margin: "0.5rem -1.5% 0.3rem",
             display: "grid",
             gridTemplateColumns: "minmax(0, 19%) 1fr",
             gap: "2%",
