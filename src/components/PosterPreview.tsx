@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { getSkylinePath } from "@/lib/raceSkylines";
+
 import { getRaceIdentity, type RaceIdentity } from "@/lib/raceIdentities";
 
 export type PosterTheme = "midnight" | "ember" | "forest" | "cream" | "noir" | "sky";
@@ -115,7 +115,7 @@ export function PosterPreview({ config, className }: Props) {
   const year = yearOf(config.date);
   const distanceKm = config.distanceKm ?? 42.195;
   const distanceLabel = `${distanceKm.toFixed(3).replace(/\.?0+$/, "")} KM`;
-  const skylinePath = getSkylinePath(config.raceId);
+  
   const locationLine = (config.location || "").toUpperCase();
   const tagline = identity?.tagline ?? locationLine;
 
@@ -162,27 +162,8 @@ export function PosterPreview({ config, className }: Props) {
         }}
       />
 
-      {/* Subtle landmark silhouette, bottom anchored */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: "32%",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      >
-        <svg
-          viewBox="0 0 200 40"
-          preserveAspectRatio="xMidYEnd meet"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}
-        >
-          <path d={skylinePath} fill={palette.ink} opacity={lightPaper ? 0.08 : 0.12} />
-        </svg>
-      </div>
+
+
 
       {/* Inner deckle border */}
       <div

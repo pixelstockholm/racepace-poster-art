@@ -261,36 +261,8 @@ function CreatePage() {
             </div>
           </div>
 
-          {/* Theme */}
-          <div>
-            <Label className="eyebrow">Color theme</Label>
-            <div className="mt-3 grid grid-cols-3 gap-3">
-              {(Object.keys(THEMES) as PosterTheme[]).map((key) => {
-                const t = THEMES[key];
-                const active = theme === key;
-                return (
-                  <button
-                    type="button"
-                    key={key}
-                    onClick={() => setTheme(key)}
-                    className={cn(
-                      "border p-3 flex items-center gap-3 text-left transition-colors",
-                      active
-                        ? "border-foreground"
-                        : "border-border hover:border-foreground/50",
-                    )}
-                  >
-                    <span
-                      aria-hidden
-                      className="h-8 w-8 inline-block border border-black/10"
-                      style={{ backgroundColor: t.paper }}
-                    />
-                    <span className="text-sm">{t.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+
+
 
           {/* Size */}
           <div>
