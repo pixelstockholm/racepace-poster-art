@@ -41,7 +41,7 @@ function formatDate(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso.toUpperCase();
   return d
-    .toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
+    .toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
     .toUpperCase();
 }
 
@@ -56,36 +56,39 @@ interface Props {
   className?: string;
 }
 
-// Per-city neighborhood lists shown in the map margin (vintage cartographic key).
+// Per-city neighborhood lists shown on the left side as small editorial labels.
 const NEIGHBORHOODS: Record<string, string[]> = {
-  berlin:     ["Mitte", "Kreuzberg", "Neukölln", "Charlottenburg", "Tiergarten"],
+  berlin:     ["Tiergarten", "Charlottenburg", "Mitte", "Kreuzberg", "Prenzlauer Berg"],
   nyc:        ["Staten Island", "Brooklyn", "Queens", "Bronx", "Manhattan"],
-  london:     ["Greenwich", "Tower", "Isle of Dogs", "Embankment", "The Mall"],
-  boston:     ["Hopkinton", "Framingham", "Wellesley", "Newton", "Boylston"],
-  chicago:    ["Loop", "Lincoln Park", "Pilsen", "Chinatown", "Bronzeville"],
-  tokyo:      ["Shinjuku", "Imperial Palace", "Shinagawa", "Asakusa", "Odaiba"],
-  paris:      ["Concorde", "Rivoli", "Bastille", "Vincennes", "Boulogne"],
+  london:     ["Westminster", "The Mall", "Tower Bridge", "Canary Wharf", "Greenwich"],
+  boston:     ["Hopkinton", "Ashland", "Heartbreak Hill", "Brookline", "Copley Square"],
+  chicago:    ["Lincoln Park", "River North", "The Loop", "Pilsen", "Chinatown"],
+  tokyo:      ["Shinjuku", "Asakusa", "Ginza", "Tokyo Bay", "Nihonbashi"],
+  paris:      ["Bois de Vincennes", "Bastille", "Seine", "Eiffel", "Champs-Élysées"],
   stockholm:  ["Södermalm", "Djurgården", "Kungsholmen", "Östermalm", "Gamla Stan"],
   valencia:   ["Ciutat Vella", "Russafa", "Cabanyal", "Turia", "Ciudad de las Artes"],
   amsterdam:  ["Olympisch", "Vondelpark", "Amstel", "Centrum", "Oud-Zuid"],
   copenhagen: ["Nørrebro", "Frederiksberg", "Christianshavn", "Islands Brygge", "Vesterbro"],
   vienna:     ["Innere Stadt", "Ringstraße", "Prater", "Leopoldstadt", "Wieden"],
   sydney:     ["North Sydney", "The Rocks", "CBD", "Domain", "Opera House"],
-  oslo:       ["Bygdøy", "Frogner", "Akershus", "Grünerløkka", "Sentrum"],
-  helsinki:   ["Töölö", "Kallio", "Kamppi", "Kruununhaka", "Olympiastadion"],
-  barcelona:  ["Diagonal", "Eixample", "Gòtic", "Gràcia", "Sagrada Família"],
-  rome:       ["Fori Imperiali", "Trastevere", "Vaticano", "Aventino", "Colosseo"],
-  milan:      ["Duomo", "Sforzesco", "Brera", "Navigli", "San Siro"],
 };
 
-function isLight(hex: string): boolean {
-  const m = hex.replace("#", "");
-  if (m.length !== 6) return true;
-  const r = parseInt(m.slice(0, 2), 16);
-  const g = parseInt(m.slice(2, 4), 16);
-  const b = parseInt(m.slice(4, 6), 16);
-  return (r * 299 + g * 587 + b * 114) / 1000 > 140;
-}
+// Approximate city coordinates for the small bottom-left detail.
+const COORDS: Record<string, { lat: string; lon: string }> = {
+  berlin:     { lat: "52.5200° N", lon: "13.4050° E" },
+  nyc:        { lat: "40.7128° N", lon: "74.0060° W" },
+  london:     { lat: "51.5074° N", lon: "0.1278° W" },
+  boston:     { lat: "42.3601° N", lon: "71.0589° W" },
+  chicago:    { lat: "41.8781° N", lon: "87.6298° W" },
+  tokyo:      { lat: "35.6762° N", lon: "139.6503° E" },
+  paris:      { lat: "48.8566° N", lon: "2.3522° E" },
+  stockholm:  { lat: "59.3293° N", lon: "18.0686° E" },
+  valencia:   { lat: "39.4699° N", lon: "0.3763° W" },
+  amsterdam:  { lat: "52.3676° N", lon: "4.9041° E" },
+  copenhagen: { lat: "55.6761° N", lon: "12.5683° E" },
+  vienna:     { lat: "48.2082° N", lon: "16.3738° E" },
+  sydney:     { lat: "33.8688° S", lon: "151.2093° E" },
+};
 
 export function PosterPreview({ config, className }: Props) {
   const identity: RaceIdentity | null = getRaceIdentity(config.raceId);
@@ -98,9 +101,6 @@ export function PosterPreview({ config, className }: Props) {
   const displayTime = config.time?.trim() || "00:00:00";
   const displayDate = formatDate(config.date);
   const year = yearOf(config.date);
-  const distanceKm = config.distanceKm ?? 42.195;
-  const distanceLabel = `${distanceKm.toFixed(3).replace(/\.?0+$/, "")} kilometers`;
-  const tagline = identity?.tagline ?? "A point-to-point marathon course";
 
   const cityName = (() => {
     if (config.location) {
@@ -111,7 +111,7 @@ export function PosterPreview({ config, className }: Props) {
   })();
   const countryLine = config.location && config.location.includes(",")
     ? config.location.split(",").slice(1).join(",").trim().toUpperCase()
-    : (config.location || "").toUpperCase();
+    : "";
 
   const editionNo = useMemo(() => {
     const seed = `${config.raceId ?? config.race}-${year}`;
@@ -120,19 +120,13 @@ export function PosterPreview({ config, className }: Props) {
     return String((h % 90) + 10).padStart(2, "0");
   }, [config.raceId, config.race, year]);
 
-  const neighborhoods = config.raceId ? NEIGHBORHOODS[config.raceId] : undefined;
-
-  // Course waypoints derived from tagline (used as the italic course line)
-  const courseLine = useMemo(() => {
-    if (!neighborhoods || neighborhoods.length < 3) return tagline;
-    const pts = [neighborhoods[0], neighborhoods[1], neighborhoods[2], neighborhoods[neighborhoods.length - 1]];
-    return pts.join(" → ");
-  }, [neighborhoods, tagline]);
+  const neighborhoods = (config.raceId && NEIGHBORHOODS[config.raceId]) || [];
+  const coords = config.raceId ? COORDS[config.raceId] : undefined;
 
   // Auto-fit the route inside the SVG by computing its bounding box.
   const routeBox = useMemo(() => {
     const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
-    if (!m || m.length < 4) return { vb: "0 0 100 100", endX: 50, endY: 50 };
+    if (!m || m.length < 4) return { vb: "0 0 100 100", endX: 50, endY: 50, startX: 50, startY: 50 };
     const nums = m.map(parseFloat);
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     for (let i = 0; i < nums.length - 1; i += 2) {
@@ -141,25 +135,25 @@ export function PosterPreview({ config, className }: Props) {
       if (y < minY) minY = y; if (y > maxY) maxY = y;
     }
     const w = maxX - minX, h = maxY - minY;
-    const pad = Math.max(w, h) * 0.06;
+    const pad = Math.max(w, h) * 0.08;
     return {
       vb: `${minX - pad} ${minY - pad} ${w + pad * 2} ${h + pad * 2}`,
+      startX: nums[0],
+      startY: nums[1],
       endX: nums[nums.length - 2],
       endY: nums[nums.length - 1],
     };
   }, [config.routePath]);
 
-  // Archival warm paper, ink, accent
+  // Editorial warm paper
   const paper = "#F1EBDD";
   const ink = "#16130E";
   const inkSoft = "rgba(22,19,14,0.62)";
   const inkFaint = "rgba(22,19,14,0.42)";
-  const hairline = "rgba(22,19,14,0.32)";
-  const mapInk = isLight(palette.paper) ? palette.ink : "#0E1B2A";
+  const hairline = "rgba(22,19,14,0.28)";
   const accent = palette.accent;
 
   const grainId = useMemo(() => `grain-${Math.random().toString(36).slice(2, 9)}`, []);
-  const mapTextureId = useMemo(() => `map-${Math.random().toString(36).slice(2, 9)}`, []);
 
   const serif = '"Fraunces", "Canela", "Tiempos", "Playfair Display", Georgia, "Times New Roman", serif';
   const sans  = '"Inter", system-ui, sans-serif';
@@ -186,53 +180,47 @@ export function PosterPreview({ config, className }: Props) {
             <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
             <feColorMatrix type="saturate" values="0" />
           </filter>
-          <filter id={mapTextureId}>
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" />
-            <feColorMatrix type="matrix" values="0 0 0 0 0.55  0 0 0 0 0.46  0 0 0 0 0.32  0 0 0 0.22 0" />
-          </filter>
         </defs>
       </svg>
-      <div aria-hidden style={{ position: "absolute", inset: 0, filter: `url(#${grainId})`, opacity: 0.16, mixBlendMode: "multiply", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "absolute", inset: 0, filter: `url(#${grainId})`, opacity: 0.14, mixBlendMode: "multiply", pointerEvents: "none", zIndex: 0 }} />
 
       <div
         style={{
           position: "relative",
           zIndex: 2,
           height: "100%",
-          padding: "4.5% 5.5% 3.5%",
+          padding: "5% 6% 4.5%",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        {/* Minimal top mark */}
+        {/* Top mark */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "baseline",
             fontFamily: sans,
-            fontSize: "0.46rem",
-            letterSpacing: "0.42em",
+            fontSize: "0.42rem",
+            letterSpacing: "0.36em",
             textTransform: "uppercase",
             fontWeight: 500,
             color: inkFaint,
           }}
         >
-          <span>Racepace</span>
-          <span>Nº {editionNo}</span>
+          <span>Racepace Edition</span>
+          <span>Edition Nº {editionNo}</span>
         </div>
 
-
-
-        {/* MASTHEAD — full-width city name */}
+        {/* MASTHEAD */}
         <h1
           style={{
             fontFamily: serif,
-            fontWeight: 800,
-            fontSize: "clamp(1.4rem, 11cqw, 3.4rem)",
+            fontWeight: 700,
+            fontSize: "clamp(1.6rem, 13cqw, 4rem)",
             lineHeight: 0.92,
             letterSpacing: "-0.02em",
-            margin: "0.3rem 0 0",
+            margin: "0.6rem 0 0",
             textAlign: "center",
             textTransform: "uppercase",
           }}
@@ -245,25 +233,73 @@ export function PosterPreview({ config, className }: Props) {
             fontFamily: serif,
             fontStyle: "italic",
             fontWeight: 400,
-            fontSize: "clamp(0.55rem, 3cqw, 0.95rem)",
-            letterSpacing: "0.04em",
+            fontSize: "clamp(0.6rem, 3.4cqw, 1.05rem)",
+            letterSpacing: "0.01em",
             textAlign: "center",
-            marginTop: "0.4rem",
-            color: inkSoft,
+            marginTop: "0.5rem",
+            color: ink,
           }}
         >
           The Marathon
         </div>
 
-        {/* MAP / ROUTE — hero */}
+        {year && (
+          <div
+            style={{
+              fontFamily: sans,
+              fontSize: "clamp(0.55rem, 2.6cqw, 0.85rem)",
+              letterSpacing: "0.06em",
+              textAlign: "center",
+              marginTop: "0.3rem",
+              color: accent,
+              fontWeight: 500,
+            }}
+          >
+            {year}
+          </div>
+        )}
+
+        {/* ROUTE + LEFT-SIDE NEIGHBORHOODS */}
         <div
           style={{
             position: "relative",
             flex: "1 1 auto",
-            margin: "0.9rem 0 0.6rem",
-            minHeight: "52%",
+            margin: "1rem 0 0.6rem",
+            minHeight: "55%",
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 24%) 1fr",
+            gap: "3%",
+            alignItems: "stretch",
           }}
         >
+          {/* Neighborhood column */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              fontFamily: sans,
+              fontSize: "0.46rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: inkSoft,
+              fontWeight: 500,
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+              {neighborhoods.map((n) => (
+                <span key={n}>{n}</span>
+              ))}
+            </div>
+            {coords && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.15rem", color: inkFaint, letterSpacing: "0.12em" }}>
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>{coords.lat}</span>
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>{coords.lon}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Route — hero in accent */}
           <svg
             viewBox={routeBox.vb}
             preserveAspectRatio="xMidYMid meet"
@@ -273,24 +309,28 @@ export function PosterPreview({ config, className }: Props) {
             <path
               d={config.routePath}
               fill="none"
-              stroke={ink}
-              strokeWidth="2.4"
+              stroke={accent}
+              strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
-            <circle cx={routeBox.endX} cy={routeBox.endY} r="3" fill={accent} vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.startX} cy={routeBox.startY} r="2.2" fill="none" stroke={accent} strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="2.6" fill={accent} vectorEffect="non-scaling-stroke" />
           </svg>
         </div>
 
-        {/* Finisher — single elegant line */}
-        <div style={{ textAlign: "center", marginTop: "auto" }}>
+        {/* Divider */}
+        <div style={{ height: 1, background: hairline, margin: "0.4rem 0 0.7rem" }} />
+
+        {/* Time + finisher */}
+        <div style={{ textAlign: "center" }}>
           <div
             style={{
               fontFamily: serif,
               fontWeight: 500,
-              fontSize: "clamp(1.1rem, 7cqw, 2rem)",
-              letterSpacing: "0.02em",
+              fontSize: "clamp(1.2rem, 7.5cqw, 2.2rem)",
+              letterSpacing: "0.04em",
               lineHeight: 1,
               color: accent,
               fontVariantNumeric: "tabular-nums",
@@ -300,13 +340,13 @@ export function PosterPreview({ config, className }: Props) {
           </div>
           <div
             style={{
-              fontFamily: serif,
+              fontFamily: sans,
               fontWeight: 500,
-              fontSize: "clamp(0.7rem, 3.4cqw, 1rem)",
-              letterSpacing: "0.22em",
+              fontSize: "clamp(0.6rem, 2.8cqw, 0.85rem)",
+              letterSpacing: "0.32em",
               textTransform: "uppercase",
               color: ink,
-              marginTop: "0.7rem",
+              marginTop: "0.55rem",
             }}
           >
             {displayName}
@@ -314,28 +354,18 @@ export function PosterPreview({ config, className }: Props) {
           <div
             style={{
               fontFamily: sans,
-              fontSize: "0.5rem",
-              letterSpacing: "0.36em",
+              fontSize: "0.46rem",
+              letterSpacing: "0.28em",
               textTransform: "uppercase",
               color: inkFaint,
-              marginTop: "0.5rem",
+              marginTop: "0.45rem",
               fontWeight: 500,
             }}
           >
             {displayDate}{countryLine ? ` · ${countryLine}` : ""}
           </div>
         </div>
-
       </div>
-    </div>
-  );
-}
-
-function FooterCell({ label, value, align, inkSoft }: { label: string; value: string; align: "left" | "center" | "right"; inkSoft: string }) {
-  return (
-    <div style={{ textAlign: align }}>
-      <div style={{ color: inkSoft, marginBottom: "0.3rem" }}>{label}</div>
-      <div style={{ letterSpacing: "0.22em", fontWeight: 600 }}>{value}</div>
     </div>
   );
 }
