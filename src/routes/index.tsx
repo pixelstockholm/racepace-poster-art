@@ -174,6 +174,7 @@ function HomePage() {
                     time: meta.time,
                     theme,
                     routePath: getRoutePath(meta.routeId),
+                    raceId: meta.routeId,
                     location: meta.location,
                     distanceKm: 42.195,
                   }}

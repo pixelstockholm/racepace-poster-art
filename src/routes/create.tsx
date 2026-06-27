@@ -355,6 +355,7 @@ function CreatePage() {
                   time,
                   theme,
                   routePath: getRoutePath(useCustom ? undefined : raceId),
+                  raceId: useCustom ? undefined : raceId,
                   location: useCustom
                     ? undefined
                     : (() => {
