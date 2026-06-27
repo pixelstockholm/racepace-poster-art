@@ -204,26 +204,25 @@ export function PosterPreview({ config, className }: Props) {
           flexDirection: "column",
         }}
       >
-        {/* Top metadata strip */}
+        {/* Minimal top mark */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
+            display: "flex",
+            justifyContent: "space-between",
             alignItems: "baseline",
             fontFamily: sans,
-            fontSize: "0.5rem",
-            letterSpacing: "0.32em",
+            fontSize: "0.46rem",
+            letterSpacing: "0.42em",
             textTransform: "uppercase",
-            fontWeight: 600,
-            color: inkSoft,
+            fontWeight: 500,
+            color: inkFaint,
           }}
         >
-          <span style={{ textAlign: "left" }}>Racepace Edition</span>
-          <span style={{ textAlign: "center" }}>Official Finisher Poster</span>
-          <span style={{ textAlign: "right" }}>Edition Nº {editionNo}</span>
+          <span>Racepace</span>
+          <span>Nº {editionNo}</span>
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.6rem" }} />
+
 
         {/* MASTHEAD — full-width city name */}
         <h1
