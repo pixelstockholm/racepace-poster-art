@@ -189,7 +189,7 @@ export function PosterPreview({ config, className }: Props) {
           position: "relative",
           zIndex: 2,
           height: "100%",
-          padding: "5% 6% 4.5%",
+          padding: "4% 6% 4%",
           display: "flex",
           flexDirection: "column",
         }}
@@ -220,7 +220,7 @@ export function PosterPreview({ config, className }: Props) {
             fontSize: "clamp(1.6rem, 13cqw, 4rem)",
             lineHeight: 0.92,
             letterSpacing: "-0.02em",
-            margin: "0.6rem 0 0",
+            margin: "0.4rem 0 0",
             textAlign: "center",
             textTransform: "uppercase",
           }}
@@ -236,7 +236,7 @@ export function PosterPreview({ config, className }: Props) {
             fontSize: "clamp(0.6rem, 3.4cqw, 1.05rem)",
             letterSpacing: "0.01em",
             textAlign: "center",
-            marginTop: "0.5rem",
+            marginTop: "0.35rem",
             color: ink,
           }}
         >
@@ -250,7 +250,7 @@ export function PosterPreview({ config, className }: Props) {
               fontSize: "clamp(0.55rem, 2.6cqw, 0.85rem)",
               letterSpacing: "0.06em",
               textAlign: "center",
-              marginTop: "0.3rem",
+              marginTop: "0.2rem",
               color: accent,
               fontWeight: 500,
             }}
@@ -263,9 +263,9 @@ export function PosterPreview({ config, className }: Props) {
         <div
           style={{
             position: "relative",
-            flex: "1 1 auto",
-            margin: "0.7rem -1.5% 0.4rem",
-            minHeight: "62%",
+            flex: "1 1 0",
+            minHeight: 0,
+            margin: "0.5rem -1.5% 0.3rem",
             display: "grid",
             gridTemplateColumns: "minmax(0, 19%) 1fr",
             gap: "2%",
@@ -322,7 +322,7 @@ export function PosterPreview({ config, className }: Props) {
         </div>
 
         {/* Divider */}
-        <div style={{ height: 1, background: hairline, margin: "0.4rem 0 0.7rem" }} />
+        <div style={{ height: 1, background: hairline, margin: "0.3rem 0 0.5rem" }} />
 
         {/* Time + finisher */}
         <div style={{ textAlign: "center" }}>
