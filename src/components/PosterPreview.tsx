@@ -126,40 +126,27 @@ export function PosterPreview({ config, className }: Props) {
   })();
 
 
-  // Newspaper paper tone — slightly warm off-white regardless of identity.
-  const paper = "#F2ECDC";
-  const ink = "#16130E";
-  const inkSoft = "rgba(22,19,14,0.62)";
-  const inkFaint = "rgba(22,19,14,0.42)";
-  const hairline = "rgba(22,19,14,0.55)";
+  // Warm off-white archival paper, regardless of identity.
+  const paper = "#F1EBDD";
+  const ink = "#1A1714";
+  const inkSoft = "rgba(26,23,20,0.6)";
+  const inkFaint = "rgba(26,23,20,0.38)";
+  const hairline = "rgba(26,23,20,0.28)";
   const accent = palette.accent;
 
   const grainId = useMemo(() => `grain-${Math.random().toString(36).slice(2, 9)}`, []);
 
-  // Today-like dateline string ("SATURDAY, 27 SEPTEMBER 2025")
-  const dateline = useMemo(() => {
+  const dayMonth = useMemo(() => {
     if (!config.date) return "";
     const d = new Date(config.date);
-    if (Number.isNaN(d.getTime())) return config.date.toUpperCase();
+    if (Number.isNaN(d.getTime())) return config.date;
     return d
-      .toLocaleDateString("en-GB", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
+      .toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
       .toUpperCase();
   }, [config.date]);
 
-  const headline = useMemo(() => {
-    // Use the city as the masthead headline — like "THE BERLIN HERALD"
-    const city = (cityName || "RACE").replace(/\.$/, "");
-    return `THE ${city} HERALD`;
-  }, [cityName]);
-
-  const raceFullName = useMemo(() => {
-    return (config.race || raceLines.join(" ")).toUpperCase();
-  }, [config.race, raceLines]);
+  const serif = '"Fraunces", "Canela", "Tiempos", "Playfair Display", Georgia, "Times New Roman", serif';
+  const sans  = '"Inter", system-ui, sans-serif';
 
   return (
     <div
@@ -170,15 +157,15 @@ export function PosterPreview({ config, className }: Props) {
         color: ink,
         position: "relative",
         overflow: "hidden",
-        fontFamily: 'var(--font-serif, "Fraunces", "Playfair Display", Georgia, "Times New Roman", serif)',
+        fontFamily: serif,
         boxShadow:
-          "0 1px 1px rgba(0,0,0,0.06), 0 30px 70px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(0,0,0,0.06)",
+          "0 1px 1px rgba(0,0,0,0.06), 0 30px 70px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(0,0,0,0.05)",
       }}
     >
-      {/* Paper grain — newsprint texture */}
+      {/* Subtle paper grain */}
       <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
         <filter id={grainId}>
-          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
           <feColorMatrix type="saturate" values="0" />
         </filter>
       </svg>
@@ -188,20 +175,19 @@ export function PosterPreview({ config, className }: Props) {
           position: "absolute",
           inset: 0,
           filter: `url(#${grainId})`,
-          opacity: 0.22,
+          opacity: 0.14,
           mixBlendMode: "multiply",
           pointerEvents: "none",
           zIndex: 0,
         }}
       />
-      {/* Faint foxing in the corners */}
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(ellipse at 0% 0%, rgba(120,90,40,0.10), transparent 35%), radial-gradient(ellipse at 100% 100%, rgba(120,90,40,0.10), transparent 35%)",
+            "radial-gradient(ellipse at 0% 0%, rgba(120,90,40,0.07), transparent 45%), radial-gradient(ellipse at 100% 100%, rgba(120,90,40,0.07), transparent 45%)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -212,244 +198,209 @@ export function PosterPreview({ config, className }: Props) {
           position: "relative",
           zIndex: 2,
           height: "100%",
-          padding: "5% 6% 4.5%",
+          padding: "7% 8% 6%",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        {/* Top metadata strip — vol, edition, city, price */}
+        {/* Top edition mark */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "baseline",
-            fontFamily: 'var(--font-sans, "Inter", system-ui, sans-serif)',
-            fontSize: "0.46rem",
-            letterSpacing: "0.18em",
+            fontFamily: sans,
+            fontSize: "0.5rem",
+            letterSpacing: "0.32em",
             textTransform: "uppercase",
             fontWeight: 500,
-            color: ink,
-            paddingBottom: "0.4rem",
-          }}
-        >
-          <span>Vol. {year || "—"} · {(countryLine || locationLine || "Worldwide").split(",")[0]}</span>
-          <span>Edition Nº {editionNo}</span>
-          <span style={{ fontVariantNumeric: "tabular-nums" }}>Price · One Marathon</span>
-        </div>
-        <div style={{ borderTop: `2px solid ${hairline}`, borderBottom: `1px solid ${hairline}`, height: 3 }} />
-
-        {/* MASTHEAD */}
-        <h1
-          style={{
-            fontFamily: 'var(--font-serif, "Fraunces", "Playfair Display", "Times New Roman", serif)',
-            fontWeight: 800,
-            fontStyle: "italic",
-            fontSize: "clamp(1.6rem, 6.2vw, 3.4rem)",
-            lineHeight: 0.95,
-            letterSpacing: "-0.02em",
-            margin: "0.6rem 0 0.4rem",
-            textAlign: "center",
-            textTransform: "uppercase",
-          }}
-        >
-          {headline}
-        </h1>
-
-        {/* Dateline strip */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            borderTop: `1px solid ${hairline}`,
-            borderBottom: `1px solid ${hairline}`,
-            padding: "0.35rem 0",
-            fontFamily: 'var(--font-sans, "Inter", system-ui, sans-serif)',
-            fontSize: "0.44rem",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            fontWeight: 600,
-            color: ink,
-          }}
-        >
-          <span>{(countryLine || locationLine || "—").split(",")[0]}</span>
-          <span>{dateline || "—"}</span>
-          <span style={{ fontVariantNumeric: "tabular-nums" }}>Nº {editionNo}</span>
-        </div>
-
-        {/* Section kicker */}
-        <div
-          style={{
-            textAlign: "center",
-            fontFamily: 'var(--font-sans, "Inter", system-ui, sans-serif)',
-            fontSize: "0.4rem",
-            letterSpacing: "0.4em",
-            textTransform: "uppercase",
-            color: accent,
-            fontWeight: 700,
-            margin: "0.9rem 0 0.4rem",
-          }}
-        >
-          Sport · Athletics · Long Distance
-        </div>
-
-        {/* Article headline */}
-        <h2
-          style={{
-            fontFamily: 'var(--font-serif, "Fraunces", "Playfair Display", Georgia, serif)',
-            fontWeight: 700,
-            fontSize: "clamp(1.1rem, 3.4vw, 1.9rem)",
-            lineHeight: 1.05,
-            letterSpacing: "-0.01em",
-            margin: "0 0 0.35rem",
-            textAlign: "center",
-            textTransform: "uppercase",
-          }}
-        >
-          {raceFullName}
-        </h2>
-
-        {/* Deck / subhead */}
-        <p
-          style={{
-            textAlign: "center",
-            fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
-            fontStyle: "italic",
-            fontWeight: 400,
-            fontSize: "0.72rem",
-            lineHeight: 1.35,
-            margin: "0 auto 0.6rem",
-            maxWidth: "82%",
             color: inkSoft,
           }}
         >
-          {tagline || "An account of the day's long run, traced through the streets of the city."}
-        </p>
-
-        {/* By-line */}
-        <div
-          style={{
-            textAlign: "center",
-            fontFamily: 'var(--font-sans, "Inter", system-ui, sans-serif)',
-            fontSize: "0.42rem",
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            color: inkFaint,
-            marginBottom: "0.7rem",
-          }}
-        >
-          By Our Athletics Correspondent · {(countryLine || "—").split(",").pop()?.trim() || "—"}
+          <span>Edition Nº {editionNo}</span>
+          <span style={{ color: accent }}>·</span>
+          <span>Racepace</span>
         </div>
 
-        {/* ROUTE — illustration plate with caption (like a print engraving) */}
-        <figure
-          style={{
-            margin: 0,
-            borderTop: `1px solid ${hairline}`,
-            borderBottom: `1px solid ${hairline}`,
-            padding: "0.8rem 0 0.55rem",
-          }}
-        >
-          <div
+        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.55rem 0 1.4rem" }} />
+
+        {/* CITY / MARATHON / YEAR — the hero wordmark */}
+        <div style={{ textAlign: "center" }}>
+          <h1
             style={{
-              height: "22vh",
-              minHeight: 120,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              fontFamily: serif,
+              fontWeight: 500,
+              fontStyle: "normal",
+              fontSize: "clamp(2.6rem, 10vw, 5.4rem)",
+              lineHeight: 0.92,
+              letterSpacing: "-0.025em",
+              margin: 0,
+              textTransform: "uppercase",
             }}
           >
-            <svg
-              viewBox="0 0 100 100"
-              preserveAspectRatio="xMidYMid meet"
-              style={{ width: "78%", height: "100%", display: "block" }}
-              aria-hidden
-            >
-              <path
-                d={config.routePath}
-                fill="none"
-                stroke={ink}
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                vectorEffect="non-scaling-stroke"
-              />
-              {(() => {
-                const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
-                if (!m || m.length < 4) return null;
-                const ex = parseFloat(m[m.length - 2]);
-                const ey = parseFloat(m[m.length - 1]);
-                return (
-                  <g>
-                    <circle cx={ex} cy={ey} r="1.6" fill={accent} vectorEffect="non-scaling-stroke" />
-                  </g>
-                );
-              })()}
-            </svg>
+            {cityName}
+          </h1>
+          <div
+            style={{
+              fontFamily: serif,
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: "clamp(0.9rem, 2.6vw, 1.4rem)",
+              letterSpacing: "0.02em",
+              marginTop: "0.25rem",
+              color: ink,
+            }}
+          >
+            Marathon
           </div>
-          <figcaption
+          <div
+            style={{
+              fontFamily: sans,
+              fontSize: "0.55rem",
+              letterSpacing: "0.5em",
+              textTransform: "uppercase",
+              fontWeight: 500,
+              marginTop: "0.55rem",
+              color: accent,
+            }}
+          >
+            {year || "—"}
+          </div>
+        </div>
+
+        {/* ROUTE — hero illustration, ~40% of poster */}
+        <div
+          style={{
+            flex: "1 1 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "1.2rem 0 0.6rem",
+            minHeight: 0,
+          }}
+        >
+          <svg
+            viewBox="0 0 100 100"
+            preserveAspectRatio="xMidYMid meet"
+            style={{ width: "92%", height: "100%", display: "block" }}
+            aria-hidden
+          >
+            <path
+              d={config.routePath}
+              fill="none"
+              stroke={ink}
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+            {(() => {
+              const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
+              if (!m || m.length < 4) return null;
+              const sx = parseFloat(m[0]);
+              const sy = parseFloat(m[1]);
+              const ex = parseFloat(m[m.length - 2]);
+              const ey = parseFloat(m[m.length - 1]);
+              return (
+                <g>
+                  <circle cx={sx} cy={sy} r="1.6" fill={accent} vectorEffect="non-scaling-stroke" />
+                  <circle cx={ex} cy={ey} r="1.6" fill={accent} vectorEffect="non-scaling-stroke" />
+                </g>
+              );
+            })()}
+          </svg>
+        </div>
+
+        {/* Tagline — course descriptor */}
+        {tagline && (
+          <div
             style={{
               textAlign: "center",
-              fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
+              fontFamily: serif,
               fontStyle: "italic",
-              fontSize: "0.55rem",
-              letterSpacing: "0.04em",
+              fontSize: "0.72rem",
+              letterSpacing: "0.02em",
               color: inkSoft,
-              marginTop: "0.4rem",
+              marginBottom: "1.2rem",
             }}
           >
-            Fig. {editionNo} — Course of the {cityName.toLowerCase()} marathon, as run on {dateline || "the day"}.
-          </figcaption>
-        </figure>
+            {tagline}
+          </div>
+        )}
 
-        {/* Two-column body */}
-        <div
-          style={{
-            marginTop: "0.9rem",
-            display: "grid",
-            gridTemplateColumns: "1fr 1px 1fr",
-            columnGap: "0.9rem",
-            flex: "1 1 auto",
-          }}
-        >
-          <NewsColumn
-            kicker="Finisher of Record"
-            value={displayName}
-            body={`Completed the full ${distanceLabel.toLowerCase()} course in an official time of ${displayTime}, entered into the registry as edition Nº ${editionNo} of ${year || "the year"}.`}
-            ink={ink}
-            inkSoft={inkSoft}
-            inkFaint={inkFaint}
-          />
-          <div style={{ background: hairline, width: 1, height: "100%" }} />
-          <NewsColumn
-            kicker="Official Particulars"
-            value={displayTime}
-            body={`Distance ${distanceLabel}. Run on ${dateline || "—"}. Filed from ${(countryLine || locationLine || "—").split(",")[0]}.`}
-            ink={ink}
-            inkSoft={inkSoft}
-            inkFaint={inkFaint}
-            tabularValue
-          />
-        </div>
+        <div style={{ borderTop: `1px solid ${hairline}`, marginBottom: "1rem" }} />
 
-        {/* Bottom rule + imprint */}
-        <div style={{ borderTop: `2px solid ${hairline}`, marginTop: "0.8rem", paddingTop: "0.4rem" }}>
+        {/* Finisher block — minimal hierarchy */}
+        <div style={{ textAlign: "center" }}>
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "baseline",
-              fontFamily: 'var(--font-sans, "Inter", system-ui, sans-serif)',
-              fontSize: "0.42rem",
-              letterSpacing: "0.3em",
+              fontFamily: sans,
+              fontSize: "0.46rem",
+              letterSpacing: "0.4em",
               textTransform: "uppercase",
+              fontWeight: 600,
+              color: inkFaint,
+              marginBottom: "0.35rem",
+            }}
+          >
+            Official Time
+          </div>
+          <div
+            style={{
+              fontFamily: serif,
+              fontWeight: 500,
+              fontSize: "clamp(1.6rem, 5vw, 2.4rem)",
+              letterSpacing: "-0.01em",
+              lineHeight: 1,
+              fontVariantNumeric: "tabular-nums",
+              color: ink,
+            }}
+          >
+            {displayTime}
+          </div>
+          <div
+            style={{
+              fontFamily: serif,
+              fontStyle: "italic",
+              fontSize: "0.95rem",
+              letterSpacing: "0.01em",
+              marginTop: "0.7rem",
+              color: ink,
+            }}
+          >
+            {displayName
+              .toLowerCase()
+              .replace(/(^|\s)\S/g, (c) => c.toUpperCase())}
+          </div>
+          <div
+            style={{
+              fontFamily: sans,
+              fontSize: "0.5rem",
+              letterSpacing: "0.28em",
+              textTransform: "uppercase",
+              fontWeight: 500,
+              color: inkSoft,
+              marginTop: "0.45rem",
+            }}
+          >
+            {distanceLabel} <span style={{ color: accent }}>·</span> {displayDate || dayMonth || "—"}
+          </div>
+        </div>
+
+        <div style={{ flex: "0 0 auto", marginTop: "auto", paddingTop: "1rem" }}>
+          <div style={{ borderTop: `1px solid ${hairline}`, marginBottom: "0.5rem" }} />
+          <div
+            style={{
+              textAlign: "center",
+              fontFamily: sans,
+              fontSize: "0.44rem",
+              letterSpacing: "0.4em",
+              textTransform: "uppercase",
+              fontWeight: 500,
               color: inkFaint,
             }}
           >
-            <span>Racepace Editions · Printed on Newsprint</span>
-            <span style={{ fontVariantNumeric: "tabular-nums" }}>
-              Nº {editionNo} / {year || "—"} · {distanceLabel}
-            </span>
+            Edition Nº {editionNo} {countryLine ? `· ${countryLine}` : ""}
           </div>
         </div>
       </div>
@@ -457,105 +408,4 @@ export function PosterPreview({ config, className }: Props) {
   );
 }
 
-interface NewsColumnProps {
-  kicker: string;
-  value: string;
-  body: string;
-  ink: string;
-  inkSoft: string;
-  inkFaint: string;
-  tabularValue?: boolean;
-}
-
-function NewsColumn({ kicker, value, body, ink, inkSoft, inkFaint, tabularValue }: NewsColumnProps) {
-  return (
-    <div>
-      <div
-        style={{
-          fontFamily: 'var(--font-sans, "Inter", system-ui, sans-serif)',
-          fontSize: "0.42rem",
-          letterSpacing: "0.32em",
-          textTransform: "uppercase",
-          fontWeight: 700,
-          color: inkFaint,
-          marginBottom: "0.35rem",
-        }}
-      >
-        {kicker}
-      </div>
-      <div
-        style={{
-          fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
-          fontWeight: 600,
-          fontSize: "0.95rem",
-          lineHeight: 1.1,
-          letterSpacing: "-0.005em",
-          color: ink,
-          marginBottom: "0.45rem",
-          textTransform: "uppercase",
-          fontVariantNumeric: tabularValue ? "tabular-nums" : "normal",
-          wordBreak: "break-word",
-        }}
-      >
-        {value}
-      </div>
-      <p
-        style={{
-          fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
-          fontSize: "0.6rem",
-          lineHeight: 1.45,
-          color: inkSoft,
-          margin: 0,
-          textAlign: "justify",
-          hyphens: "auto",
-        }}
-      >
-        {body}
-      </p>
-    </div>
-  );
-}
-
-
-interface FooterFieldProps {
-  label: string;
-  value: string;
-  ink: string;
-  inkFaint: string;
-  align?: "left" | "right";
-  tabular?: boolean;
-}
-
-function FooterField({ label, value, ink, inkFaint, align = "left", tabular }: FooterFieldProps) {
-  return (
-    <div style={{ textAlign: align }}>
-      <div
-        style={{
-          fontSize: "0.46rem",
-          letterSpacing: "0.3em",
-          textTransform: "uppercase",
-          fontWeight: 600,
-          color: inkFaint,
-          marginBottom: "0.3rem",
-        }}
-      >
-        {label}
-      </div>
-      <div
-        style={{
-          fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
-          fontWeight: 500,
-          fontSize: "0.95rem",
-          letterSpacing: "-0.005em",
-          color: ink,
-          lineHeight: 1.15,
-          fontVariantNumeric: tabular ? "tabular-nums" : "normal",
-          wordBreak: "break-word",
-        }}
-      >
-        {value}
-      </div>
-    </div>
-  );
-}
 
