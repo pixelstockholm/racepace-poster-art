@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { getSkylinePath } from "@/lib/raceSkylines";
 
 export type PosterTheme = "midnight" | "ember" | "forest" | "cream" | "noir" | "sky";
 
@@ -11,6 +12,8 @@ export interface PosterConfig {
   routePath: string; // SVG path data in a 0 0 100 100 viewBox
   location?: string; // e.g. "Berlin, Germany"
   distanceKm?: number;
+  elevationM?: number;
+  raceId?: string;
 }
 
 interface ThemeTokens {
@@ -19,15 +22,16 @@ interface ThemeTokens {
   accent: string;
   muted: string;
   routeStroke: string;
+  skyline: string;
 }
 
 export const THEMES: Record<PosterTheme, ThemeTokens & { label: string }> = {
-  midnight: { label: "Midnight", bg: "#0B1220", ink: "#F2F4F8", accent: "#5B8DEF", muted: "#6E7A93", routeStroke: "#F2F4F8" },
-  ember:    { label: "Ember",    bg: "#0F0F10", ink: "#F5F1EA", accent: "#F25C1F", muted: "#6E6A63", routeStroke: "#F25C1F" },
-  forest:   { label: "Forest",   bg: "#0E1A14", ink: "#F1ECDE", accent: "#7FB28C", muted: "#6A7670", routeStroke: "#F1ECDE" },
-  cream:    { label: "Bone",     bg: "#EFEAE0", ink: "#0B0B0C", accent: "#1E3A8A", muted: "#6A6358", routeStroke: "#0B0B0C" },
-  noir:     { label: "Noir",     bg: "#0A0A0B", ink: "#F2EFE7", accent: "#F2EFE7", muted: "#6E6A63", routeStroke: "#F2EFE7" },
-  sky:      { label: "Steel",    bg: "#E6EAF0", ink: "#0B0B0C", accent: "#1E3A8A", muted: "#5C6577", routeStroke: "#1E3A8A" },
+  midnight: { label: "Midnight", bg: "#0B1220", ink: "#F2F4F8", accent: "#5B8DEF", muted: "#6E7A93", routeStroke: "#F2F4F8", skyline: "#152038" },
+  ember:    { label: "Ember",    bg: "#0F0F10", ink: "#F5F1EA", accent: "#F25C1F", muted: "#6E6A63", routeStroke: "#F25C1F", skyline: "#1B1A18" },
+  forest:   { label: "Forest",   bg: "#0E1A14", ink: "#F1ECDE", accent: "#7FB28C", muted: "#6A7670", routeStroke: "#F1ECDE", skyline: "#172821" },
+  cream:    { label: "Bone",     bg: "#EFEAE0", ink: "#0B0B0C", accent: "#1E3A8A", muted: "#6A6358", routeStroke: "#0B0B0C", skyline: "#E2DCCF" },
+  noir:     { label: "Noir",     bg: "#0A0A0B", ink: "#F2EFE7", accent: "#F2EFE7", muted: "#6E6A63", routeStroke: "#F2EFE7", skyline: "#161617" },
+  sky:      { label: "Steel",    bg: "#E6EAF0", ink: "#0B0B0C", accent: "#1E3A8A", muted: "#5C6577", routeStroke: "#1E3A8A", skyline: "#D6DCE6" },
 };
 
 function formatDate(iso: string): string {
@@ -44,6 +48,29 @@ function yearOf(iso: string): string {
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? "" : String(d.getFullYear());
 }
+
+function parseTimeToSeconds(t: string): number | null {
+  const m = t.trim().match(/^(\d{1,2}):(\d{2}):(\d{2})$/);
+  if (!m) return null;
+  const [, h, mm, ss] = m;
+  return parseInt(h) * 3600 + parseInt(mm) * 60 + parseInt(ss);
+}
+
+function computePace(time: string, distanceKm: number): string {
+  const secs = parseTimeToSeconds(time);
+  if (!secs || !distanceKm) return "—";
+  const perKm = secs / distanceKm;
+  const m = Math.floor(perKm / 60);
+  const s = Math.round(perKm % 60);
+  return `${m}:${s.toString().padStart(2, "0")}/KM`;
+}
+
+// Elevation defaults per race (approx total gain in meters)
+const RACE_ELEVATION: Record<string, number> = {
+  berlin: 73, nyc: 250, london: 95, boston: 246, chicago: 60, tokyo: 82,
+  paris: 195, stockholm: 168, valencia: 30, amsterdam: 18, copenhagen: 45,
+  vienna: 110, sydney: 246,
+};
 
 interface Props {
   config: PosterConfig;
@@ -64,7 +91,11 @@ export function PosterPreview({ config, className }: Props) {
   const displayTime = config.time?.trim() || "00:00:00";
   const displayDate = formatDate(config.date);
   const year = yearOf(config.date);
-  const distance = config.distanceKm ? `${config.distanceKm.toFixed(3).replace(/\.?0+$/, "")} KM` : "42.195 KM";
+  const distanceKm = config.distanceKm ?? 42.195;
+  const distanceLabel = `${distanceKm.toFixed(3).replace(/\.?0+$/, "")} KM`;
+  const pace = computePace(displayTime, distanceKm);
+  const elevation = config.elevationM ?? (config.raceId ? RACE_ELEVATION[config.raceId] : undefined) ?? 80;
+  const skylinePath = getSkylinePath(config.raceId);
 
   return (
     <div
@@ -73,7 +104,7 @@ export function PosterPreview({ config, className }: Props) {
         aspectRatio: "2 / 3",
         backgroundColor: theme.bg,
         color: theme.ink,
-        padding: "9% 8% 7%",
+        padding: "8% 8% 6%",
         display: "flex",
         flexDirection: "column",
         boxShadow:
@@ -106,22 +137,52 @@ export function PosterPreview({ config, className }: Props) {
           fontSize: "clamp(1.2rem, 3vw, 2rem)",
           lineHeight: 1.0,
           letterSpacing: "-0.02em",
-          marginTop: "0.9rem",
+          marginTop: "0.8rem",
           wordBreak: "break-word",
         }}
       >
         {displayRace}
       </div>
 
-      {/* Route — HERO. Takes the dominant share of the poster. */}
+      {/* Stats strip */}
+      <div
+        style={{
+          marginTop: "0.9rem",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          gap: "0.5rem",
+          borderTop: `1px solid ${theme.muted}`,
+          borderBottom: `1px solid ${theme.muted}`,
+          padding: "0.55rem 0",
+        }}
+      >
+        {[
+          { label: "Distance", value: distanceLabel },
+          { label: "Pace", value: pace },
+          { label: "Elevation", value: `${elevation} M` },
+        ].map((s, i) => (
+          <div key={s.label} style={{ textAlign: i === 0 ? "left" : i === 1 ? "center" : "right" }}>
+            <div style={{ fontSize: "0.48rem", letterSpacing: "0.24em", textTransform: "uppercase", color: theme.muted, marginBottom: "0.18rem" }}>
+              {s.label}
+            </div>
+            <div style={{ fontSize: "0.72rem", fontWeight: 500, letterSpacing: "0.02em", fontVariantNumeric: "tabular-nums" }}>
+              {s.value}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Route — HERO, with skyline silhouette beneath */}
       <div
         style={{
           flex: 1,
           display: "flex",
-          alignItems: "center",
+          flexDirection: "column",
           justifyContent: "center",
-          margin: "1.4rem -2% 1.2rem",
+          alignItems: "stretch",
+          margin: "1.1rem -2% 0.8rem",
           minHeight: 0,
+          position: "relative",
         }}
       >
         <svg
@@ -154,13 +215,31 @@ export function PosterPreview({ config, className }: Props) {
             );
           })()}
         </svg>
+        {/* Skyline silhouette anchored to the bottom of the route area */}
+        <svg
+          viewBox="0 0 200 40"
+          preserveAspectRatio="xMidYEnd meet"
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100%",
+            height: "22%",
+            display: "block",
+            pointerEvents: "none",
+          }}
+          aria-hidden
+        >
+          <path d={skylinePath} fill={theme.skyline} />
+        </svg>
       </div>
 
       {/* hairline */}
-      <div style={{ height: 1, backgroundColor: theme.muted, opacity: 0.4 }} />
+      <div style={{ height: 1, backgroundColor: theme.muted, opacity: 0.5 }} />
 
-      {/* Finish time — large, but the route remains the visual lead */}
-      <div style={{ marginTop: "1rem" }}>
+      {/* Finish time */}
+      <div style={{ marginTop: "0.9rem" }}>
         <div
           style={{
             fontSize: "0.55rem",
@@ -170,7 +249,7 @@ export function PosterPreview({ config, className }: Props) {
             marginBottom: "0.3rem",
           }}
         >
-          Finish Time · {distance}
+          Finish Time
         </div>
         <div
           style={{
@@ -191,7 +270,7 @@ export function PosterPreview({ config, className }: Props) {
       {/* Runner + date footer */}
       <div
         style={{
-          marginTop: "1rem",
+          marginTop: "0.9rem",
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: "0.6rem 1rem",
@@ -234,7 +313,7 @@ export function PosterPreview({ config, className }: Props) {
       {/* wordmark */}
       <div
         style={{
-          marginTop: "1rem",
+          marginTop: "0.9rem",
           display: "flex",
           justifyContent: "space-between",
           fontSize: "0.52rem",
@@ -246,7 +325,6 @@ export function PosterPreview({ config, className }: Props) {
         <span>Racepace</span>
         <span>Finisher Series</span>
       </div>
-
     </div>
   );
 }
