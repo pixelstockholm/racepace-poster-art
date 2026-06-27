@@ -204,26 +204,25 @@ export function PosterPreview({ config, className }: Props) {
           flexDirection: "column",
         }}
       >
-        {/* Top metadata strip */}
+        {/* Minimal top mark */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
+            display: "flex",
+            justifyContent: "space-between",
             alignItems: "baseline",
             fontFamily: sans,
-            fontSize: "0.5rem",
-            letterSpacing: "0.32em",
+            fontSize: "0.46rem",
+            letterSpacing: "0.42em",
             textTransform: "uppercase",
-            fontWeight: 600,
-            color: inkSoft,
+            fontWeight: 500,
+            color: inkFaint,
           }}
         >
-          <span style={{ textAlign: "left" }}>Racepace Edition</span>
-          <span style={{ textAlign: "center" }}>Official Finisher Poster</span>
-          <span style={{ textAlign: "right" }}>Edition Nº {editionNo}</span>
+          <span>Racepace</span>
+          <span>Nº {editionNo}</span>
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.6rem" }} />
+
 
         {/* MASTHEAD — full-width city name */}
         <h1
@@ -244,71 +243,27 @@ export function PosterPreview({ config, className }: Props) {
         <div
           style={{
             fontFamily: serif,
+            fontStyle: "italic",
             fontWeight: 400,
-            fontSize: "clamp(0.6rem, 3.4cqw, 1.05rem)",
-            letterSpacing: "0.42em",
+            fontSize: "clamp(0.55rem, 3cqw, 0.95rem)",
+            letterSpacing: "0.04em",
             textAlign: "center",
-            textTransform: "uppercase",
-            marginTop: "0.25rem",
-            color: ink,
+            marginTop: "0.4rem",
+            color: inkSoft,
           }}
         >
-          Marathon
+          The Marathon
         </div>
 
-        <div
-          style={{
-            fontFamily: serif,
-            fontWeight: 400,
-            fontStyle: "normal",
-            fontSize: "0.85rem",
-            letterSpacing: "0.5em",
-            color: accent,
-            marginTop: "0.35rem",
-            paddingLeft: "0.2rem",
-          }}
-        >
-          {year || "—"}
-        </div>
-
-        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.35rem" }} />
-
-        {/* MAP / ROUTE */}
+        {/* MAP / ROUTE — hero */}
         <div
           style={{
             position: "relative",
             flex: "1 1 auto",
-            margin: "0.6rem 0 0.5rem",
-            minHeight: "34%",
+            margin: "0.9rem 0 0.6rem",
+            minHeight: "52%",
           }}
         >
-          {/* Compass + neighborhoods */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "22%",
-              fontFamily: sans,
-              fontSize: "0.46rem",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: inkSoft,
-              fontWeight: 500,
-              lineHeight: 1.8,
-            }}
-          >
-            <svg viewBox="0 0 40 40" width="22" height="22" style={{ display: "block", marginBottom: "0.4rem" }}>
-              <circle cx="20" cy="20" r="13" fill="none" stroke={hairline} strokeWidth="0.8" />
-              <text x="20" y="11" textAnchor="middle" fontFamily={serif} fontStyle="italic" fontSize="7" fill={ink}>N</text>
-              <line x1="20" y1="14" x2="20" y2="26" stroke={ink} strokeWidth="0.8" />
-              <polygon points="20,13 18.2,16 21.8,16" fill={ink} />
-            </svg>
-            {neighborhoods?.slice(0, 5).map((n) => (
-              <div key={n}>{n}</div>
-            ))}
-          </div>
-
           <svg
             viewBox={routeBox.vb}
             preserveAspectRatio="xMidYMid meet"
@@ -318,113 +273,59 @@ export function PosterPreview({ config, className }: Props) {
             <path
               d={config.routePath}
               fill="none"
-              stroke={mapInk}
-              strokeWidth="1.6"
+              stroke={ink}
+              strokeWidth="2.4"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
-            <circle cx={routeBox.endX} cy={routeBox.endY} r="2.2" fill="none" stroke={accent} strokeWidth="1" vectorEffect="non-scaling-stroke" />
-            <circle cx={routeBox.endX} cy={routeBox.endY} r="0.7" fill={accent} vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="3" fill={accent} vectorEffect="non-scaling-stroke" />
           </svg>
         </div>
 
-        {/* Course caption */}
-        <div style={{ marginTop: "0.2rem" }}>
+        {/* Finisher — single elegant line */}
+        <div style={{ textAlign: "center", marginTop: "auto" }}>
+          <div
+            style={{
+              fontFamily: serif,
+              fontWeight: 500,
+              fontSize: "clamp(1.1rem, 7cqw, 2rem)",
+              letterSpacing: "0.02em",
+              lineHeight: 1,
+              color: accent,
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {displayTime}
+          </div>
+          <div
+            style={{
+              fontFamily: serif,
+              fontWeight: 500,
+              fontSize: "clamp(0.7rem, 3.4cqw, 1rem)",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: ink,
+              marginTop: "0.7rem",
+            }}
+          >
+            {displayName}
+          </div>
           <div
             style={{
               fontFamily: sans,
               fontSize: "0.5rem",
               letterSpacing: "0.36em",
               textTransform: "uppercase",
-              fontWeight: 700,
-              color: accent,
+              color: inkFaint,
+              marginTop: "0.5rem",
+              fontWeight: 500,
             }}
           >
-            The {cityName.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase())} Course
-          </div>
-          <div
-            style={{
-              fontFamily: serif,
-              fontStyle: "italic",
-              fontSize: "0.82rem",
-              letterSpacing: "0.01em",
-              color: ink,
-              marginTop: "0.3rem",
-            }}
-          >
-            {courseLine}
+            {displayDate}{countryLine ? ` · ${countryLine}` : ""}
           </div>
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.5rem 0 0.45rem" }} />
-
-        {/* Finisher block — two columns */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1px 1.4fr", gap: "1rem", alignItems: "start" }}>
-          <div>
-            <div style={{ fontFamily: sans, fontSize: "0.46rem", letterSpacing: "0.34em", textTransform: "uppercase", fontWeight: 700, color: accent, marginBottom: "0.4rem" }}>
-              Official Time
-            </div>
-            <div
-              style={{
-                fontFamily: serif,
-                fontWeight: 500,
-                fontSize: "clamp(0.95rem, 5.6cqw, 1.55rem)",
-                letterSpacing: "0.01em",
-                lineHeight: 1,
-                color: accent,
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {displayTime}
-            </div>
-          </div>
-          <div style={{ background: hairline, width: 1, height: "100%" }} />
-          <div>
-            <div style={{ fontFamily: sans, fontSize: "0.46rem", letterSpacing: "0.34em", textTransform: "uppercase", fontWeight: 700, color: inkSoft, marginBottom: "0.4rem" }}>
-              Finisher
-            </div>
-            <div
-              style={{
-                fontFamily: serif,
-                fontWeight: 600,
-                fontSize: "clamp(0.68rem, 3cqw, 0.95rem)",
-                letterSpacing: "0.04em",
-                lineHeight: 1.05,
-                textTransform: "uppercase",
-                color: ink,
-              }}
-            >
-              {displayName}
-            </div>
-            <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: "0.75rem", color: inkSoft, marginTop: "0.25rem" }}>
-              {distanceLabel}
-            </div>
-          </div>
-        </div>
-
-        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.55rem 0 0.35rem" }} />
-
-        {/* Footer triptych */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1px 1fr 1px 1fr",
-            alignItems: "center",
-            fontFamily: sans,
-            fontSize: "0.46rem",
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            color: ink,
-            fontWeight: 500,
-          }}
-        >
-          <FooterCell label="Date" value={displayDate || "—"} align="left" inkSoft={inkSoft} />
-          <div style={{ background: hairline, width: 1, height: "1.8rem", justifySelf: "center" }} />
-          <FooterCell label="Location" value={countryLine || cityName} align="center" inkSoft={inkSoft} />
-          <div style={{ background: hairline, width: 1, height: "1.8rem", justifySelf: "center" }} />
-          <FooterCell label="Edition" value={`Nº ${editionNo} / 500`} align="right" inkSoft={inkSoft} />
-        </div>
       </div>
     </div>
   );
