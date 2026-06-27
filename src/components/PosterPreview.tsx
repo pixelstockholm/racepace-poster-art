@@ -309,13 +309,11 @@ export function PosterPreview({ config, className }: Props) {
           </div>
 
           <svg
-            viewBox="0 0 100 100"
+            viewBox={routeBox.vb}
             preserveAspectRatio="xMidYMid meet"
             style={{ width: "100%", height: "100%", display: "block" }}
             aria-hidden
           >
-            {/* Faint cartographic backdrop */}
-            <rect x="0" y="0" width="100" height="100" fill="transparent" filter={`url(#${mapTextureId})`} opacity="0.55" />
             <path
               d={config.routePath}
               fill="none"
@@ -325,19 +323,8 @@ export function PosterPreview({ config, className }: Props) {
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
-
-            {(() => {
-              const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
-              if (!m || m.length < 4) return null;
-              const ex = parseFloat(m[m.length - 2]);
-              const ey = parseFloat(m[m.length - 1]);
-              return (
-                <g>
-                  <circle cx={ex} cy={ey} r="1.6" fill="none" stroke={accent} strokeWidth="0.8" vectorEffect="non-scaling-stroke" />
-                  <circle cx={ex} cy={ey} r="0.5" fill={accent} vectorEffect="non-scaling-stroke" />
-                </g>
-              );
-            })()}
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="2.2" fill="none" stroke={accent} strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="0.7" fill={accent} vectorEffect="non-scaling-stroke" />
           </svg>
         </div>
 
