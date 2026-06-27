@@ -56,18 +56,18 @@ interface Props {
   className?: string;
 }
 
-// Per-city neighborhood lists shown on the left side as small editorial labels.
+// Per-city neighborhood lists — curated, real, not filler.
 const NEIGHBORHOODS: Record<string, string[]> = {
-  berlin:     ["Tiergarten", "Charlottenburg", "Mitte", "Kreuzberg", "Prenzlauer Berg"],
-  nyc:        ["Staten Island", "Brooklyn", "Queens", "Bronx", "Manhattan"],
-  london:     ["Westminster", "The Mall", "Tower Bridge", "Canary Wharf", "Greenwich"],
-  boston:     ["Hopkinton", "Ashland", "Heartbreak Hill", "Brookline", "Copley Square"],
-  chicago:    ["Lincoln Park", "River North", "The Loop", "Pilsen", "Chinatown"],
+  berlin:     ["Tiergarten", "Mitte", "Kreuzberg", "Charlottenburg", "Brandenburg Gate"],
+  nyc:        ["Staten Island", "Brooklyn", "Queens", "Bronx", "Manhattan", "Central Park"],
+  london:     ["Greenwich", "Tower Bridge", "Canary Wharf", "Westminster", "The Mall"],
+  boston:     ["Hopkinton", "Ashland", "Heartbreak Hill", "Brookline", "Boylston Street"],
+  chicago:    ["Grant Park", "River North", "The Loop", "Lincoln Park", "Chinatown"],
   tokyo:      ["Shinjuku", "Asakusa", "Ginza", "Tokyo Bay", "Nihonbashi"],
   paris:      ["Bois de Vincennes", "Bastille", "Seine", "Eiffel", "Champs-Élysées"],
   stockholm:  ["Södermalm", "Djurgården", "Kungsholmen", "Östermalm", "Gamla Stan"],
   valencia:   ["Ciutat Vella", "Russafa", "Cabanyal", "Turia", "Ciudad de las Artes"],
-  amsterdam:  ["Olympisch", "Vondelpark", "Amstel", "Centrum", "Oud-Zuid"],
+  amsterdam:  ["Olympisch Stadion", "Vondelpark", "Amstel", "Centrum", "Oud-Zuid"],
   copenhagen: ["Nørrebro", "Frederiksberg", "Christianshavn", "Islands Brygge", "Vesterbro"],
   vienna:     ["Innere Stadt", "Ringstraße", "Prater", "Leopoldstadt", "Wieden"],
   sydney:     ["North Sydney", "The Rocks", "CBD", "Domain", "Opera House"],
@@ -135,7 +135,7 @@ export function PosterPreview({ config, className }: Props) {
       if (y < minY) minY = y; if (y > maxY) maxY = y;
     }
     const w = maxX - minX, h = maxY - minY;
-    const pad = Math.max(w, h) * 0.08;
+    const pad = Math.max(w, h) * 0.03;
     return {
       vb: `${minX - pad} ${minY - pad} ${w + pad * 2} ${h + pad * 2}`,
       startX: nums[0],
@@ -264,11 +264,11 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             position: "relative",
             flex: "1 1 auto",
-            margin: "1rem 0 0.6rem",
-            minHeight: "55%",
+            margin: "0.7rem -1.5% 0.4rem",
+            minHeight: "62%",
             display: "grid",
-            gridTemplateColumns: "minmax(0, 24%) 1fr",
-            gap: "3%",
+            gridTemplateColumns: "minmax(0, 19%) 1fr",
+            gap: "2%",
             alignItems: "stretch",
           }}
         >
@@ -279,14 +279,15 @@ export function PosterPreview({ config, className }: Props) {
               flexDirection: "column",
               justifyContent: "space-between",
               fontFamily: sans,
-              fontSize: "0.46rem",
-              letterSpacing: "0.22em",
+              fontSize: "0.44rem",
+              letterSpacing: "0.2em",
               textTransform: "uppercase",
               color: inkSoft,
               fontWeight: 500,
+              paddingLeft: "1.5%",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {neighborhoods.map((n) => (
                 <span key={n}>{n}</span>
               ))}
@@ -310,13 +311,13 @@ export function PosterPreview({ config, className }: Props) {
               d={config.routePath}
               fill="none"
               stroke={accent}
-              strokeWidth="1.6"
+              strokeWidth="1.7"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
-            <circle cx={routeBox.startX} cy={routeBox.startY} r="2.2" fill="none" stroke={accent} strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
-            <circle cx={routeBox.endX} cy={routeBox.endY} r="2.6" fill={accent} vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} vectorEffect="non-scaling-stroke" />
           </svg>
         </div>
 
@@ -328,11 +329,11 @@ export function PosterPreview({ config, className }: Props) {
           <div
             style={{
               fontFamily: serif,
-              fontWeight: 500,
-              fontSize: "clamp(1.2rem, 7.5cqw, 2.2rem)",
+              fontWeight: 600,
+              fontSize: "clamp(1.3rem, 8cqw, 2.4rem)",
               letterSpacing: "0.04em",
               lineHeight: 1,
-              color: accent,
+              color: `color-mix(in oklab, ${accent} 78%, #16130E)`,
               fontVariantNumeric: "tabular-nums",
             }}
           >
