@@ -189,7 +189,7 @@ export function PosterPreview({ config, className }: Props) {
           position: "relative",
           zIndex: 2,
           height: "100%",
-          padding: "5% 6% 4.5%",
+          padding: "4% 6% 4%",
           display: "flex",
           flexDirection: "column",
         }}
