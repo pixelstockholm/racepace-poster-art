@@ -18,7 +18,6 @@ export interface PosterConfig {
   bib?: string;
 }
 
-// Theme = paper finish, used as fallback / for custom races.
 interface ThemeTokens {
   paper: string;
   ink: string;
@@ -42,7 +41,7 @@ function formatDate(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso.toUpperCase();
   return d
-    .toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+    .toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
     .toUpperCase();
 }
 
@@ -57,25 +56,28 @@ interface Props {
   className?: string;
 }
 
-// Split race name across two lines: drop a sponsor first-word like "TCS", "BMW".
-function splitRaceName(race: string): string[] {
-  const trimmed = race.trim();
-  if (!trimmed) return ["YOUR RACE"];
-  const cleaned = trimmed
-    .replace(/^(TCS|BMW|Bank of America|Schneider Electric|Mainova|Generali|Nike|Sanlam|Spar|Orlen|Volkswagen|Acea|Zurich|EDP|N Kolay|Irish Life)\s+/i, "")
-    .trim();
-  const parts = cleaned.split(/\s+/);
-  if (parts.length === 1) return [parts[0].toUpperCase()];
-  // Put "Marathon" alone on line 2 if it's the last word.
-  if (parts.length >= 2 && /^marathon$/i.test(parts[parts.length - 1])) {
-    return [parts.slice(0, -1).join(" ").toUpperCase(), parts[parts.length - 1].toUpperCase()];
-  }
-  // Otherwise split roughly in half.
-  const mid = Math.ceil(parts.length / 2);
-  return [parts.slice(0, mid).join(" ").toUpperCase(), parts.slice(mid).join(" ").toUpperCase()];
-}
+// Per-city neighborhood lists shown in the map margin (vintage cartographic key).
+const NEIGHBORHOODS: Record<string, string[]> = {
+  berlin:     ["Mitte", "Kreuzberg", "Neukölln", "Charlottenburg", "Tiergarten"],
+  nyc:        ["Staten Island", "Brooklyn", "Queens", "Bronx", "Manhattan"],
+  london:     ["Greenwich", "Tower", "Isle of Dogs", "Embankment", "The Mall"],
+  boston:     ["Hopkinton", "Framingham", "Wellesley", "Newton", "Boylston"],
+  chicago:    ["Loop", "Lincoln Park", "Pilsen", "Chinatown", "Bronzeville"],
+  tokyo:      ["Shinjuku", "Imperial Palace", "Shinagawa", "Asakusa", "Odaiba"],
+  paris:      ["Concorde", "Rivoli", "Bastille", "Vincennes", "Boulogne"],
+  stockholm:  ["Södermalm", "Djurgården", "Kungsholmen", "Östermalm", "Gamla Stan"],
+  valencia:   ["Ciutat Vella", "Russafa", "Cabanyal", "Turia", "Ciudad de las Artes"],
+  amsterdam:  ["Olympisch", "Vondelpark", "Amstel", "Centrum", "Oud-Zuid"],
+  copenhagen: ["Nørrebro", "Frederiksberg", "Christianshavn", "Islands Brygge", "Vesterbro"],
+  vienna:     ["Innere Stadt", "Ringstraße", "Prater", "Leopoldstadt", "Wieden"],
+  sydney:     ["North Sydney", "The Rocks", "CBD", "Domain", "Opera House"],
+  oslo:       ["Bygdøy", "Frogner", "Akershus", "Grünerløkka", "Sentrum"],
+  helsinki:   ["Töölö", "Kallio", "Kamppi", "Kruununhaka", "Olympiastadion"],
+  barcelona:  ["Diagonal", "Eixample", "Gòtic", "Gràcia", "Sagrada Família"],
+  rome:       ["Fori Imperiali", "Trastevere", "Vaticano", "Aventino", "Colosseo"],
+  milan:      ["Duomo", "Sforzesco", "Brera", "Navigli", "San Siro"],
+};
 
-// Detect light vs dark paper for adjustments.
 function isLight(hex: string): boolean {
   const m = hex.replace("#", "");
   if (m.length !== 6) return true;
@@ -86,64 +88,58 @@ function isLight(hex: string): boolean {
 }
 
 export function PosterPreview({ config, className }: Props) {
-  // City identity wins when known; otherwise use selected theme.
   const identity: RaceIdentity | null = getRaceIdentity(config.raceId);
   const themeFallback = THEMES[config.theme] ?? THEMES.cream;
   const palette = identity
-    ? {
-        paper: identity.paper,
-        ink: identity.ink,
-        accent: identity.accent,
-        support: identity.support,
-        mark: identity.mark,
-      }
+    ? { paper: identity.paper, ink: identity.ink, accent: identity.accent, support: identity.support, mark: identity.mark }
     : themeFallback;
 
-  const raceLines = splitRaceName(config.race);
   const displayName = (config.name?.trim() || "Your Name").toUpperCase();
   const displayTime = config.time?.trim() || "00:00:00";
   const displayDate = formatDate(config.date);
   const year = yearOf(config.date);
   const distanceKm = config.distanceKm ?? 42.195;
-  const distanceLabel = `${distanceKm.toFixed(3).replace(/\.?0+$/, "")} KM`;
-  const locationLine = (config.location || "").toUpperCase();
-  const tagline = identity?.tagline ?? "";
+  const distanceLabel = `${distanceKm.toFixed(3).replace(/\.?0+$/, "")} kilometers`;
+  const tagline = identity?.tagline ?? "A point-to-point marathon course";
+
   const cityName = (() => {
     if (config.location) {
       const c = config.location.split(",")[0]?.trim();
       if (c) return c.toUpperCase();
     }
-    return (raceLines[0] || "CITY").toUpperCase();
+    return (config.race || "CITY").split(/\s+/)[0]?.toUpperCase() || "CITY";
   })();
   const countryLine = config.location && config.location.includes(",")
     ? config.location.split(",").slice(1).join(",").trim().toUpperCase()
-    : "";
-  const editionNo = (() => {
+    : (config.location || "").toUpperCase();
+
+  const editionNo = useMemo(() => {
     const seed = `${config.raceId ?? config.race}-${year}`;
     let h = 0;
     for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
     return String((h % 90) + 10).padStart(2, "0");
-  })();
+  }, [config.raceId, config.race, year]);
 
+  const neighborhoods = config.raceId ? NEIGHBORHOODS[config.raceId] : undefined;
 
-  // Warm off-white archival paper, regardless of identity.
+  // Course waypoints derived from tagline (used as the italic course line)
+  const courseLine = useMemo(() => {
+    if (!neighborhoods || neighborhoods.length < 3) return tagline;
+    const pts = [neighborhoods[0], neighborhoods[1], neighborhoods[2], neighborhoods[neighborhoods.length - 1]];
+    return pts.join(" → ");
+  }, [neighborhoods, tagline]);
+
+  // Archival warm paper, ink, accent
   const paper = "#F1EBDD";
-  const ink = "#1A1714";
-  const inkSoft = "rgba(26,23,20,0.6)";
-  const inkFaint = "rgba(26,23,20,0.38)";
-  const hairline = "rgba(26,23,20,0.28)";
+  const ink = "#16130E";
+  const inkSoft = "rgba(22,19,14,0.62)";
+  const inkFaint = "rgba(22,19,14,0.42)";
+  const hairline = "rgba(22,19,14,0.32)";
+  const mapInk = isLight(palette.paper) ? palette.ink : "#0E1B2A";
   const accent = palette.accent;
 
   const grainId = useMemo(() => `grain-${Math.random().toString(36).slice(2, 9)}`, []);
-
-  const dayMonth = useMemo(() => {
-    if (!config.date) return "";
-    const d = new Date(config.date);
-    if (Number.isNaN(d.getTime())) return config.date;
-    return d
-      .toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
-      .toUpperCase();
-  }, [config.date]);
+  const mapTextureId = useMemo(() => `map-${Math.random().toString(36).slice(2, 9)}`, []);
 
   const serif = '"Fraunces", "Canela", "Tiempos", "Playfair Display", Georgia, "Times New Roman", serif';
   const sans  = '"Inter", system-ui, sans-serif';
@@ -152,130 +148,158 @@ export function PosterPreview({ config, className }: Props) {
     <div
       className={className}
       style={{
-        aspectRatio: "2 / 3",
+        aspectRatio: "3 / 4",
         backgroundColor: paper,
         color: ink,
         position: "relative",
         overflow: "hidden",
         fontFamily: serif,
-        boxShadow:
-          "0 1px 1px rgba(0,0,0,0.06), 0 30px 70px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(0,0,0,0.05)",
+        boxShadow: "0 1px 1px rgba(0,0,0,0.06), 0 30px 70px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(0,0,0,0.05)",
       }}
     >
-      {/* Subtle paper grain */}
+      {/* Paper grain */}
       <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
-        <filter id={grainId}>
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
+        <defs>
+          <filter id={grainId}>
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <filter id={mapTextureId}>
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0.55  0 0 0 0 0.46  0 0 0 0 0.32  0 0 0 0.22 0" />
+          </filter>
+        </defs>
       </svg>
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          filter: `url(#${grainId})`,
-          opacity: 0.14,
-          mixBlendMode: "multiply",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse at 0% 0%, rgba(120,90,40,0.07), transparent 45%), radial-gradient(ellipse at 100% 100%, rgba(120,90,40,0.07), transparent 45%)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
+      <div aria-hidden style={{ position: "absolute", inset: 0, filter: `url(#${grainId})`, opacity: 0.16, mixBlendMode: "multiply", pointerEvents: "none", zIndex: 0 }} />
 
       <div
         style={{
           position: "relative",
           zIndex: 2,
           height: "100%",
-          padding: "7% 8% 6%",
+          padding: "5.5% 6% 4.5%",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        {/* Top edition mark */}
+        {/* Top metadata strip */}
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
             alignItems: "baseline",
             fontFamily: sans,
             fontSize: "0.5rem",
             letterSpacing: "0.32em",
             textTransform: "uppercase",
-            fontWeight: 500,
+            fontWeight: 600,
             color: inkSoft,
           }}
         >
-          <span>Edition Nº {editionNo}</span>
-          <span style={{ color: accent }}>·</span>
-          <span>Racepace</span>
+          <span style={{ textAlign: "left" }}>Racepace Edition</span>
+          <span style={{ textAlign: "center" }}>Official Finisher Poster</span>
+          <span style={{ textAlign: "right" }}>Edition Nº {editionNo}</span>
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.55rem 0 1.4rem" }} />
+        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.6rem" }} />
 
-        {/* CITY / MARATHON / YEAR — compact wordmark above the route */}
-        <div style={{ textAlign: "center" }}>
-          <h1
-            style={{
-              fontFamily: serif,
-              fontWeight: 500,
-              fontSize: "clamp(1.6rem, 5.4vw, 2.8rem)",
-              lineHeight: 0.95,
-              letterSpacing: "-0.02em",
-              margin: 0,
-              textTransform: "uppercase",
-            }}
-          >
-            {cityName}
-          </h1>
-          <div
-            style={{
-              fontFamily: serif,
-              fontStyle: "italic",
-              fontWeight: 400,
-              fontSize: "clamp(0.7rem, 1.8vw, 1rem)",
-              letterSpacing: "0.02em",
-              marginTop: "0.15rem",
-              color: inkSoft,
-            }}
-          >
-            Marathon · <span style={{ color: accent, fontStyle: "normal", letterSpacing: "0.1em" }}>{year || "—"}</span>
-          </div>
-        </div>
-
-        {/* ROUTE — the hero, ~45% of poster height */}
-        <div
+        {/* MASTHEAD — full-width city name */}
+        <h1
           style={{
-            flex: "1 1 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "1.6rem 0 1rem",
-            minHeight: "42%",
+            fontFamily: serif,
+            fontWeight: 800,
+            fontSize: "clamp(2.6rem, 11.5vw, 6rem)",
+            lineHeight: 0.92,
+            letterSpacing: "-0.02em",
+            margin: "0.55rem 0 0",
+            textAlign: "center",
+            textTransform: "uppercase",
           }}
         >
+          {cityName}
+        </h1>
+
+        <div
+          style={{
+            fontFamily: serif,
+            fontWeight: 400,
+            fontSize: "clamp(0.95rem, 3.4vw, 1.85rem)",
+            letterSpacing: "0.42em",
+            textAlign: "center",
+            textTransform: "uppercase",
+            marginTop: "0.45rem",
+            color: ink,
+          }}
+        >
+          Marathon
+        </div>
+
+        <div
+          style={{
+            fontFamily: serif,
+            fontWeight: 400,
+            fontStyle: "normal",
+            fontSize: "0.85rem",
+            letterSpacing: "0.5em",
+            color: accent,
+            marginTop: "0.55rem",
+            paddingLeft: "0.2rem",
+          }}
+        >
+          {year || "—"}
+        </div>
+
+        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.5rem" }} />
+
+        {/* MAP / ROUTE */}
+        <div
+          style={{
+            position: "relative",
+            flex: "1 1 auto",
+            margin: "1rem 0 0.9rem",
+            minHeight: "40%",
+          }}
+        >
+          {/* Compass + neighborhoods */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "22%",
+              fontFamily: sans,
+              fontSize: "0.46rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: inkSoft,
+              fontWeight: 500,
+              lineHeight: 1.8,
+            }}
+          >
+            <svg viewBox="0 0 40 40" width="22" height="22" style={{ display: "block", marginBottom: "0.4rem" }}>
+              <circle cx="20" cy="20" r="13" fill="none" stroke={hairline} strokeWidth="0.8" />
+              <text x="20" y="11" textAnchor="middle" fontFamily={serif} fontStyle="italic" fontSize="7" fill={ink}>N</text>
+              <line x1="20" y1="14" x2="20" y2="26" stroke={ink} strokeWidth="0.8" />
+              <polygon points="20,13 18.2,16 21.8,16" fill={ink} />
+            </svg>
+            {neighborhoods?.slice(0, 5).map((n) => (
+              <div key={n}>{n}</div>
+            ))}
+          </div>
+
           <svg
             viewBox="0 0 100 100"
             preserveAspectRatio="xMidYMid meet"
             style={{ width: "100%", height: "100%", display: "block" }}
             aria-hidden
           >
+            {/* Faint cartographic backdrop */}
+            <rect x="0" y="0" width="100" height="100" fill="transparent" filter={`url(#${mapTextureId})`} opacity="0.55" />
             <path
               d={config.routePath}
               fill="none"
-              stroke={ink}
-              strokeWidth="3"
+              stroke={mapInk}
+              strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
@@ -284,115 +308,124 @@ export function PosterPreview({ config, className }: Props) {
             {(() => {
               const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
               if (!m || m.length < 4) return null;
-              const sx = parseFloat(m[0]);
-              const sy = parseFloat(m[1]);
               const ex = parseFloat(m[m.length - 2]);
               const ey = parseFloat(m[m.length - 1]);
               return (
                 <g>
-                  <circle cx={sx} cy={sy} r="1.6" fill={accent} vectorEffect="non-scaling-stroke" />
-                  <circle cx={ex} cy={ey} r="1.6" fill={accent} vectorEffect="non-scaling-stroke" />
+                  <circle cx={ex} cy={ey} r="1.6" fill="none" stroke={accent} strokeWidth="0.8" vectorEffect="non-scaling-stroke" />
+                  <circle cx={ex} cy={ey} r="0.5" fill={accent} vectorEffect="non-scaling-stroke" />
                 </g>
               );
             })()}
           </svg>
         </div>
 
-        {/* Tagline — course descriptor */}
-        {tagline && (
-          <div
-            style={{
-              textAlign: "center",
-              fontFamily: serif,
-              fontStyle: "italic",
-              fontSize: "0.72rem",
-              letterSpacing: "0.02em",
-              color: inkSoft,
-              marginBottom: "1.2rem",
-            }}
-          >
-            {tagline}
-          </div>
-        )}
-
-        <div style={{ borderTop: `1px solid ${hairline}`, marginBottom: "1rem" }} />
-
-        {/* Finisher block — minimal hierarchy */}
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              fontFamily: sans,
-              fontSize: "0.46rem",
-              letterSpacing: "0.4em",
-              textTransform: "uppercase",
-              fontWeight: 600,
-              color: inkFaint,
-              marginBottom: "0.35rem",
-            }}
-          >
-            Official Time
-          </div>
-          <div
-            style={{
-              fontFamily: serif,
-              fontWeight: 500,
-              fontSize: "clamp(1.6rem, 5vw, 2.4rem)",
-              letterSpacing: "-0.01em",
-              lineHeight: 1,
-              fontVariantNumeric: "tabular-nums",
-              color: ink,
-            }}
-          >
-            {displayTime}
-          </div>
-          <div
-            style={{
-              fontFamily: serif,
-              fontStyle: "italic",
-              fontSize: "0.95rem",
-              letterSpacing: "0.01em",
-              marginTop: "0.7rem",
-              color: ink,
-            }}
-          >
-            {displayName
-              .toLowerCase()
-              .replace(/(^|\s)\S/g, (c) => c.toUpperCase())}
-          </div>
+        {/* Course caption */}
+        <div style={{ marginTop: "0.2rem" }}>
           <div
             style={{
               fontFamily: sans,
               fontSize: "0.5rem",
-              letterSpacing: "0.28em",
+              letterSpacing: "0.36em",
               textTransform: "uppercase",
-              fontWeight: 500,
-              color: inkSoft,
-              marginTop: "0.45rem",
+              fontWeight: 700,
+              color: accent,
             }}
           >
-            {distanceLabel} <span style={{ color: accent }}>·</span> {displayDate || dayMonth || "—"}
+            The {cityName.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase())} Course
+          </div>
+          <div
+            style={{
+              fontFamily: serif,
+              fontStyle: "italic",
+              fontSize: "0.82rem",
+              letterSpacing: "0.01em",
+              color: ink,
+              marginTop: "0.3rem",
+            }}
+          >
+            {courseLine}
           </div>
         </div>
 
-        <div style={{ flex: "0 0 auto", marginTop: "auto", paddingTop: "1rem" }}>
-          <div style={{ borderTop: `1px solid ${hairline}`, marginBottom: "0.5rem" }} />
-          <div
-            style={{
-              textAlign: "center",
-              fontFamily: sans,
-              fontSize: "0.44rem",
-              letterSpacing: "0.4em",
-              textTransform: "uppercase",
-              fontWeight: 500,
-              color: inkFaint,
-            }}
-          >
-            Edition Nº {editionNo} {countryLine ? `· ${countryLine}` : ""}
+        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.9rem 0 0.8rem" }} />
+
+        {/* Finisher block — two columns */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1px 1.4fr", gap: "1rem", alignItems: "start" }}>
+          <div>
+            <div style={{ fontFamily: sans, fontSize: "0.46rem", letterSpacing: "0.34em", textTransform: "uppercase", fontWeight: 700, color: accent, marginBottom: "0.4rem" }}>
+              Official Time
+            </div>
+            <div
+              style={{
+                fontFamily: serif,
+                fontWeight: 500,
+                fontSize: "clamp(1.6rem, 5.8vw, 2.6rem)",
+                letterSpacing: "0.01em",
+                lineHeight: 1,
+                color: accent,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {displayTime}
+            </div>
           </div>
+          <div style={{ background: hairline, width: 1, height: "100%" }} />
+          <div>
+            <div style={{ fontFamily: sans, fontSize: "0.46rem", letterSpacing: "0.34em", textTransform: "uppercase", fontWeight: 700, color: inkSoft, marginBottom: "0.4rem" }}>
+              Finisher
+            </div>
+            <div
+              style={{
+                fontFamily: serif,
+                fontWeight: 600,
+                fontSize: "clamp(1.05rem, 3.2vw, 1.55rem)",
+                letterSpacing: "0.04em",
+                lineHeight: 1.05,
+                textTransform: "uppercase",
+                color: ink,
+              }}
+            >
+              {displayName}
+            </div>
+            <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: "0.75rem", color: inkSoft, marginTop: "0.25rem" }}>
+              {distanceLabel}
+            </div>
+          </div>
+        </div>
+
+        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.9rem 0 0.5rem" }} />
+
+        {/* Footer triptych */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1px 1fr 1px 1fr",
+            alignItems: "center",
+            fontFamily: sans,
+            fontSize: "0.46rem",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            color: ink,
+            fontWeight: 500,
+          }}
+        >
+          <FooterCell label="Date" value={displayDate || "—"} align="left" inkSoft={inkSoft} />
+          <div style={{ background: hairline, width: 1, height: "1.8rem", justifySelf: "center" }} />
+          <FooterCell label="Location" value={countryLine || cityName} align="center" inkSoft={inkSoft} />
+          <div style={{ background: hairline, width: 1, height: "1.8rem", justifySelf: "center" }} />
+          <FooterCell label="Edition" value={`Nº ${editionNo} / 500`} align="right" inkSoft={inkSoft} />
         </div>
       </div>
     </div>
   );
 }
 
-
+function FooterCell({ label, value, align, inkSoft }: { label: string; value: string; align: "left" | "center" | "right"; inkSoft: string }) {
+  return (
+    <div style={{ textAlign: align }}>
+      <div style={{ color: inkSoft, marginBottom: "0.3rem" }}>{label}</div>
+      <div style={{ letterSpacing: "0.22em", fontWeight: 600 }}>{value}</div>
+    </div>
+  );
+}
