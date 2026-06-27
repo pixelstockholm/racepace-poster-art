@@ -168,6 +168,7 @@ export function PosterPreview({ config, className }: Props) {
     <div
       className={className}
       style={{
+        width: "100%",
         aspectRatio: "3 / 4",
         backgroundColor: paper,
         color: ink,
