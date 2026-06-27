@@ -229,7 +229,7 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             fontFamily: serif,
             fontWeight: 800,
-            fontSize: "clamp(2.6rem, 11.5vw, 6rem)",
+            fontSize: "clamp(1.6rem, 13cqw, 4.2rem)",
             lineHeight: 0.92,
             letterSpacing: "-0.02em",
             margin: "0.55rem 0 0",
@@ -244,7 +244,7 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             fontFamily: serif,
             fontWeight: 400,
-            fontSize: "clamp(0.95rem, 3.4vw, 1.85rem)",
+            fontSize: "clamp(0.7rem, 4cqw, 1.3rem)",
             letterSpacing: "0.42em",
             textAlign: "center",
             textTransform: "uppercase",
@@ -381,7 +381,7 @@ export function PosterPreview({ config, className }: Props) {
               style={{
                 fontFamily: serif,
                 fontWeight: 500,
-                fontSize: "clamp(1.6rem, 5.8vw, 2.6rem)",
+                fontSize: "clamp(1.1rem, 7cqw, 2rem)",
                 letterSpacing: "0.01em",
                 lineHeight: 1,
                 color: accent,
@@ -400,7 +400,7 @@ export function PosterPreview({ config, className }: Props) {
               style={{
                 fontFamily: serif,
                 fontWeight: 600,
-                fontSize: "clamp(1.05rem, 3.2vw, 1.55rem)",
+                fontSize: "clamp(0.78rem, 3.6cqw, 1.1rem)",
                 letterSpacing: "0.04em",
                 lineHeight: 1.05,
                 textTransform: "uppercase",
