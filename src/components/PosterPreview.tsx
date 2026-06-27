@@ -322,7 +322,7 @@ export function PosterPreview({ config, className }: Props) {
         </div>
 
         {/* Divider */}
-        <div style={{ height: 1, background: hairline, margin: "0.4rem 0 0.7rem" }} />
+        <div style={{ height: 1, background: hairline, margin: "0.3rem 0 0.5rem" }} />
 
         {/* Time + finisher */}
         <div style={{ textAlign: "center" }}>
