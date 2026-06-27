@@ -24,6 +24,8 @@ import {
 import { cn } from "@/lib/utils";
 
 import { RACES, findRaceById } from "@/lib/races";
+import { getRoutePath } from "@/lib/raceRoutes";
+
 import { fetchPosterProduct, useCartStore, type ShopifyVariant } from "@/lib/shopify";
 
 export const Route = createFileRoute("/create")({
