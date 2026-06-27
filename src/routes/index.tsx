@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroImage from "@/assets/hero-poster-room.jpg";
+import heroAsset from "@/assets/hero-exact.jpg.asset.json";
 import stockholmInterior from "@/assets/interior-stockholm.jpg";
 import berlinInterior from "@/assets/interior-berlin.jpg";
 import parisInterior from "@/assets/interior-paris.jpg";
@@ -39,49 +39,32 @@ const FEATURED = [
 function HomePage() {
   return (
     <main className="bg-paper text-ink">
-      {/* SECTION 1 — HERO (full-bleed photo, overlaid text) */}
+      {/* SECTION 1 — HERO (exact reference image, no overlay) */}
       <section className="relative bg-paper">
-        <div className="relative w-full h-[calc(100vh-4rem)] min-h-[640px] overflow-hidden">
+        <div className="relative w-full" style={{ aspectRatio: "1536 / 929" }}>
           <img
-            src={heroImage}
-            alt="A framed marathon poster hanging in a sunlit Scandinavian living room."
-            width={1920}
-            height={1280}
+            src={heroAsset.url}
+            alt="Racepace — Marathon posters designed to belong in your home."
+            width={1536}
+            height={929}
             className="absolute inset-0 w-full h-full object-cover"
           />
-          {/* Text overlay sits on the empty wall on the left */}
-          <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-12 lg:px-20 xl:px-28 max-w-[58%]">
-            <h1 className="font-serif text-4xl md:text-6xl lg:text-[4.5rem] xl:text-[5.25rem] leading-[1.02] tracking-tight text-ink max-w-2xl">
-              Marathon posters designed to belong in <em className="italic font-serif">your</em> home.
-            </h1>
-            <p className="mt-8 max-w-md text-base md:text-lg text-ink/70 leading-relaxed">
-              Personalized editions inspired by the cities that shaped your race.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link
-                to="/create"
-                className="inline-flex items-center justify-center h-12 px-9 bg-ink text-paper text-[0.7rem] tracking-[0.26em] uppercase hover:opacity-90 transition-opacity"
-              >
-                Create Yours
-              </Link>
-              <Link
-                to="/shop"
-                className="inline-flex items-center justify-center h-12 px-9 border border-ink text-ink text-[0.7rem] tracking-[0.26em] uppercase hover:bg-ink hover:text-paper transition-colors"
-              >
-                Browse Posters
-              </Link>
-            </div>
-          </div>
-          {/* Bottom-left tagline strip */}
-          <div className="absolute left-0 right-0 bottom-0 z-10 px-6 md:px-12 lg:px-20 xl:px-28 pb-8 lg:pb-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.62rem] tracking-[0.28em] uppercase text-ink/60">
-            <span>Signature Edition</span>
-            <span className="text-ink/30">|</span>
-            <span>Editorial Design</span>
-            <span className="text-ink/30">|</span>
-            <span>Timeless Quality</span>
-          </div>
+          {/* Invisible click targets aligned to the buttons baked into the image */}
+          <Link
+            to="/create"
+            aria-label="Create Yours"
+            className="absolute"
+            style={{ left: "4.9%", top: "60.8%", width: "9.8%", height: "6.5%" }}
+          />
+          <Link
+            to="/shop"
+            aria-label="Browse Posters"
+            className="absolute"
+            style={{ left: "18.2%", top: "60.8%", width: "11%", height: "6.5%" }}
+          />
         </div>
       </section>
+
 
       {/* SECTION 2 — FEATURED POSTERS */}
       <section>
