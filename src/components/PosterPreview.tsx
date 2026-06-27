@@ -233,7 +233,7 @@ export function PosterPreview({ config, className }: Props) {
             fontSize: "clamp(1.4rem, 11cqw, 3.4rem)",
             lineHeight: 0.92,
             letterSpacing: "-0.02em",
-            margin: "0.55rem 0 0",
+            margin: "0.3rem 0 0",
             textAlign: "center",
             textTransform: "uppercase",
           }}
@@ -249,7 +249,7 @@ export function PosterPreview({ config, className }: Props) {
             letterSpacing: "0.42em",
             textAlign: "center",
             textTransform: "uppercase",
-            marginTop: "0.45rem",
+            marginTop: "0.25rem",
             color: ink,
           }}
         >
@@ -264,21 +264,21 @@ export function PosterPreview({ config, className }: Props) {
             fontSize: "0.85rem",
             letterSpacing: "0.5em",
             color: accent,
-            marginTop: "0.55rem",
+            marginTop: "0.35rem",
             paddingLeft: "0.2rem",
           }}
         >
           {year || "—"}
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.5rem" }} />
+        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.35rem" }} />
 
         {/* MAP / ROUTE */}
         <div
           style={{
             position: "relative",
             flex: "1 1 auto",
-            margin: "1rem 0 0.9rem",
+            margin: "0.6rem 0 0.5rem",
             minHeight: "34%",
           }}
         >
@@ -357,7 +357,7 @@ export function PosterPreview({ config, className }: Props) {
           </div>
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.9rem 0 0.8rem" }} />
+        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.5rem 0 0.45rem" }} />
 
         {/* Finisher block — two columns */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1px 1.4fr", gap: "1rem", alignItems: "start" }}>
@@ -403,7 +403,7 @@ export function PosterPreview({ config, className }: Props) {
           </div>
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.9rem 0 0.5rem" }} />
+        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.55rem 0 0.35rem" }} />
 
         {/* Footer triptych */}
         <div
