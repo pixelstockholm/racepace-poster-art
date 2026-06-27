@@ -224,16 +224,15 @@ export function PosterPreview({ config, className }: Props) {
 
         <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.55rem 0 1.4rem" }} />
 
-        {/* CITY / MARATHON / YEAR — the hero wordmark */}
+        {/* CITY / MARATHON / YEAR — compact wordmark above the route */}
         <div style={{ textAlign: "center" }}>
           <h1
             style={{
               fontFamily: serif,
               fontWeight: 500,
-              fontStyle: "normal",
-              fontSize: "clamp(2.6rem, 10vw, 5.4rem)",
-              lineHeight: 0.92,
-              letterSpacing: "-0.025em",
+              fontSize: "clamp(1.6rem, 5.4vw, 2.8rem)",
+              lineHeight: 0.95,
+              letterSpacing: "-0.02em",
               margin: 0,
               textTransform: "uppercase",
             }}
@@ -245,55 +244,43 @@ export function PosterPreview({ config, className }: Props) {
               fontFamily: serif,
               fontStyle: "italic",
               fontWeight: 400,
-              fontSize: "clamp(0.9rem, 2.6vw, 1.4rem)",
+              fontSize: "clamp(0.7rem, 1.8vw, 1rem)",
               letterSpacing: "0.02em",
-              marginTop: "0.25rem",
-              color: ink,
+              marginTop: "0.15rem",
+              color: inkSoft,
             }}
           >
-            Marathon
-          </div>
-          <div
-            style={{
-              fontFamily: sans,
-              fontSize: "0.55rem",
-              letterSpacing: "0.5em",
-              textTransform: "uppercase",
-              fontWeight: 500,
-              marginTop: "0.55rem",
-              color: accent,
-            }}
-          >
-            {year || "—"}
+            Marathon · <span style={{ color: accent, fontStyle: "normal", letterSpacing: "0.1em" }}>{year || "—"}</span>
           </div>
         </div>
 
-        {/* ROUTE — hero illustration, ~40% of poster */}
+        {/* ROUTE — the hero, ~45% of poster height */}
         <div
           style={{
             flex: "1 1 auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            margin: "1.2rem 0 0.6rem",
-            minHeight: 0,
+            margin: "1.6rem 0 1rem",
+            minHeight: "42%",
           }}
         >
           <svg
             viewBox="0 0 100 100"
             preserveAspectRatio="xMidYMid meet"
-            style={{ width: "92%", height: "100%", display: "block" }}
+            style={{ width: "100%", height: "100%", display: "block" }}
             aria-hidden
           >
             <path
               d={config.routePath}
               fill="none"
               stroke={ink}
-              strokeWidth="2.2"
+              strokeWidth="3"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
+
             {(() => {
               const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
               if (!m || m.length < 4) return null;
