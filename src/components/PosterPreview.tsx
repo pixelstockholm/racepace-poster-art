@@ -115,7 +115,7 @@ export function PosterPreview({ config, className }: Props) {
   const year = yearOf(config.date);
   const distanceKm = config.distanceKm ?? 42.195;
   const distanceLabel = `${distanceKm.toFixed(3).replace(/\.?0+$/, "")} KM`;
-  const skylinePath = getSkylinePath(config.raceId);
+  
   const locationLine = (config.location || "").toUpperCase();
   const tagline = identity?.tagline ?? locationLine;
 
