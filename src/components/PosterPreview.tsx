@@ -236,7 +236,7 @@ export function PosterPreview({ config, className }: Props) {
             fontSize: "clamp(0.6rem, 3.4cqw, 1.05rem)",
             letterSpacing: "0.01em",
             textAlign: "center",
-            marginTop: "0.5rem",
+            marginTop: "0.35rem",
             color: ink,
           }}
         >
