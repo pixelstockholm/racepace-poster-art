@@ -199,7 +199,7 @@ export function PosterPreview({ config, className }: Props) {
           position: "relative",
           zIndex: 2,
           height: "100%",
-          padding: "5.5% 6% 4.5%",
+          padding: "4.5% 5.5% 3.5%",
           display: "flex",
           flexDirection: "column",
         }}
@@ -230,7 +230,7 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             fontFamily: serif,
             fontWeight: 800,
-            fontSize: "clamp(1.6rem, 13cqw, 4.2rem)",
+            fontSize: "clamp(1.4rem, 11cqw, 3.4rem)",
             lineHeight: 0.92,
             letterSpacing: "-0.02em",
             margin: "0.55rem 0 0",
@@ -245,7 +245,7 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             fontFamily: serif,
             fontWeight: 400,
-            fontSize: "clamp(0.7rem, 4cqw, 1.3rem)",
+            fontSize: "clamp(0.6rem, 3.4cqw, 1.05rem)",
             letterSpacing: "0.42em",
             textAlign: "center",
             textTransform: "uppercase",
@@ -279,7 +279,7 @@ export function PosterPreview({ config, className }: Props) {
             position: "relative",
             flex: "1 1 auto",
             margin: "1rem 0 0.9rem",
-            minHeight: "40%",
+            minHeight: "34%",
           }}
         >
           {/* Compass + neighborhoods */}
@@ -369,7 +369,7 @@ export function PosterPreview({ config, className }: Props) {
               style={{
                 fontFamily: serif,
                 fontWeight: 500,
-                fontSize: "clamp(1.1rem, 7cqw, 2rem)",
+                fontSize: "clamp(0.95rem, 5.6cqw, 1.55rem)",
                 letterSpacing: "0.01em",
                 lineHeight: 1,
                 color: accent,
@@ -388,7 +388,7 @@ export function PosterPreview({ config, className }: Props) {
               style={{
                 fontFamily: serif,
                 fontWeight: 600,
-                fontSize: "clamp(0.78rem, 3.6cqw, 1.1rem)",
+                fontSize: "clamp(0.68rem, 3cqw, 0.95rem)",
                 letterSpacing: "0.04em",
                 lineHeight: 1.05,
                 textTransform: "uppercase",
