@@ -56,11 +56,13 @@ export const RACE_ROUTES: Record<string, string> = {
     "M 24 50 L 30 46 L 36 48 L 40 52 L 46 50 L 52 48 L 58 50 L 64 52 L 70 56 L 76 58 L 82 60 L 86 64 L 84 70 L 78 72 L 72 70 L 68 64 L 70 58 L 76 56 L 80 52 L 78 46 L 72 44 L 68 48 L 64 52 L 58 56 L 50 58 L 42 56 L 36 58 L 30 62 L 24 60 L 18 56 L 16 50 L 20 46 L 26 44 L 30 48",
 
   // ─────────── STOCKHOLM ───────────
-  // Two-lap course over Stockholm's bridges: Stadion start → Strandvägen →
-  // Skeppsholmen → Söder Mälarstrand → Västerbron → north along Norr Mälar →
-  // back to Stadion. The figure traces both laps over Riddarfjärden.
+  // Two-lap course starting/finishing at Stockholms Stadion (NE).
+  // Out west across Västerbron, loop around Kungsholmen, back over the
+  // bridges through Gamla Stan and Södermalm, north along Strandvägen,
+  // out to Djurgården, repeat. Spiky, multi-island silhouette.
   stockholm:
-    "M 78 32 L 72 36 L 64 40 L 56 42 L 48 46 L 42 52 L 38 60 L 42 66 L 50 68 L 58 66 L 64 60 L 68 52 L 66 44 L 60 38 L 52 36 L 44 38 L 36 42 L 28 46 L 22 52 L 20 60 L 24 66 L 32 70 L 40 72 L 48 74 L 56 72 L 64 70 L 70 66 L 74 60 L 76 52 L 78 44 Z",
+    "M 86 16 L 80 22 L 74 22 L 70 28 L 64 30 L 60 36 L 54 36 L 50 42 L 44 42 L 38 46 L 32 46 L 26 50 L 20 56 L 18 64 L 22 70 L 30 72 L 36 70 L 42 66 L 48 68 L 54 72 L 60 76 L 66 78 L 72 76 L 78 70 L 82 64 L 78 58 L 72 56 L 66 60 L 60 62 L 54 58 L 50 52 L 56 50 L 62 52 L 68 50 L 74 46 L 76 40 L 72 36 L 78 34 L 84 30 L 86 24 Z M 86 16 L 88 22 L 90 30",
+
 
   // ─────────── VALENCIA ───────────
   // Loops west through historic center and out east to finish on the floating

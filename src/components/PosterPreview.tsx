@@ -129,6 +129,26 @@ export function PosterPreview({ config, className }: Props) {
     return pts.join(" → ");
   }, [neighborhoods, tagline]);
 
+  // Auto-fit the route inside the SVG by computing its bounding box.
+  const routeBox = useMemo(() => {
+    const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
+    if (!m || m.length < 4) return { vb: "0 0 100 100", endX: 50, endY: 50 };
+    const nums = m.map(parseFloat);
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (let i = 0; i < nums.length - 1; i += 2) {
+      const x = nums[i], y = nums[i + 1];
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+    const w = maxX - minX, h = maxY - minY;
+    const pad = Math.max(w, h) * 0.06;
+    return {
+      vb: `${minX - pad} ${minY - pad} ${w + pad * 2} ${h + pad * 2}`,
+      endX: nums[nums.length - 2],
+      endY: nums[nums.length - 1],
+    };
+  }, [config.routePath]);
+
   // Archival warm paper, ink, accent
   const paper = "#F1EBDD";
   const ink = "#16130E";
@@ -148,12 +168,14 @@ export function PosterPreview({ config, className }: Props) {
     <div
       className={className}
       style={{
+        width: "100%",
         aspectRatio: "3 / 4",
         backgroundColor: paper,
         color: ink,
         position: "relative",
         overflow: "hidden",
         fontFamily: serif,
+        containerType: "inline-size",
         boxShadow: "0 1px 1px rgba(0,0,0,0.06), 0 30px 70px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(0,0,0,0.05)",
       }}
     >
@@ -177,7 +199,7 @@ export function PosterPreview({ config, className }: Props) {
           position: "relative",
           zIndex: 2,
           height: "100%",
-          padding: "5.5% 6% 4.5%",
+          padding: "4.5% 5.5% 3.5%",
           display: "flex",
           flexDirection: "column",
         }}
@@ -208,10 +230,10 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             fontFamily: serif,
             fontWeight: 800,
-            fontSize: "clamp(2.6rem, 11.5vw, 6rem)",
+            fontSize: "clamp(1.4rem, 11cqw, 3.4rem)",
             lineHeight: 0.92,
             letterSpacing: "-0.02em",
-            margin: "0.55rem 0 0",
+            margin: "0.3rem 0 0",
             textAlign: "center",
             textTransform: "uppercase",
           }}
@@ -223,11 +245,11 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             fontFamily: serif,
             fontWeight: 400,
-            fontSize: "clamp(0.95rem, 3.4vw, 1.85rem)",
+            fontSize: "clamp(0.6rem, 3.4cqw, 1.05rem)",
             letterSpacing: "0.42em",
             textAlign: "center",
             textTransform: "uppercase",
-            marginTop: "0.45rem",
+            marginTop: "0.25rem",
             color: ink,
           }}
         >
@@ -242,22 +264,22 @@ export function PosterPreview({ config, className }: Props) {
             fontSize: "0.85rem",
             letterSpacing: "0.5em",
             color: accent,
-            marginTop: "0.55rem",
+            marginTop: "0.35rem",
             paddingLeft: "0.2rem",
           }}
         >
           {year || "—"}
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.5rem" }} />
+        <div style={{ borderTop: `1px solid ${hairline}`, marginTop: "0.35rem" }} />
 
         {/* MAP / ROUTE */}
         <div
           style={{
             position: "relative",
             flex: "1 1 auto",
-            margin: "1rem 0 0.9rem",
-            minHeight: "40%",
+            margin: "0.6rem 0 0.5rem",
+            minHeight: "34%",
           }}
         >
           {/* Compass + neighborhoods */}
@@ -288,13 +310,11 @@ export function PosterPreview({ config, className }: Props) {
           </div>
 
           <svg
-            viewBox="0 0 100 100"
+            viewBox={routeBox.vb}
             preserveAspectRatio="xMidYMid meet"
             style={{ width: "100%", height: "100%", display: "block" }}
             aria-hidden
           >
-            {/* Faint cartographic backdrop */}
-            <rect x="0" y="0" width="100" height="100" fill="transparent" filter={`url(#${mapTextureId})`} opacity="0.55" />
             <path
               d={config.routePath}
               fill="none"
@@ -304,19 +324,8 @@ export function PosterPreview({ config, className }: Props) {
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
-
-            {(() => {
-              const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
-              if (!m || m.length < 4) return null;
-              const ex = parseFloat(m[m.length - 2]);
-              const ey = parseFloat(m[m.length - 1]);
-              return (
-                <g>
-                  <circle cx={ex} cy={ey} r="1.6" fill="none" stroke={accent} strokeWidth="0.8" vectorEffect="non-scaling-stroke" />
-                  <circle cx={ex} cy={ey} r="0.5" fill={accent} vectorEffect="non-scaling-stroke" />
-                </g>
-              );
-            })()}
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="2.2" fill="none" stroke={accent} strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="0.7" fill={accent} vectorEffect="non-scaling-stroke" />
           </svg>
         </div>
 
@@ -348,7 +357,7 @@ export function PosterPreview({ config, className }: Props) {
           </div>
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.9rem 0 0.8rem" }} />
+        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.5rem 0 0.45rem" }} />
 
         {/* Finisher block — two columns */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1px 1.4fr", gap: "1rem", alignItems: "start" }}>
@@ -360,7 +369,7 @@ export function PosterPreview({ config, className }: Props) {
               style={{
                 fontFamily: serif,
                 fontWeight: 500,
-                fontSize: "clamp(1.6rem, 5.8vw, 2.6rem)",
+                fontSize: "clamp(0.95rem, 5.6cqw, 1.55rem)",
                 letterSpacing: "0.01em",
                 lineHeight: 1,
                 color: accent,
@@ -379,7 +388,7 @@ export function PosterPreview({ config, className }: Props) {
               style={{
                 fontFamily: serif,
                 fontWeight: 600,
-                fontSize: "clamp(1.05rem, 3.2vw, 1.55rem)",
+                fontSize: "clamp(0.68rem, 3cqw, 0.95rem)",
                 letterSpacing: "0.04em",
                 lineHeight: 1.05,
                 textTransform: "uppercase",
@@ -394,7 +403,7 @@ export function PosterPreview({ config, className }: Props) {
           </div>
         </div>
 
-        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.9rem 0 0.5rem" }} />
+        <div style={{ borderTop: `1px solid ${hairline}`, margin: "0.55rem 0 0.35rem" }} />
 
         {/* Footer triptych */}
         <div
