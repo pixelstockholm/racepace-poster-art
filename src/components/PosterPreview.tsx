@@ -162,27 +162,8 @@ export function PosterPreview({ config, className }: Props) {
         }}
       />
 
-      {/* Subtle landmark silhouette, bottom anchored */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: "32%",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      >
-        <svg
-          viewBox="0 0 200 40"
-          preserveAspectRatio="xMidYEnd meet"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}
-        >
-          <path d={skylinePath} fill={palette.ink} opacity={lightPaper ? 0.08 : 0.12} />
-        </svg>
-      </div>
+
+
 
       {/* Inner deckle border */}
       <div
