@@ -264,11 +264,11 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             position: "relative",
             flex: "1 1 auto",
-            margin: "1rem 0 0.6rem",
-            minHeight: "55%",
+            margin: "0.7rem -1.5% 0.4rem",
+            minHeight: "62%",
             display: "grid",
-            gridTemplateColumns: "minmax(0, 24%) 1fr",
-            gap: "3%",
+            gridTemplateColumns: "minmax(0, 19%) 1fr",
+            gap: "2%",
             alignItems: "stretch",
           }}
         >
@@ -279,14 +279,15 @@ export function PosterPreview({ config, className }: Props) {
               flexDirection: "column",
               justifyContent: "space-between",
               fontFamily: sans,
-              fontSize: "0.46rem",
-              letterSpacing: "0.22em",
+              fontSize: "0.44rem",
+              letterSpacing: "0.2em",
               textTransform: "uppercase",
               color: inkSoft,
               fontWeight: 500,
+              paddingLeft: "1.5%",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {neighborhoods.map((n) => (
                 <span key={n}>{n}</span>
               ))}
@@ -310,13 +311,13 @@ export function PosterPreview({ config, className }: Props) {
               d={config.routePath}
               fill="none"
               stroke={accent}
-              strokeWidth="1.6"
+              strokeWidth="1.7"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
-            <circle cx={routeBox.startX} cy={routeBox.startY} r="2.2" fill="none" stroke={accent} strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
-            <circle cx={routeBox.endX} cy={routeBox.endY} r="2.6" fill={accent} vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} vectorEffect="non-scaling-stroke" />
           </svg>
         </div>
 
@@ -328,11 +329,11 @@ export function PosterPreview({ config, className }: Props) {
           <div
             style={{
               fontFamily: serif,
-              fontWeight: 500,
-              fontSize: "clamp(1.2rem, 7.5cqw, 2.2rem)",
+              fontWeight: 600,
+              fontSize: "clamp(1.3rem, 8cqw, 2.4rem)",
               letterSpacing: "0.04em",
               lineHeight: 1,
-              color: accent,
+              color: `color-mix(in oklab, ${accent} 78%, #16130E)`,
               fontVariantNumeric: "tabular-nums",
             }}
           >
