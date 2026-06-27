@@ -174,6 +174,7 @@ export function PosterPreview({ config, className }: Props) {
         position: "relative",
         overflow: "hidden",
         fontFamily: serif,
+        containerType: "inline-size",
         boxShadow: "0 1px 1px rgba(0,0,0,0.06), 0 30px 70px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(0,0,0,0.05)",
       }}
     >
