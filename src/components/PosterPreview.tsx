@@ -115,9 +115,34 @@ export function PosterPreview({ config, className }: Props) {
   const year = yearOf(config.date);
   const distanceKm = config.distanceKm ?? 42.195;
   const distanceLabel = `${distanceKm.toFixed(3).replace(/\.?0+$/, "")} KM`;
-  
+
   const locationLine = (config.location || "").toUpperCase();
-  const tagline = identity?.tagline ?? locationLine;
+  const tagline = identity?.tagline ?? "";
+
+  // City name = first segment of location ("Berlin, Germany" → "BERLIN").
+  // Fallback: clean the race name.
+  const cityName = useMemo(() => {
+    if (config.location) {
+      const c = config.location.split(",")[0]?.trim();
+      if (c) return c.toUpperCase();
+    }
+    return (raceLines[0] || "CITY").toUpperCase();
+  }, [config.location, raceLines]);
+
+  const countryLine = useMemo(() => {
+    if (config.location && config.location.includes(",")) {
+      return config.location.split(",").slice(1).join(",").trim().toUpperCase();
+    }
+    return "";
+  }, [config.location]);
+
+  // Stable "edition number" for the editorial feel (deterministic from id+year)
+  const editionNo = useMemo(() => {
+    const seed = `${config.raceId ?? config.race}-${year}`;
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+    return String((h % 90) + 10).padStart(2, "0"); // 10–99
+  }, [config.raceId, config.race, year]);
 
   const grainId = useMemo(() => `grain-${Math.random().toString(36).slice(2, 9)}`, []);
 
@@ -137,13 +162,8 @@ export function PosterPreview({ config, className }: Props) {
         flexDirection: "column",
       }}
     >
-      {/* Paper grain texture */}
-      <svg
-        aria-hidden
-        width="0"
-        height="0"
-        style={{ position: "absolute" }}
-      >
+      {/* Paper grain */}
+      <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
         <filter id={grainId}>
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
           <feColorMatrix type="saturate" values="0" />
@@ -162,100 +182,97 @@ export function PosterPreview({ config, className }: Props) {
         }}
       />
 
-
-
-
-      {/* Inner deckle border */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: "3.5%",
-          border: `1px solid ${hairline}`,
-          pointerEvents: "none",
-          zIndex: 1,
-        }}
-      />
-
-      {/* Content */}
+      {/* Magazine-cover content */}
       <div
         style={{
           position: "relative",
           zIndex: 2,
           height: "100%",
-          padding: "9% 8.5% 7%",
+          padding: "8% 8% 6.5%",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        {/* HEADER — Race name + year */}
-        <header style={{ textAlign: "center" }}>
-          <div
-            style={{
-              fontSize: "0.5rem",
-              letterSpacing: "0.5em",
-              textTransform: "uppercase",
-              fontWeight: 700,
-              color: palette.accent,
-              marginBottom: "0.8rem",
-              paddingLeft: "0.5em",
-            }}
-          >
-            {(identity ? config.location : locationLine) || "Marathon"}
-          </div>
+        {/* Masthead row — country · edition */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            fontSize: "0.5rem",
+            letterSpacing: "0.28em",
+            textTransform: "uppercase",
+            fontWeight: 600,
+            color: inkSoft,
+            paddingBottom: "0.6rem",
+            borderBottom: `1px solid ${hairline}`,
+          }}
+        >
+          <span>{countryLine || "MARATHON"}</span>
+          <span style={{ fontVariantNumeric: "tabular-nums" }}>Nº {editionNo}</span>
+        </div>
+
+        {/* HERO — CITY · MARATHON · YEAR */}
+        <header style={{ marginTop: "1.4rem" }}>
           <h1
             style={{
               fontFamily: 'var(--font-serif, "Fraunces", "Playfair Display", Georgia, serif)',
-              fontWeight: 900,
-              fontSize: raceLines.length > 1 ? "clamp(1.5rem, 4.6vw, 2.7rem)" : "clamp(1.8rem, 5.4vw, 3.2rem)",
-              lineHeight: 0.92,
-              letterSpacing: "-0.025em",
-              textTransform: "uppercase",
+              fontWeight: 600,
+              fontSize: "clamp(2.4rem, 8.5vw, 4.6rem)",
+              lineHeight: 0.86,
+              letterSpacing: "-0.04em",
               margin: 0,
+              textTransform: "uppercase",
               wordBreak: "break-word",
             }}
           >
-            {raceLines.map((line, i) => (
-              <span key={i} style={{ display: "block" }}>{line}</span>
-            ))}
+            {cityName}
           </h1>
           <div
             style={{
-              marginTop: "0.7rem",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: "baseline",
+              justifyContent: "space-between",
               gap: "0.8rem",
+              marginTop: "0.35rem",
             }}
           >
-            <span style={{ height: 1, width: "1.4rem", backgroundColor: palette.accent }} />
+            <span
+              style={{
+                fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
+                fontWeight: 400,
+                fontSize: "clamp(1rem, 2.6vw, 1.4rem)",
+                letterSpacing: "0.32em",
+                textTransform: "uppercase",
+                color: palette.ink,
+              }}
+            >
+              Marathon
+            </span>
             <span
               style={{
                 fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
                 fontStyle: "italic",
-                fontWeight: 500,
-                fontSize: "0.95rem",
-                letterSpacing: "0.08em",
-                color: palette.ink,
+                fontWeight: 400,
+                fontSize: "clamp(1.1rem, 2.8vw, 1.5rem)",
+                color: palette.accent,
                 fontVariantNumeric: "tabular-nums",
               }}
             >
               {year || "—"}
             </span>
-            <span style={{ height: 1, width: "1.4rem", backgroundColor: palette.accent }} />
           </div>
         </header>
 
-        {/* ROUTE — hero element, ~45% of poster height */}
+        {/* ROUTE — ~26% of poster height */}
         <div
           style={{
-            flex: "1 1 auto",
+            height: "26%",
+            flexShrink: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            margin: "1.2rem -3% 1rem",
-            position: "relative",
-            minHeight: 0,
+            margin: "1.8rem 0 1.2rem",
           }}
         >
           <svg
@@ -264,24 +281,11 @@ export function PosterPreview({ config, className }: Props) {
             style={{ width: "100%", height: "100%", display: "block" }}
             aria-hidden
           >
-            {/* faint shadow */}
             <path
               d={config.routePath}
               fill="none"
               stroke={palette.ink}
-              strokeOpacity={lightPaper ? 0.08 : 0.12}
-              strokeWidth="9"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              transform="translate(0.6, 0.8)"
-            />
-            {/* main route — bold screen-print accent */}
-            <path
-              d={config.routePath}
-              fill="none"
-              stroke={palette.accent}
-              strokeWidth="8"
+              strokeWidth="1.4"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
@@ -289,103 +293,142 @@ export function PosterPreview({ config, className }: Props) {
             {(() => {
               const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
               if (!m || m.length < 4) return null;
-              const sx = parseFloat(m[0]);
-              const sy = parseFloat(m[1]);
               const ex = parseFloat(m[m.length - 2]);
               const ey = parseFloat(m[m.length - 1]);
               return (
-                <g>
-                  <circle cx={sx} cy={sy} r="2.6" fill={palette.paper} stroke={palette.ink} strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
-                  <circle cx={ex} cy={ey} r="3.4" fill={palette.mark} stroke={palette.paper} strokeWidth="1.4" vectorEffect="non-scaling-stroke" />
-                </g>
+                <circle
+                  cx={ex}
+                  cy={ey}
+                  r="1.8"
+                  fill={palette.accent}
+                  vectorEffect="non-scaling-stroke"
+                />
               );
             })()}
           </svg>
         </div>
 
-        {/* Tagline — small italic local reference */}
+        {/* Course caption */}
         {tagline && (
-          <div
+          <p
             style={{
               textAlign: "center",
               fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
               fontStyle: "italic",
-              fontSize: "0.6rem",
-              letterSpacing: "0.04em",
+              fontWeight: 400,
+              fontSize: "0.72rem",
+              lineHeight: 1.35,
+              letterSpacing: "0.02em",
               color: inkSoft,
-              marginBottom: "1rem",
+              margin: "0 auto",
+              maxWidth: "85%",
             }}
           >
             {tagline}
-          </div>
+          </p>
         )}
 
-        {/* FOOTER — Runner + time, then tiny race details */}
-        <div style={{ borderTop: `1px solid ${hairline}`, paddingTop: "1rem" }}>
-          <div
-            style={{
-              fontSize: "0.5rem",
-              letterSpacing: "0.4em",
-              textTransform: "uppercase",
-              fontWeight: 700,
-              color: inkFaint,
-              textAlign: "center",
-              marginBottom: "0.45rem",
-            }}
-          >
-            Finisher
-          </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
-              fontWeight: 800,
-              fontSize: "clamp(1rem, 2.6vw, 1.35rem)",
-              letterSpacing: "-0.01em",
-              textAlign: "center",
-              textTransform: "uppercase",
-              lineHeight: 1.1,
-              wordBreak: "break-word",
-            }}
-          >
-            {displayName}
-          </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-sans, "Inter", system-ui, sans-serif)',
-              fontWeight: 800,
-              fontSize: "clamp(1.6rem, 5vw, 2.6rem)",
-              letterSpacing: "-0.04em",
-              fontVariantNumeric: "tabular-nums",
-              textAlign: "center",
-              marginTop: "0.35rem",
-              color: palette.accent,
-              lineHeight: 1,
-            }}
-          >
-            {displayTime}
-          </div>
+        {/* Spacer pushes footer down */}
+        <div style={{ flex: "1 1 auto" }} />
 
-          {/* Tiny race details row */}
-          <div
-            style={{
-              marginTop: "1rem",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "0.6rem",
-              fontFamily: 'ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, monospace',
-              fontSize: "0.5rem",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: inkFaint,
-            }}
-          >
-            <span>{displayDate || "—"}</span>
-            <span style={{ flex: 1, height: 1, backgroundColor: hairline }} />
-            <span>{distanceLabel}</span>
-          </div>
+        {/* Editorial footer grid */}
+        <div
+          style={{
+            borderTop: `1px solid ${hairline}`,
+            paddingTop: "1rem",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            rowGap: "0.9rem",
+            columnGap: "1rem",
+          }}
+        >
+          <FooterField label="Finisher" value={displayName} ink={palette.ink} inkFaint={inkFaint} />
+          <FooterField
+            label="Official Time"
+            value={displayTime}
+            ink={palette.ink}
+            inkFaint={inkFaint}
+            align="right"
+            tabular
+          />
+          <FooterField
+            label="Date"
+            value={displayDate || "—"}
+            ink={palette.ink}
+            inkFaint={inkFaint}
+          />
+          <FooterField
+            label="Distance"
+            value={distanceLabel}
+            ink={palette.ink}
+            inkFaint={inkFaint}
+            align="right"
+            tabular
+          />
+        </div>
+
+        {/* Bottom imprint */}
+        <div
+          style={{
+            marginTop: "1rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            fontSize: "0.46rem",
+            letterSpacing: "0.32em",
+            textTransform: "uppercase",
+            color: inkFaint,
+          }}
+        >
+          <span>Racepace Editions</span>
+          <span style={{ fontVariantNumeric: "tabular-nums" }}>
+            Edition Nº {editionNo} / {year || "—"}
+          </span>
         </div>
       </div>
     </div>
   );
 }
+
+interface FooterFieldProps {
+  label: string;
+  value: string;
+  ink: string;
+  inkFaint: string;
+  align?: "left" | "right";
+  tabular?: boolean;
+}
+
+function FooterField({ label, value, ink, inkFaint, align = "left", tabular }: FooterFieldProps) {
+  return (
+    <div style={{ textAlign: align }}>
+      <div
+        style={{
+          fontSize: "0.46rem",
+          letterSpacing: "0.3em",
+          textTransform: "uppercase",
+          fontWeight: 600,
+          color: inkFaint,
+          marginBottom: "0.3rem",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontFamily: 'var(--font-serif, "Fraunces", Georgia, serif)',
+          fontWeight: 500,
+          fontSize: "0.95rem",
+          letterSpacing: "-0.005em",
+          color: ink,
+          lineHeight: 1.15,
+          fontVariantNumeric: tabular ? "tabular-nums" : "normal",
+          wordBreak: "break-word",
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
