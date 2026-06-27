@@ -339,28 +339,28 @@ export function PosterPreview({ config, className }: Props) {
           </div>
         </header>
 
-        {/* Route — hero */}
+        {/* Route — iconic centerpiece. ~46% of poster height. */}
         <div
           style={{
-            flex: 1,
+            height: "46%",
+            flexShrink: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            margin: "1.2rem -3% 1rem",
-            minHeight: 0,
+            margin: "1.4rem -6% 1.2rem",
             position: "relative",
           }}
         >
-          {/* glow */}
+          {/* soft glow halo */}
           <div
             aria-hidden
             style={{
               position: "absolute",
-              inset: "10%",
+              inset: "5%",
               borderRadius: "50%",
               background: theme.routeGlow,
-              filter: "blur(40px)",
-              opacity: 0.6,
+              filter: "blur(55px)",
+              opacity: 0.5,
             }}
           />
           <svg
@@ -369,15 +369,27 @@ export function PosterPreview({ config, className }: Props) {
             style={{ width: "100%", height: "100%", display: "block", position: "relative" }}
             aria-hidden
           >
+            {/* outer halo stroke for thickness without flatness */}
             <path
               d={config.routePath}
               fill="none"
               stroke={theme.routeStroke}
-              strokeWidth="3"
+              strokeOpacity="0.22"
+              strokeWidth="10"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
-              style={{ filter: `drop-shadow(0 0 6px ${theme.routeGlow})` }}
+            />
+            {/* main route — thick, iconic */}
+            <path
+              d={config.routePath}
+              fill="none"
+              stroke={theme.routeStroke}
+              strokeWidth="6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+              style={{ filter: `drop-shadow(0 0 4px ${theme.routeGlow})` }}
             />
             {(() => {
               const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
@@ -388,13 +400,14 @@ export function PosterPreview({ config, className }: Props) {
               const ey = parseFloat(m[m.length - 1]);
               return (
                 <g>
-                  <circle cx={sx} cy={sy} r="2" fill={theme.ink} />
-                  <circle cx={ex} cy={ey} r="2.4" fill={theme.finishMark} stroke={theme.ink} strokeWidth="0.6" />
+                  <circle cx={sx} cy={sy} r="2.6" fill={theme.ink} />
+                  <circle cx={ex} cy={ey} r="3.2" fill={theme.finishMark} stroke={theme.ink} strokeWidth="0.8" />
                 </g>
               );
             })()}
           </svg>
         </div>
+
 
         {/* Finish time block */}
         <div
