@@ -1,9 +1,12 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { CartDrawer } from "./CartDrawer";
 
 export function SiteHeader() {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
   return (
-    <header className="sticky top-0 z-40 bg-background/85 backdrop-blur-md border-b border-border">
+    <header className={`sticky top-0 z-40 ${isHome ? "" : "bg-background/85 backdrop-blur-md border-b border-border"}`}>
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
         <Link
           to="/"
