@@ -35,7 +35,7 @@ export function SiteHeader() {
           >
             Browse posters
           </Link>
-          <CartDrawer />
+          <CartDrawer triggerClassName={isHome ? "relative inline-flex items-center gap-2 text-sm tracking-wide text-paper hover:text-paper/70 transition-colors" : undefined} />
         </div>
       </div>
     </header>
