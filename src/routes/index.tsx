@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroAsset from "@/assets/hero-stockholm-interior.jpg.asset.json";
+import heroAsset from "@/assets/hero-balcony-morning.png.asset.json";
 import stockholmInterior from "@/assets/interior-stockholm.jpg";
 import berlinInterior from "@/assets/interior-berlin.jpg";
 import parisInterior from "@/assets/interior-paris.jpg";
@@ -40,15 +40,35 @@ function HomePage() {
   return (
     <main className="bg-paper text-ink">
       {/* SECTION 1 — HERO */}
-      <section className="relative -mt-16 bg-paper">
-        <div className="relative w-full" style={{ aspectRatio: "1536 / 1024" }}>
-          <img
-            src={heroAsset.url}
-            alt="Racepace — Marathon posters designed to belong in your home."
-            width={1536}
-            height={1024}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+      <section className="relative -mt-16 h-screen min-h-[600px] flex items-center justify-center">
+        <img
+          src={heroAsset.url}
+          alt="Warm morning light on a balcony — coffee, running shoes, and a race medal."
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Subtle top gradient for header readability */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/50 to-transparent pointer-events-none" />
+        {/* Overall warmth overlay */}
+        <div className="absolute inset-0 bg-ink/20 pointer-events-none" />
+
+        <div className="relative z-10 text-center text-paper px-6 max-w-3xl mx-auto">
+          <p className="text-[0.68rem] tracking-[0.28em] uppercase text-paper/70 mb-8">
+            Racepace
+          </p>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.05] tracking-tight">
+            The race ends.
+            <br />
+            The story stays.
+          </h1>
+          <p className="mt-7 text-sm md:text-base text-paper/70 leading-relaxed max-w-lg mx-auto">
+            Personalized prints inspired by the cities, mornings and moments that shaped your run.
+          </p>
+          <Link
+            to="/shop"
+            className="inline-block mt-10 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/30 pb-1 hover:border-paper/80 transition-colors"
+          >
+            Browse Editions →
+          </Link>
         </div>
       </section>
 

@@ -10,32 +10,32 @@ export function SiteHeader() {
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
         <Link
           to="/"
-          className="font-serif text-xl tracking-tight text-foreground hover:text-primary transition-colors"
+          className={`font-serif text-xl tracking-tight transition-colors ${isHome ? "text-paper hover:text-paper/70" : "text-foreground hover:text-primary"}`}
         >
           Racepace
         </Link>
-        <nav className="hidden md:flex items-center gap-10 text-sm tracking-wide">
-          <Link to="/shop" className="hover:text-primary transition-colors" activeProps={{ className: "text-primary" }}>
+        <nav className={`hidden md:flex items-center gap-10 text-sm tracking-wide ${isHome ? "text-paper" : ""}`}>
+          <Link to="/shop" className={`transition-colors ${isHome ? "hover:text-paper/70" : "hover:text-primary"}`} activeProps={{ className: "text-primary" }}>
             Shop
           </Link>
-          <Link to="/about" className="hover:text-primary transition-colors" activeProps={{ className: "text-primary" }}>
+          <Link to="/about" className={`transition-colors ${isHome ? "hover:text-paper/70" : "hover:text-primary"}`} activeProps={{ className: "text-primary" }}>
             About
           </Link>
-          <Link to="/faq" className="hover:text-primary transition-colors" activeProps={{ className: "text-primary" }}>
+          <Link to="/faq" className={`transition-colors ${isHome ? "hover:text-paper/70" : "hover:text-primary"}`} activeProps={{ className: "text-primary" }}>
             FAQ
           </Link>
-          <Link to="/contact" className="hover:text-primary transition-colors" activeProps={{ className: "text-primary" }}>
+          <Link to="/contact" className={`transition-colors ${isHome ? "hover:text-paper/70" : "hover:text-primary"}`} activeProps={{ className: "text-primary" }}>
             Contact
           </Link>
         </nav>
         <div className="flex items-center gap-6">
           <Link
             to="/shop"
-            className="hidden md:inline text-sm tracking-widest uppercase border-b border-foreground pb-0.5 hover:border-primary hover:text-primary transition-colors"
+            className={`hidden md:inline text-sm tracking-widest uppercase pb-0.5 transition-colors ${isHome ? "text-paper border-b border-paper/40 hover:border-paper" : "text-foreground border-b border-foreground hover:border-primary hover:text-primary"}`}
           >
             Browse posters
           </Link>
-          <CartDrawer />
+          <CartDrawer triggerClassName={isHome ? "relative inline-flex items-center gap-2 text-sm tracking-wide text-paper hover:text-paper/70 transition-colors" : undefined} />
         </div>
       </div>
     </header>
