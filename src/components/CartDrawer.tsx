@@ -45,7 +45,7 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
       <SheetTrigger asChild>
         <button
           type="button"
-          className="relative inline-flex items-center gap-2 text-sm tracking-wide text-foreground hover:text-primary transition-colors"
+          className={triggerClassName ?? "relative inline-flex items-center gap-2 text-sm tracking-wide text-foreground hover:text-primary transition-colors"}
           aria-label="Open cart"
         >
           <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />
