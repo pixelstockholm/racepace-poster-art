@@ -107,24 +107,67 @@ function HomePage() {
               View all →
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-10 gap-y-14 lg:gap-y-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 lg:gap-x-14 gap-y-16 lg:gap-y-24">
             {FEATURED.map((p) => (
               <Link
-                key={p.id}
+                key={p.raceId}
                 to="/create"
-                search={{ race: p.id }}
+                search={{ race: p.raceId }}
                 className="group block"
               >
-                <div className="overflow-hidden bg-secondary/30 shadow-[0_1px_2px_rgba(40,30,20,0.04)] transition-shadow duration-500 group-hover:shadow-[0_24px_60px_-28px_rgba(40,30,20,0.35)]">
-                  <div className="aspect-[4/5] overflow-hidden">
-                    <img
-                      src={p.image}
-                      alt={`${p.city} marathon poster framed in a styled interior.`}
-                      width={1280}
-                      height={1280}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                    />
+                {/* Interior staging: warm linen wall, oak shelf, soft daylight */}
+                <div
+                  className="relative aspect-[4/5] overflow-hidden"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, #E7DFCE 0%, #DCD1BA 62%, #C9B998 100%)",
+                  }}
+                >
+                  {/* Soft window light */}
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "radial-gradient(120% 80% at 18% 12%, rgba(255,244,220,0.55) 0%, rgba(255,244,220,0) 55%)",
+                    }}
+                  />
+                  {/* Oak shelf at bottom */}
+                  <div
+                    aria-hidden
+                    className="absolute inset-x-0 bottom-0 h-[14%] pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, #8A6A45 0%, #6E5132 60%, #4F3920 100%)",
+                      boxShadow: "inset 0 1px 0 rgba(255,235,200,0.18)",
+                    }}
+                  />
+                  {/* Cast shadow under poster */}
+                  <div
+                    aria-hidden
+                    className="absolute left-1/2 -translate-x-1/2"
+                    style={{
+                      bottom: "12%",
+                      width: "62%",
+                      height: "10%",
+                      background:
+                        "radial-gradient(closest-side, rgba(40,28,16,0.32), rgba(40,28,16,0))",
+                      filter: "blur(6px)",
+                    }}
+                  />
+                  {/* The actual Racepace poster — leaning on the shelf */}
+                  <div
+                    className="absolute"
+                    style={{
+                      left: "50%",
+                      bottom: "14%",
+                      width: "62%",
+                      transform: "translateX(-50%) rotate(-0.4deg)",
+                      transition: "transform 700ms ease",
+                      transformOrigin: "bottom center",
+                    }}
+                  >
+                    <PosterPreview config={p} />
                   </div>
                 </div>
                 <div className="mt-5 flex items-baseline justify-between gap-4">
