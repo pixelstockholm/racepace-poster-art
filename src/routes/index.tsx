@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroAsset from "@/assets/hero-exact.jpg.asset.json";
+import heroAsset from "@/assets/hero-stockholm-interior.jpg.asset.json";
 import stockholmInterior from "@/assets/interior-stockholm.jpg";
 import berlinInterior from "@/assets/interior-berlin.jpg";
 import parisInterior from "@/assets/interior-paris.jpg";
@@ -39,28 +39,15 @@ const FEATURED = [
 function HomePage() {
   return (
     <main className="bg-paper text-ink">
-      {/* SECTION 1 — HERO (exact reference image, no overlay) */}
+      {/* SECTION 1 — HERO */}
       <section className="relative -mt-16 bg-paper">
-        <div className="relative w-full" style={{ aspectRatio: "1536 / 929" }}>
+        <div className="relative w-full" style={{ aspectRatio: "1536 / 1024" }}>
           <img
             src={heroAsset.url}
             alt="Racepace — Marathon posters designed to belong in your home."
             width={1536}
-            height={929}
+            height={1024}
             className="absolute inset-0 w-full h-full object-cover"
-          />
-          {/* Invisible click targets aligned to the buttons baked into the image */}
-          <Link
-            to="/create"
-            aria-label="Create Yours"
-            className="absolute"
-            style={{ left: "4.9%", top: "60.8%", width: "9.8%", height: "6.5%" }}
-          />
-          <Link
-            to="/shop"
-            aria-label="Browse Posters"
-            className="absolute"
-            style={{ left: "18.2%", top: "60.8%", width: "11%", height: "6.5%" }}
           />
         </div>
       </section>
