@@ -41,7 +41,7 @@ function HomePage() {
     <main className="bg-paper text-ink">
       {/* SECTION 1 — HERO (exact reference image, no overlay) */}
       <section className="relative -mt-16 bg-paper">
-        <div className="relative mx-auto max-h-screen" style={{ aspectRatio: "1536 / 929" }}>
+        <div className="relative w-full" style={{ aspectRatio: "1536 / 929" }}>
           <img
             src={heroAsset.url}
             alt="Racepace — Marathon posters designed to belong in your home."
