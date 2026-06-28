@@ -51,21 +51,18 @@ function HomePage() {
         {/* Overall warmth overlay */}
         <div className="absolute inset-0 bg-ink/20 pointer-events-none" />
 
-        <div className="relative z-10 text-center text-paper px-6 max-w-3xl mx-auto">
-          <p className="text-[0.68rem] tracking-[0.28em] uppercase text-paper/70 mb-8">
-            Racepace
-          </p>
+        <div className="relative z-10 text-paper px-6 lg:pl-[16%] max-w-3xl">
           <h1 className="font-serif text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.05] tracking-tight">
             The race ends.
             <br />
             The story stays.
           </h1>
-          <p className="mt-7 text-sm md:text-base text-paper/70 leading-relaxed max-w-lg mx-auto">
-            Personalized prints inspired by the cities, mornings and moments that shaped your run.
+          <p className="mt-10 text-sm md:text-base text-paper/70 leading-relaxed max-w-sm">
+            For the miles worth remembering.
           </p>
           <Link
             to="/shop"
-            className="inline-block mt-10 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/30 pb-1 hover:border-paper/80 transition-colors"
+            className="inline-block mt-12 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/30 pb-1 hover:border-paper/80 transition-colors"
           >
             Browse Editions →
           </Link>
