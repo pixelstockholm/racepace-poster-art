@@ -11,7 +11,7 @@ import {
 import { Minus, Plus, ShoppingBag, Trash2, ExternalLink, Loader2 } from "lucide-react";
 import { useCartStore, lineKeyOf } from "@/lib/shopify";
 
-export function CartDrawer() {
+export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const items = useCartStore((s) => s.items);
   const isLoading = useCartStore((s) => s.isLoading);
