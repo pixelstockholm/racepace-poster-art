@@ -71,18 +71,21 @@ function HomePage() {
         {/* Overall warmth overlay */}
         <div className="absolute inset-0 bg-ink/20 pointer-events-none" />
 
-        <div className="relative z-10 text-paper px-6 lg:pl-[16%] max-w-3xl">
+        <div
+          className="relative z-10 text-paper px-6 lg:pl-[16%] max-w-3xl"
+          style={{ textShadow: "0 2px 24px rgba(10,8,4,0.45), 0 1px 2px rgba(10,8,4,0.35)" }}
+        >
           <h1 className="font-serif text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.05] tracking-tight">
             The race ends.
             <br />
             The story stays.
           </h1>
-          <p className="mt-10 text-sm md:text-base text-paper/70 leading-relaxed max-w-sm">
+          <p className="mt-10 text-sm md:text-base text-paper/80 leading-relaxed max-w-sm">
             For the miles worth remembering.
           </p>
           <Link
             to="/shop"
-            className="inline-block mt-12 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/30 pb-1 hover:border-paper/80 transition-colors"
+            className="inline-block mt-12 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/40 pb-1 hover:border-paper/80 transition-colors"
           >
             Browse Editions →
           </Link>
