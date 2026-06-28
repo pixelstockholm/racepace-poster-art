@@ -6,7 +6,7 @@ export function SiteHeader() {
   const isHome = location.pathname === "/";
 
   return (
-    <header className={`sticky top-0 z-40 ${isHome ? "" : "bg-background/85 backdrop-blur-md border-b border-border"}`}>
+    <header className={`absolute top-0 inset-x-0 z-40 ${isHome ? "" : "relative bg-background/85 backdrop-blur-md border-b border-border"}`}>
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
         <Link
           to="/"
@@ -14,20 +14,6 @@ export function SiteHeader() {
         >
           Racepace
         </Link>
-        <nav className={`hidden md:flex items-center gap-10 text-sm tracking-wide ${isHome ? "text-paper" : ""}`}>
-          <Link to="/shop" className={`transition-colors ${isHome ? "hover:text-paper/70" : "hover:text-primary"}`} activeProps={{ className: "text-primary" }}>
-            Shop
-          </Link>
-          <Link to="/about" className={`transition-colors ${isHome ? "hover:text-paper/70" : "hover:text-primary"}`} activeProps={{ className: "text-primary" }}>
-            About
-          </Link>
-          <Link to="/faq" className={`transition-colors ${isHome ? "hover:text-paper/70" : "hover:text-primary"}`} activeProps={{ className: "text-primary" }}>
-            FAQ
-          </Link>
-          <Link to="/contact" className={`transition-colors ${isHome ? "hover:text-paper/70" : "hover:text-primary"}`} activeProps={{ className: "text-primary" }}>
-            Contact
-          </Link>
-        </nav>
         <div className="flex items-center gap-6">
           <Link
             to="/shop"
