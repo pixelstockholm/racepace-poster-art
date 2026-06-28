@@ -1,11 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroAsset from "@/assets/hero-balcony-morning.png.asset.json";
-import stockholmInterior from "@/assets/interior-stockholm.jpg";
-import berlinInterior from "@/assets/interior-berlin.jpg";
-import parisInterior from "@/assets/interior-paris.jpg";
-import tokyoInterior from "@/assets/interior-tokyo.jpg";
-import chicagoInterior from "@/assets/interior-chicago.jpg";
-import amsterdamInterior from "@/assets/interior-amsterdam.jpg";
+import { PosterPreview, type PosterConfig } from "@/components/PosterPreview";
+import { RACE_ROUTES } from "@/lib/raceRoutes";
+import { findRaceById } from "@/lib/races";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,14 +24,37 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const FEATURED = [
-  { id: "stockholm", city: "Stockholm", country: "Sweden", image: stockholmInterior },
-  { id: "berlin", city: "Berlin", country: "Germany", image: berlinInterior },
-  { id: "paris", city: "Paris", country: "France", image: parisInterior },
-  { id: "tokyo", city: "Tokyo", country: "Japan", image: tokyoInterior },
-  { id: "chicago", city: "Chicago", country: "United States", image: chicagoInterior },
-  { id: "amsterdam", city: "Amsterdam", country: "Netherlands", image: amsterdamInterior },
-];
+const FEATURED_IDS = ["stockholm", "berlin", "paris", "tokyo", "chicago", "amsterdam"] as const;
+
+const SAMPLE_TIMES: Record<string, { name: string; time: string }> = {
+  stockholm: { name: "E. Sjöberg",  time: "03:24:18" },
+  berlin:    { name: "D. Okafor",   time: "02:58:42" },
+  paris:     { name: "M. Lévesque", time: "03:41:05" },
+  tokyo:     { name: "H. Nakamura", time: "03:12:33" },
+  chicago:   { name: "J. Whitfield",time: "03:06:51" },
+  amsterdam: { name: "L. de Vries", time: "03:33:09" },
+};
+
+function buildConfig(id: string): PosterConfig & { city: string; country: string } {
+  const race = findRaceById(id)!;
+  const s = SAMPLE_TIMES[id];
+  return {
+    name: s.name,
+    race: race.name,
+    date: race.date,
+    time: s.time,
+    theme: "cream",
+    routePath: RACE_ROUTES[id] ?? "",
+    location: `${race.city}, ${race.country}`,
+    distanceKm: race.distanceKm,
+    raceId: id,
+    city: race.city,
+    country: race.country,
+  };
+}
+
+const FEATURED = FEATURED_IDS.map(buildConfig);
+
 
 function HomePage() {
   return (
