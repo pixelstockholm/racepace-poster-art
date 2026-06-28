@@ -44,7 +44,7 @@ function HomePage() {
         <img
           src={heroAsset.url}
           alt="Warm morning light on a balcony — coffee, running shoes, and a race medal."
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_75%]"
         />
         {/* Subtle top gradient for header readability */}
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/50 to-transparent pointer-events-none" />
