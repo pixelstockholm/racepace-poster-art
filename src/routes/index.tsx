@@ -40,7 +40,7 @@ function HomePage() {
   return (
     <main className="bg-paper text-ink">
       {/* SECTION 1 — HERO (exact reference image, no overlay) */}
-      <section className="relative bg-paper">
+      <section className="relative -mt-16 bg-paper">
         <div className="relative w-full" style={{ aspectRatio: "1536 / 929" }}>
           <img
             src={heroAsset.url}
