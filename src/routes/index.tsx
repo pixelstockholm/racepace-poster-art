@@ -115,59 +115,39 @@ function HomePage() {
                 search={{ race: p.raceId }}
                 className="group block"
               >
-                {/* Interior staging: warm linen wall, oak shelf, soft daylight */}
+                {/* White wall with framed poster */}
                 <div
-                  className="relative aspect-[4/5] overflow-hidden"
+                  className="relative overflow-hidden flex items-center justify-center p-10 lg:p-14"
                   style={{
+                    aspectRatio: "4 / 5",
                     background:
-                      "linear-gradient(180deg, #E7DFCE 0%, #DCD1BA 62%, #C9B998 100%)",
+                      "linear-gradient(180deg, #FAFAF7 0%, #F2F0EA 100%)",
                   }}
                 >
-                  {/* Soft window light */}
+                  {/* Very soft directional light */}
                   <div
                     aria-hidden
                     className="absolute inset-0 pointer-events-none"
                     style={{
                       background:
-                        "radial-gradient(120% 80% at 18% 12%, rgba(255,244,220,0.55) 0%, rgba(255,244,220,0) 55%)",
+                        "radial-gradient(110% 70% at 22% 14%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 60%)",
                     }}
                   />
-                  {/* Oak shelf at bottom */}
+                  {/* Frame */}
                   <div
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-[14%] pointer-events-none"
+                    className="relative"
                     style={{
-                      background:
-                        "linear-gradient(180deg, #8A6A45 0%, #6E5132 60%, #4F3920 100%)",
-                      boxShadow: "inset 0 1px 0 rgba(255,235,200,0.18)",
-                    }}
-                  />
-                  {/* Cast shadow under poster */}
-                  <div
-                    aria-hidden
-                    className="absolute left-1/2 -translate-x-1/2"
-                    style={{
-                      bottom: "12%",
-                      width: "62%",
-                      height: "10%",
-                      background:
-                        "radial-gradient(closest-side, rgba(40,28,16,0.32), rgba(40,28,16,0))",
-                      filter: "blur(6px)",
-                    }}
-                  />
-                  {/* The actual Racepace poster — leaning on the shelf */}
-                  <div
-                    className="absolute"
-                    style={{
-                      left: "50%",
-                      bottom: "14%",
-                      width: "62%",
-                      transform: "translateX(-50%) rotate(-0.4deg)",
-                      transition: "transform 700ms ease",
-                      transformOrigin: "bottom center",
+                      width: "78%",
+                      padding: "10px",
+                      background: "#0B0B0B",
+                      boxShadow:
+                        "0 1px 0 rgba(255,255,255,0.04) inset, 0 30px 60px -20px rgba(20,18,14,0.35), 0 12px 24px -12px rgba(20,18,14,0.22)",
                     }}
                   >
-                    <PosterPreview config={p} />
+                    {/* Mat */}
+                    <div style={{ background: "#FFFFFF", padding: "10px" }}>
+                      <PosterPreview config={p} />
+                    </div>
                   </div>
                 </div>
                 <div className="mt-5 flex items-baseline justify-between gap-4">
