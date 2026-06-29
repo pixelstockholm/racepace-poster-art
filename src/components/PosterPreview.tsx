@@ -355,7 +355,7 @@ export function PosterPreview({ config, className }: Props) {
           <div
             style={{
               fontFamily: sans,
-              fontSize: "0.46rem",
+              fontSize: "clamp(0.44rem, 1.8cqw, 0.75rem)",
               letterSpacing: "0.28em",
               textTransform: "uppercase",
               color: inkFaint,
