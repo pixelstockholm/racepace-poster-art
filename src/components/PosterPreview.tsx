@@ -279,7 +279,7 @@ export function PosterPreview({ config, className }: Props) {
               flexDirection: "column",
               justifyContent: "space-between",
               fontFamily: sans,
-              fontSize: "0.44rem",
+              fontSize: "clamp(0.42rem, 1.7cqw, 0.72rem)",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
               color: inkSoft,
@@ -287,13 +287,13 @@ export function PosterPreview({ config, className }: Props) {
               paddingLeft: "1.5%",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6em" }}>
               {neighborhoods.map((n) => (
                 <span key={n}>{n}</span>
               ))}
             </div>
             {coords && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.15rem", color: inkFaint, letterSpacing: "0.12em" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.2em", color: inkFaint, letterSpacing: "0.12em" }}>
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>{coords.lat}</span>
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>{coords.lon}</span>
               </div>
