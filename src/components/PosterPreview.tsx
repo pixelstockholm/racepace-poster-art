@@ -201,7 +201,7 @@ export function PosterPreview({ config, className }: Props) {
             justifyContent: "space-between",
             alignItems: "baseline",
             fontFamily: sans,
-            fontSize: "0.42rem",
+            fontSize: "clamp(0.4rem, 1.6cqw, 0.7rem)",
             letterSpacing: "0.36em",
             textTransform: "uppercase",
             fontWeight: 500,
