@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 
 import { getRaceIdentity, type RaceIdentity } from "@/lib/raceIdentities";
 
@@ -153,7 +153,8 @@ export function PosterPreview({ config, className }: Props) {
   const hairline = "rgba(22,19,14,0.28)";
   const accent = palette.accent;
 
-  const grainId = useMemo(() => `grain-${Math.random().toString(36).slice(2, 9)}`, []);
+  const reactId = useId();
+  const grainId = `grain-${reactId.replace(/:/g, "")}`;
 
   const serif = '"Fraunces", "Canela", "Tiempos", "Playfair Display", Georgia, "Times New Roman", serif';
   const sans  = '"Inter", system-ui, sans-serif';
@@ -161,6 +162,7 @@ export function PosterPreview({ config, className }: Props) {
   return (
     <div
       className={className}
+      data-racepace-poster
       style={{
         width: "100%",
         aspectRatio: "3 / 4",
@@ -201,7 +203,7 @@ export function PosterPreview({ config, className }: Props) {
             justifyContent: "space-between",
             alignItems: "baseline",
             fontFamily: sans,
-            fontSize: "clamp(0.4rem, 1.6cqw, 0.7rem)",
+            fontSize: "1.6cqw",
             letterSpacing: "0.36em",
             textTransform: "uppercase",
             fontWeight: 500,
@@ -217,10 +219,10 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             fontFamily: serif,
             fontWeight: 700,
-            fontSize: "clamp(1.6rem, 13cqw, 4rem)",
+            fontSize: "13cqw",
             lineHeight: 0.92,
             letterSpacing: "-0.02em",
-            margin: "0.4rem 0 0",
+            margin: "1.8cqw 0 0",
             textAlign: "center",
             textTransform: "uppercase",
           }}
@@ -233,10 +235,10 @@ export function PosterPreview({ config, className }: Props) {
             fontFamily: serif,
             fontStyle: "italic",
             fontWeight: 400,
-            fontSize: "clamp(0.6rem, 3.4cqw, 1.05rem)",
+            fontSize: "3.4cqw",
             letterSpacing: "0.01em",
             textAlign: "center",
-            marginTop: "0.35rem",
+            marginTop: "1.5cqw",
             color: ink,
           }}
         >
@@ -247,10 +249,10 @@ export function PosterPreview({ config, className }: Props) {
           <div
             style={{
               fontFamily: sans,
-              fontSize: "clamp(0.55rem, 2.6cqw, 0.85rem)",
+              fontSize: "2.6cqw",
               letterSpacing: "0.06em",
               textAlign: "center",
-              marginTop: "0.2rem",
+              marginTop: "0.8cqw",
               color: accent,
               fontWeight: 500,
             }}
@@ -265,7 +267,7 @@ export function PosterPreview({ config, className }: Props) {
             position: "relative",
             flex: "1 1 0",
             minHeight: 0,
-            margin: "0.5rem -1.5% 0.3rem",
+            margin: "2cqw -1.5% 1.2cqw",
             display: "grid",
             gridTemplateColumns: "minmax(0, 19%) 1fr",
             gap: "2%",
@@ -279,7 +281,7 @@ export function PosterPreview({ config, className }: Props) {
               flexDirection: "column",
               justifyContent: "space-between",
               fontFamily: sans,
-              fontSize: "clamp(0.42rem, 1.7cqw, 0.72rem)",
+              fontSize: "1.7cqw",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
               color: inkSoft,
@@ -314,15 +316,14 @@ export function PosterPreview({ config, className }: Props) {
               strokeWidth="1.7"
               strokeLinecap="round"
               strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
             />
-            <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" vectorEffect="non-scaling-stroke" />
-            <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} vectorEffect="non-scaling-stroke" />
+            <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" />
+            <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} />
           </svg>
         </div>
 
         {/* Divider */}
-        <div style={{ height: 1, background: hairline, margin: "0.3rem 0 0.5rem" }} />
+        <div style={{ height: 1, background: hairline, margin: "1.2cqw 0 2cqw" }} />
 
         {/* Time + finisher */}
         <div style={{ textAlign: "center" }}>
@@ -330,7 +331,7 @@ export function PosterPreview({ config, className }: Props) {
             style={{
               fontFamily: serif,
               fontWeight: 600,
-              fontSize: "clamp(1.3rem, 8cqw, 2.4rem)",
+              fontSize: "8cqw",
               letterSpacing: "0.04em",
               lineHeight: 1,
               color: `color-mix(in oklab, ${accent} 78%, #16130E)`,
@@ -343,11 +344,11 @@ export function PosterPreview({ config, className }: Props) {
             style={{
               fontFamily: sans,
               fontWeight: 500,
-              fontSize: "clamp(0.6rem, 2.8cqw, 0.85rem)",
+              fontSize: "2.8cqw",
               letterSpacing: "0.32em",
               textTransform: "uppercase",
               color: ink,
-              marginTop: "0.55rem",
+              marginTop: "2.2cqw",
             }}
           >
             {displayName}
@@ -355,11 +356,11 @@ export function PosterPreview({ config, className }: Props) {
           <div
             style={{
               fontFamily: sans,
-              fontSize: "clamp(0.44rem, 1.8cqw, 0.75rem)",
+              fontSize: "1.8cqw",
               letterSpacing: "0.28em",
               textTransform: "uppercase",
               color: inkFaint,
-              marginTop: "0.45rem",
+              marginTop: "1.8cqw",
               fontWeight: 500,
             }}
           >
