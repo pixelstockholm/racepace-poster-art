@@ -60,7 +60,7 @@ function HomePage() {
   return (
     <main className="bg-paper text-ink">
       {/* SECTION 1 — HERO */}
-      <section className="relative -mt-16 h-screen min-h-[600px] flex items-center justify-start">
+      <section className="relative h-screen min-h-[600px] flex items-center justify-start">
         <img
           src={heroAsset.url}
           alt="Warm morning light on a balcony — coffee, running shoes, and a race medal."
