@@ -109,20 +109,70 @@ function ShopPage() {
               search={{ race: race.id }}
               className="group block"
             >
-              <div className="bg-secondary/40 p-5 lg:p-6 transition-transform group-hover:-translate-y-1">
-                <PosterPreview
-                  config={{
-                    name: "Your Name",
-                    race: race.name,
-                    date: race.date,
-                    time: "03:24:17",
-                    theme: "cream",
-                    routePath: getRoutePath(race.id),
-                    raceId: race.id,
-                    location: `${race.city}, ${race.country}`,
-                    distanceKm: race.distanceKm,
+              {/* Plastered white wall with framed poster */}
+              <div
+                className="relative overflow-hidden flex items-center justify-center p-10 lg:p-14 transition-transform group-hover:-translate-y-1"
+                style={{
+                  aspectRatio: "4 / 5",
+                  background:
+                    "radial-gradient(120% 80% at 22% 14%, #FBF9F4 0%, #F3F0E8 55%, #E8E3D6 100%)",
+                }}
+              >
+                <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
+                  <defs>
+                    <filter id={`wall-shop-${race.id}`}>
+                      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+                      <feColorMatrix type="saturate" values="0" />
+                    </filter>
+                  </defs>
+                </svg>
+                <div
+                  aria-hidden
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ filter: `url(#wall-shop-${race.id})`, opacity: 0.18, mixBlendMode: "multiply" }}
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      "radial-gradient(90% 60% at 25% 10%, rgba(255,250,235,0.55) 0%, rgba(255,250,235,0) 60%)",
                   }}
                 />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      "radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.08) 100%)",
+                  }}
+                />
+                <div
+                  className="relative"
+                  style={{
+                    width: "78%",
+                    padding: "10px",
+                    background: "#0B0B0B",
+                    boxShadow:
+                      "inset 0 1px 0 rgba(255,255,255,0.06), 0 30px 50px -22px rgba(30,24,16,0.45), 0 14px 24px -14px rgba(30,24,16,0.28)",
+                  }}
+                >
+                  <div style={{ background: "#FFFFFF", padding: "10px" }}>
+                    <PosterPreview
+                      config={{
+                        name: "Your Name",
+                        race: race.name,
+                        date: race.date,
+                        time: "03:24:17",
+                        theme: "cream",
+                        routePath: getRoutePath(race.id),
+                        raceId: race.id,
+                        location: `${race.city}, ${race.country}`,
+                        distanceKm: race.distanceKm,
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="mt-4 flex items-baseline justify-between gap-4">
                 <div>
