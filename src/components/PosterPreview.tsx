@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 
 import { getRaceIdentity, type RaceIdentity } from "@/lib/raceIdentities";
 
@@ -153,7 +153,8 @@ export function PosterPreview({ config, className }: Props) {
   const hairline = "rgba(22,19,14,0.28)";
   const accent = palette.accent;
 
-  const grainId = useMemo(() => `grain-${Math.random().toString(36).slice(2, 9)}`, []);
+  const reactId = useId();
+  const grainId = `grain-${reactId.replace(/:/g, "")}`;
 
   const serif = '"Fraunces", "Canela", "Tiempos", "Playfair Display", Georgia, "Times New Roman", serif';
   const sans  = '"Inter", system-ui, sans-serif';
@@ -161,6 +162,7 @@ export function PosterPreview({ config, className }: Props) {
   return (
     <div
       className={className}
+      data-racepace-poster
       style={{
         width: "100%",
         aspectRatio: "3 / 4",
