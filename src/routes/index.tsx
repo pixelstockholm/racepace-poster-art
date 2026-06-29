@@ -115,22 +115,45 @@ function HomePage() {
                 search={{ race: p.raceId }}
                 className="group block"
               >
-                {/* White wall with framed poster */}
+                {/* Plastered white wall with framed poster */}
                 <div
                   className="relative overflow-hidden flex items-center justify-center p-10 lg:p-14"
                   style={{
                     aspectRatio: "4 / 5",
                     background:
-                      "linear-gradient(180deg, #FAFAF7 0%, #F2F0EA 100%)",
+                      "radial-gradient(120% 80% at 22% 14%, #FBF9F4 0%, #F3F0E8 55%, #E8E3D6 100%)",
                   }}
                 >
-                  {/* Very soft directional light */}
+                  {/* Plaster grain */}
+                  <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
+                    <defs>
+                      <filter id={`wall-${p.raceId}`}>
+                        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+                        <feColorMatrix type="saturate" values="0" />
+                      </filter>
+                    </defs>
+                  </svg>
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ filter: `url(#wall-${p.raceId})`, opacity: 0.18, mixBlendMode: "multiply" }}
+                  />
+                  {/* Soft directional light */}
                   <div
                     aria-hidden
                     className="absolute inset-0 pointer-events-none"
                     style={{
                       background:
-                        "radial-gradient(110% 70% at 22% 14%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 60%)",
+                        "radial-gradient(90% 60% at 25% 10%, rgba(255,250,235,0.55) 0%, rgba(255,250,235,0) 60%)",
+                    }}
+                  />
+                  {/* Subtle vignette */}
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.08) 100%)",
                     }}
                   />
                   {/* Frame */}
@@ -141,7 +164,7 @@ function HomePage() {
                       padding: "10px",
                       background: "#0B0B0B",
                       boxShadow:
-                        "0 1px 0 rgba(255,255,255,0.04) inset, 0 30px 60px -20px rgba(20,18,14,0.35), 0 12px 24px -12px rgba(20,18,14,0.22)",
+                        "inset 0 1px 0 rgba(255,255,255,0.06), 0 30px 50px -22px rgba(30,24,16,0.45), 0 14px 24px -14px rgba(30,24,16,0.28)",
                     }}
                   >
                     {/* Mat */}

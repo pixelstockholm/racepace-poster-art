@@ -201,7 +201,7 @@ export function PosterPreview({ config, className }: Props) {
             justifyContent: "space-between",
             alignItems: "baseline",
             fontFamily: sans,
-            fontSize: "0.42rem",
+            fontSize: "clamp(0.4rem, 1.6cqw, 0.7rem)",
             letterSpacing: "0.36em",
             textTransform: "uppercase",
             fontWeight: 500,
@@ -279,7 +279,7 @@ export function PosterPreview({ config, className }: Props) {
               flexDirection: "column",
               justifyContent: "space-between",
               fontFamily: sans,
-              fontSize: "0.44rem",
+              fontSize: "clamp(0.42rem, 1.7cqw, 0.72rem)",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
               color: inkSoft,
@@ -287,13 +287,13 @@ export function PosterPreview({ config, className }: Props) {
               paddingLeft: "1.5%",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6em" }}>
               {neighborhoods.map((n) => (
                 <span key={n}>{n}</span>
               ))}
             </div>
             {coords && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.15rem", color: inkFaint, letterSpacing: "0.12em" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.2em", color: inkFaint, letterSpacing: "0.12em" }}>
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>{coords.lat}</span>
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>{coords.lon}</span>
               </div>
@@ -355,7 +355,7 @@ export function PosterPreview({ config, className }: Props) {
           <div
             style={{
               fontFamily: sans,
-              fontSize: "0.46rem",
+              fontSize: "clamp(0.44rem, 1.8cqw, 0.75rem)",
               letterSpacing: "0.28em",
               textTransform: "uppercase",
               color: inkFaint,
