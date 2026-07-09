@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroAsset from "@/assets/hero-balcony-morning.png.asset.json";
 import { PosterPreview, type PosterConfig } from "@/components/PosterPreview";
-import { RACE_ROUTES } from "@/lib/raceRoutes";
+import { getRoutePath } from "@/lib/raceRoutes";
 import { findRaceById } from "@/lib/races";
 
 export const Route = createFileRoute("/")({
@@ -44,7 +44,7 @@ function buildConfig(id: string): PosterConfig & { city: string; country: string
     date: race.date,
     time: s.time,
     theme: "cream",
-    routePath: RACE_ROUTES[id] ?? "",
+    routePath: getRoutePath(id),
     location: `${race.city}, ${race.country}`,
     distanceKm: race.distanceKm,
     raceId: id,

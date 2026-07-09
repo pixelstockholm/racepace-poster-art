@@ -10,7 +10,7 @@ export interface PosterConfig {
   date: string;
   time: string;
   theme: PosterTheme;
-  routePath: string;
+  routePath: string | null;
   location?: string;
   distanceKm?: number;
   elevationM?: number;
@@ -124,9 +124,12 @@ export function PosterPreview({ config, className }: Props) {
   const coords = config.raceId ? COORDS[config.raceId] : undefined;
 
   // Auto-fit the route inside the SVG by computing its bounding box.
+  const hasRoute = !!config.routePath;
   const routeBox = useMemo(() => {
+    const empty = { vb: "0 0 100 100", endX: 50, endY: 50, startX: 50, startY: 50 };
+    if (!config.routePath) return empty;
     const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
-    if (!m || m.length < 4) return { vb: "0 0 100 100", endX: 50, endY: 50, startX: 50, startY: 50 };
+    if (!m || m.length < 4) return empty;
     const nums = m.map(parseFloat);
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     for (let i = 0; i < nums.length - 1; i += 2) {
@@ -302,24 +305,46 @@ export function PosterPreview({ config, className }: Props) {
             )}
           </div>
 
-          {/* Route — hero in accent */}
-          <svg
-            viewBox={routeBox.vb}
-            preserveAspectRatio="xMidYMid meet"
-            style={{ width: "100%", height: "100%", display: "block" }}
-            aria-hidden
-          >
-            <path
-              d={config.routePath}
-              fill="none"
-              stroke={accent}
-              strokeWidth="1.7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" />
-            <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} />
-          </svg>
+          {/* Route — hero in accent, or a "pending" plate when no verified GPX yet */}
+          {hasRoute ? (
+            <svg
+              viewBox={routeBox.vb}
+              preserveAspectRatio="xMidYMid meet"
+              style={{ width: "100%", height: "100%", display: "block" }}
+              aria-hidden
+            >
+              <path
+                d={config.routePath ?? ""}
+                fill="none"
+                stroke={accent}
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" />
+              <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} />
+            </svg>
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: `1px dashed ${hairline}`,
+                fontFamily: sans,
+                fontSize: "1.6cqw",
+                letterSpacing: "0.24em",
+                textTransform: "uppercase",
+                color: inkFaint,
+                textAlign: "center",
+                padding: "3cqw",
+              }}
+            >
+              Route pending verification
+            </div>
+          )}
         </div>
 
         {/* Divider */}
