@@ -1,0 +1,4 @@
+{
+  "$schema": "Verified marathon routes. Populate from the Racepace admin app. Never hand-edit svg_path without re-verifying against the GPX source.",
+  "routes": []
+}
