@@ -305,24 +305,46 @@ export function PosterPreview({ config, className }: Props) {
             )}
           </div>
 
-          {/* Route — hero in accent */}
-          <svg
-            viewBox={routeBox.vb}
-            preserveAspectRatio="xMidYMid meet"
-            style={{ width: "100%", height: "100%", display: "block" }}
-            aria-hidden
-          >
-            <path
-              d={config.routePath}
-              fill="none"
-              stroke={accent}
-              strokeWidth="1.7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" />
-            <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} />
-          </svg>
+          {/* Route — hero in accent, or a "pending" plate when no verified GPX yet */}
+          {hasRoute ? (
+            <svg
+              viewBox={routeBox.vb}
+              preserveAspectRatio="xMidYMid meet"
+              style={{ width: "100%", height: "100%", display: "block" }}
+              aria-hidden
+            >
+              <path
+                d={config.routePath ?? ""}
+                fill="none"
+                stroke={accent}
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" />
+              <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} />
+            </svg>
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: `1px dashed ${hairline}`,
+                fontFamily: sans,
+                fontSize: "1.6cqw",
+                letterSpacing: "0.24em",
+                textTransform: "uppercase",
+                color: inkFaint,
+                textAlign: "center",
+                padding: "3cqw",
+              }}
+            >
+              Route pending verification
+            </div>
+          )}
         </div>
 
         {/* Divider */}
