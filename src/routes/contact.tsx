@@ -34,7 +34,7 @@ function ContactPage() {
     e.preventDefault();
     const subject = encodeURIComponent(`Racepace — message from ${name || "a visitor"}`);
     const body = encodeURIComponent(`${message}\n\nFrom: ${name} <${email}>`);
-    window.location.href = `mailto:hello@racepace.lovable.app?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:hello@racepace.co?subject=${subject}&body=${body}`;
     toast.success("Opening your email client…");
   };
 
@@ -47,8 +47,8 @@ function ContactPage() {
       <p className="mt-6 text-lg text-muted-foreground max-w-xl">
         Questions about an order, a custom request, or wholesale — we usually reply within
         a business day. Or email us directly at{" "}
-        <a className="text-primary underline" href="mailto:hello@racepace.lovable.app">
-          hello@racepace.lovable.app
+        <a className="text-primary underline" href="mailto:hello@racepace.co">
+          hello@racepace.co
         </a>
         .
       </p>

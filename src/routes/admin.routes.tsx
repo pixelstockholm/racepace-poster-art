@@ -21,6 +21,23 @@ export const Route = createFileRoute("/admin/routes")({
 });
 
 function AdminRoutesPage() {
+  if (!import.meta.env.DEV) {
+    return (
+      <main className="mx-auto max-w-3xl px-6 py-20">
+        <p className="text-xs uppercase tracking-[0.28em] text-neutral-500">Racepace admin</p>
+        <h1 className="mt-4 font-serif text-4xl">Private production tool.</h1>
+        <p className="mt-4 text-sm leading-relaxed text-neutral-600">
+          Route import and production review tools are not exposed on the public storefront.
+          Orders are handled through the connected production workflow after checkout.
+        </p>
+      </main>
+    );
+  }
+
+  return <AdminRoutesTool />;
+}
+
+function AdminRoutesTool() {
   const [raceId, setRaceId] = useState<string>("berlin");
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [sourceUrl, setSourceUrl] = useState<string>("");

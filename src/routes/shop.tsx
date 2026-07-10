@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { PosterPreview } from "@/components/PosterPreview";
 import { RACES } from "@/lib/races";
-import { getRoutePath } from "@/lib/raceRoutes";
+import { getRoutePath, isRouteVerified } from "@/lib/raceRoutes";
 
 export const Route = createFileRoute("/shop")({
   head: () => ({
@@ -12,13 +12,13 @@ export const Route = createFileRoute("/shop")({
       {
         name: "description",
         content:
-          "Browse the full Racepace collection of city marathon posters. Personalize any print with your name, time and date.",
+          "Browse verified Racepace marathon editions. Personalize available prints with your name, time and date.",
       },
       { property: "og:title", content: "Shop marathon posters — Racepace" },
       {
         property: "og:description",
         content:
-          "Limited-edition city marathon posters. Berlin, NYC, Tokyo, London and more — printed on archival paper.",
+          "Verified city marathon editions, printed on archival paper after design review.",
       },
     ],
   }),
@@ -54,8 +54,10 @@ function ShopPage() {
         r.city.toLowerCase().includes(q) ||
         r.country.toLowerCase().includes(q)
       );
-    });
+    }).sort((a, b) => Number(isRouteVerified(b.id)) - Number(isRouteVerified(a.id)));
   }, [query, filter]);
+  const availableEditions = filtered.filter((race) => isRouteVerified(race.id));
+  const archiveQueue = filtered.filter((race) => !isRouteVerified(race.id));
 
   return (
     <main className="mx-auto max-w-7xl px-6 lg:px-10 pt-12 pb-24">
@@ -63,11 +65,11 @@ function ShopPage() {
       <header className="mb-12">
         <p className="eyebrow">The collection</p>
         <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl mt-4 leading-[0.95] tracking-tight">
-          Every major. Every memory.
+          The verified archive.
         </h1>
         <p className="mt-5 max-w-xl text-muted-foreground leading-relaxed">
-          Limited-edition city marathon prints, each built around its course and its colours.
-          Browse the gallery, then make one yours.
+          Available launch editions are built from reviewed race routes. More cities are
+          added as each course is verified and prepared for print.
         </p>
       </header>
 
@@ -101,13 +103,17 @@ function ShopPage() {
       {filtered.length === 0 ? (
         <p className="text-muted-foreground py-20 text-center">No marathons match your search.</p>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
-          {filtered.map((race) => (
-            <Link
+        <>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-14">
+          {availableEditions.map((race) => {
+            const verified = isRouteVerified(race.id);
+            const CardShell = verified ? Link : "div";
+
+            return (
+            <CardShell
               key={race.id}
-              to="/create"
-              search={{ race: race.id }}
-              className="group block"
+              {...(verified ? { to: "/create", search: { race: race.id } } : {})}
+              className={`group block ${verified ? "" : "cursor-not-allowed opacity-70"}`}
             >
               {/* Plastered white wall with framed poster */}
               <div
@@ -147,6 +153,11 @@ function ShopPage() {
                       "radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.08) 100%)",
                   }}
                 />
+                {!verified && (
+                  <div className="absolute right-4 top-4 z-10 bg-paper/90 px-3 py-1 text-[0.58rem] tracking-[0.22em] uppercase text-foreground shadow-sm">
+                    Coming soon
+                  </div>
+                )}
                 <div
                   className="relative"
                   style={{
@@ -182,12 +193,43 @@ function ShopPage() {
                   </div>
                 </div>
                 <span className="text-xs tracking-widest uppercase text-muted-foreground group-hover:text-primary transition-colors">
-                  Personalize →
+                  {verified ? "Personalize →" : "Request →"}
                 </span>
               </div>
-            </Link>
-          ))}
+            </CardShell>
+          )})}
         </div>
+
+        {archiveQueue.length > 0 && (
+          <section className="mt-24 border-t border-border pt-14">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <p className="eyebrow">Archive queue</p>
+                <h2 className="mt-3 font-serif text-3xl md:text-4xl tracking-tight">
+                  More races, currently being prepared.
+                </h2>
+              </div>
+              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+                These editions are listed for demand signals only. Checkout opens after
+                the route has been verified and reviewed for print.
+              </p>
+            </div>
+            <div className="mt-10 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+              {archiveQueue.map((race) => (
+                <div key={race.id} className="bg-background p-5">
+                  <div className="font-serif text-xl leading-tight">{race.city}</div>
+                  <div className="mt-1 text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground">
+                    {race.country}
+                  </div>
+                  <div className="mt-5 text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground">
+                    Request edition →
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+        </>
       )}
     </main>
   );

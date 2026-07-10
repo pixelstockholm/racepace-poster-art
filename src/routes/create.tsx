@@ -24,7 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import { RACES, findRaceById } from "@/lib/races";
-import { getRoutePath } from "@/lib/raceRoutes";
+import { getRoutePath, isRouteVerified } from "@/lib/raceRoutes";
 
 import { fetchPosterProduct, useCartStore, type ShopifyVariant } from "@/lib/shopify";
 
@@ -65,6 +65,7 @@ function CreatePage() {
   const [theme, setTheme] = useState<PosterTheme>("cream");
   const [size, setSize] = useState<string>("A2");
   const [racePickerOpen, setRacePickerOpen] = useState(false);
+  const currentRace = findRaceById(raceId);
 
   // When race changes, auto-fill the date
   useEffect(() => {
@@ -76,12 +77,14 @@ function CreatePage() {
 
   const raceLabel = useCustom
     ? customRace
-    : findRaceById(raceId)?.name ?? "";
+    : currentRace?.name ?? "";
+  const routeAvailable = useCustom ? false : isRouteVerified(raceId);
 
   // Shopify product
   const { data: product, isLoading: productLoading } = useQuery({
     queryKey: ["poster-product"],
     queryFn: fetchPosterProduct,
+    enabled: routeAvailable,
   });
 
   const variantBySize = useMemo(() => {
@@ -98,6 +101,12 @@ function CreatePage() {
   const isAdding = useCartStore((s) => s.isLoading);
 
   const handleAdd = async () => {
+    if (!routeAvailable) {
+      toast.error("This route is not ready yet.", {
+        description: "Choose an available edition or request this race for the archive.",
+      });
+      return;
+    }
     if (!product || !selectedVariant) return;
     if (!raceLabel.trim()) {
       toast.error("Please choose or enter a race.");
@@ -119,6 +128,15 @@ function CreatePage() {
       { key: "Finish time", value: time.trim() },
       { key: "Theme", value: THEMES[theme].label },
       { key: "Size", value: size },
+      { key: "_race_id", value: raceId },
+      { key: "_race_city", value: currentRace?.city ?? "" },
+      { key: "_race_country", value: currentRace?.country ?? "" },
+      { key: "_route_verified", value: String(routeAvailable) },
+      { key: "_poster_theme", value: theme },
+      { key: "_poster_size", value: size },
+      { key: "_design_status", value: "pending_review" },
+      { key: "_fulfillment_status", value: "awaiting_admin_approval" },
+      { key: "_source", value: "racepace_web" },
     ];
 
     await addItem({
@@ -138,17 +156,39 @@ function CreatePage() {
   };
 
   const sizes = ["A3", "A2", "50x70cm", "70x100cm"];
+  const displayPrices: Record<string, string> = {
+    A3: "SEK 590",
+    A2: "SEK 790",
+    "50x70cm": "SEK 890",
+    "70x100cm": "SEK 1290",
+  };
+  const editionCity = useCustom
+    ? customRace || "Custom race"
+    : currentRace?.city ?? "Race";
+  const editionLocation = currentRace
+    ? `${currentRace.city}, ${currentRace.country}`
+    : "Route pending";
 
   return (
     <main className="mx-auto max-w-7xl px-6 lg:px-10 pt-10 pb-24">
-      <div className="mb-10">
-        <p className="eyebrow">Design</p>
-        <h1 className="font-serif text-4xl md:text-5xl mt-4 leading-tight">
-          Build your poster.
-        </h1>
-        <p className="mt-3 text-muted-foreground max-w-xl">
-          Every detail updates the preview in real time. When it feels right, add it to your cart.
-        </p>
+      <div className="mb-12 grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+        <div>
+          <p className="eyebrow">Racepace Edition</p>
+          <h1 className="font-serif text-4xl md:text-5xl mt-4 leading-tight">
+            {editionCity} Edition
+          </h1>
+          <p className="mt-3 text-muted-foreground max-w-xl">
+            A personalized marathon print built around the route, city and details of your race.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3 text-[0.62rem] tracking-[0.22em] uppercase">
+          <span className="border border-border px-3 py-2 text-muted-foreground">
+            {editionLocation}
+          </span>
+          <span className={`border px-3 py-2 ${routeAvailable ? "border-foreground text-foreground" : "border-border text-muted-foreground"}`}>
+            {routeAvailable ? "Verified route" : "Archive queue"}
+          </span>
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -156,7 +196,10 @@ function CreatePage() {
         <div className="lg:col-span-5 space-y-8">
           {/* Race picker */}
           <div>
-            <Label className="eyebrow">Race</Label>
+            <div className="flex items-center gap-4">
+              <span className="font-serif text-2xl leading-none">01</span>
+              <Label className="eyebrow">Edition</Label>
+            </div>
             <div className="mt-3 space-y-3">
               {!useCustom ? (
                 <Popover open={racePickerOpen} onOpenChange={setRacePickerOpen}>
@@ -219,54 +262,63 @@ function CreatePage() {
                 onClick={() => setUseCustom((v) => !v)}
                 className="text-xs uppercase tracking-widest text-muted-foreground hover:text-primary"
               >
-                {useCustom ? "← Pick from list" : "Race not listed? Enter it manually →"}
+                {useCustom ? "← Pick from list" : "Race not listed? Request archive addition →"}
               </button>
+              {!routeAvailable && !useCustom && (
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  This route is in the archive queue and is not available for checkout yet.
+                </p>
+              )}
             </div>
           </div>
 
           {/* Name */}
-          <div>
-            <Label htmlFor="name" className="eyebrow">Finisher name</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Alexander Müller"
-              className="mt-3 h-12 rounded-none"
-              maxLength={40}
-            />
-          </div>
-
-          {/* Time & date */}
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="time" className="eyebrow">Finish time</Label>
-              <Input
-                id="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                placeholder="HH:MM:SS"
-                className="mt-3 h-12 rounded-none tabular-nums"
-              />
+          <div className="space-y-6 border-t border-border pt-8">
+            <div className="flex items-center gap-4">
+              <span className="font-serif text-2xl leading-none">02</span>
+              <Label className="eyebrow">Personal details</Label>
             </div>
             <div>
-              <Label htmlFor="date" className="eyebrow">Race date</Label>
+              <Label htmlFor="name" className="eyebrow">Finisher name</Label>
               <Input
-                id="date"
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Alexander Müller"
                 className="mt-3 h-12 rounded-none"
+                maxLength={40}
               />
             </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="time" className="eyebrow">Finish time</Label>
+                <Input
+                  id="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  placeholder="HH:MM:SS"
+                  className="mt-3 h-12 rounded-none tabular-nums"
+                />
+              </div>
+              <div>
+                <Label htmlFor="date" className="eyebrow">Race date</Label>
+                <Input
+                  id="date"
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="mt-3 h-12 rounded-none"
+                />
+              </div>
+            </div>
           </div>
-
-
-
 
           {/* Size */}
-          <div>
-            <Label className="eyebrow">Size</Label>
+          <div className="border-t border-border pt-8">
+            <div className="flex items-center gap-4">
+              <span className="font-serif text-2xl leading-none">03</span>
+              <Label className="eyebrow">Format</Label>
+            </div>
             <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {sizes.map((s) => {
                 const v = variantBySize.get(s);
@@ -285,7 +337,7 @@ function CreatePage() {
                   >
                     <span className="text-sm">{s}</span>
                     <span className="text-xs text-muted-foreground mt-1 tabular-nums">
-                      {v ? `${v.price.currencyCode} ${parseFloat(v.price.amount).toFixed(0)}` : "—"}
+                      {displayPrices[s] ?? (v ? `${v.price.currencyCode} ${parseFloat(v.price.amount).toFixed(0)}` : "—")}
                     </span>
                   </button>
                 );
@@ -298,18 +350,20 @@ function CreatePage() {
             <div className="flex items-center justify-between mb-4">
               <span className="eyebrow">Total</span>
               <span className="font-serif text-3xl tabular-nums">
-                {selectedVariant
+                {displayPrices[size] ?? (selectedVariant
                   ? `${selectedVariant.price.currencyCode} ${parseFloat(selectedVariant.price.amount).toFixed(2)}`
-                  : "—"}
+                  : "—")}
               </span>
             </div>
             <Button
               onClick={handleAdd}
-              disabled={!selectedVariant || isAdding || productLoading}
-              className="w-full h-14 rounded-none text-sm tracking-widest uppercase"
+              disabled={!selectedVariant || isAdding || productLoading || !routeAvailable}
+              className="w-full h-14 rounded-none bg-ink text-paper text-sm tracking-widest uppercase hover:bg-ink/90 disabled:bg-muted disabled:text-muted-foreground"
             >
               {isAdding ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
+              ) : !routeAvailable ? (
+                "Route coming soon"
               ) : productLoading ? (
                 "Loading…"
               ) : (
@@ -317,7 +371,7 @@ function CreatePage() {
               )}
             </Button>
             <p className="mt-3 text-xs text-muted-foreground">
-              Free worldwide shipping on orders over €100. Printed and shipped within 5 business days.
+              Printed on archival matte paper. Each route is reviewed before production.
             </p>
           </div>
         </div>

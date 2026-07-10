@@ -8,8 +8,7 @@ export function SiteFooter() {
           <div className="md:col-span-6">
             <div className="font-serif text-2xl tracking-tight">Racepace</div>
             <p className="mt-5 text-sm text-muted-foreground max-w-sm leading-relaxed">
-              A race deserves more than a medal. Editorial marathon prints,
-              printed on archival paper and shipped worldwide.
+              Editorial marathon prints built from verified routes and personal race details.
             </p>
           </div>
           <nav className="md:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-8 text-sm">
@@ -31,7 +30,7 @@ export function SiteFooter() {
       <div className="border-t border-rule/60">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-6 flex flex-wrap items-center justify-between gap-2 text-[0.65rem] tracking-[0.22em] uppercase text-muted-foreground">
           <span>© {new Date().getFullYear()} Racepace</span>
-          <span>Printed in Europe</span>
+          <span>Verified route archive</span>
         </div>
       </div>
     </footer>

@@ -4,11 +4,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "sonner";
 
 export const SHOPIFY_API_VERSION = "2025-07";
-export const SHOPIFY_STORE_PERMANENT_DOMAIN = "pathorize-flow-iaw9w.myshopify.com";
-export const SHOPIFY_STOREFRONT_TOKEN = "c4b79a36faa8ef4ab6f0b3a914dfb47c";
+export const SHOPIFY_STORE_PERMANENT_DOMAIN =
+  import.meta.env.VITE_SHOPIFY_STORE_DOMAIN ?? "pathorize-flow-iaw9w.myshopify.com";
+export const SHOPIFY_STOREFRONT_TOKEN =
+  import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN ?? "c4b79a36faa8ef4ab6f0b3a914dfb47c";
 export const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 
-export const POSTER_PRODUCT_HANDLE = "custom-marathon-poster";
+export const POSTER_PRODUCT_HANDLE =
+  import.meta.env.VITE_SHOPIFY_POSTER_PRODUCT_HANDLE ?? "custom-marathon-poster";
 
 export interface ShopifyVariant {
   id: string;

@@ -28,15 +28,15 @@ export const Route = createFileRoute("/faq")({
 const FAQS: Array<{ q: string; a: string }> = [
   {
     q: "How long does shipping take?",
-    a: "Posters print within 5 business days and ship via tracked courier. Europe arrives in 3–6 business days, North America in 5–9 business days, rest of world in 7–14 business days. Free worldwide shipping on orders over €100.",
+    a: "Orders are reviewed before production, then printed and shipped via the selected production partner. Expected delivery windows are shown at checkout once your shipping country is selected.",
   },
   {
     q: "What sizes do you offer?",
-    a: "A3 (29.7 × 42 cm), A2 (42 × 59.4 cm), 50 × 70 cm, and 70 × 100 cm. A2 and 50 × 70 are our most popular — they're large enough to anchor a wall without overpowering it.",
+    a: "A3 (29.7 × 42 cm), A2 (42 × 59.4 cm), 50 × 70 cm, and 70 × 100 cm. A2 is the default size because it feels substantial without overpowering a room.",
   },
   {
     q: "What paper do you print on?",
-    a: "230gsm archival matte paper with a fine tooth. Pigment inks rated for 100+ years without fading. Cut to size with a fine border so it sits well inside standard frames.",
+    a: "Racepace editions are intended for archival matte paper with a refined, low-gloss finish. Final paper specifications are confirmed in the product details at checkout.",
   },
   {
     q: "Do posters come framed?",
@@ -44,7 +44,7 @@ const FAQS: Array<{ q: string; a: string }> = [
   },
   {
     q: "Can I edit my poster after ordering?",
-    a: "Yes, as long as we haven't started printing. Email hello@racepace.lovable.app with your order number and the change. Once your order moves to printing (usually within 24 hours) we can't make changes.",
+    a: "Yes, as long as the order has not been approved for print. Contact us with your order number and the change you need as soon as possible.",
   },
   {
     q: "What if I made a typo?",
@@ -56,7 +56,7 @@ const FAQS: Array<{ q: string; a: string }> = [
   },
   {
     q: "My race isn't on the list. Can I still order?",
-    a: "Yes — switch to the manual entry on the customization page and type your race name. The design system handles any race, distance or event.",
+    a: "Not immediately. Races need a verified route before checkout is enabled. You can request a race and we will prioritize additions based on demand.",
   },
 ];
 

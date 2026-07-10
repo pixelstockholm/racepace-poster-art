@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroAsset from "@/assets/hero-balcony-morning.png.asset.json";
+import heroAsset from "@/assets/featured-posters.jpg";
 import { PosterPreview, type PosterConfig } from "@/components/PosterPreview";
 import { getRoutePath } from "@/lib/raceRoutes";
 import { findRaceById } from "@/lib/races";
@@ -24,11 +24,12 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const FEATURED_IDS = ["stockholm", "berlin", "paris", "tokyo", "chicago", "amsterdam"] as const;
+const FEATURED_IDS = ["berlin", "nyc"] as const;
 
 const SAMPLE_TIMES: Record<string, { name: string; time: string }> = {
   stockholm: { name: "E. Sjöberg",  time: "03:24:18" },
   berlin:    { name: "D. Okafor",   time: "02:58:42" },
+  nyc:        { name: "A. Dumas",    time: "03:28:19" },
   paris:     { name: "M. Lévesque", time: "03:41:05" },
   tokyo:     { name: "H. Nakamura", time: "03:12:33" },
   chicago:   { name: "J. Whitfield",time: "03:06:51" },
@@ -62,9 +63,9 @@ function HomePage() {
       {/* SECTION 1 — HERO */}
       <section className="relative h-screen min-h-[600px] flex items-center justify-start">
         <img
-          src={heroAsset.url}
-          alt="Warm morning light on a balcony — coffee, running shoes, and a race medal."
-          className="absolute inset-0 w-full h-full object-cover object-[50%_75%]"
+          src={heroAsset}
+          alt="Framed marathon editions hanging in warm morning light."
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Subtle top gradient for header readability */}
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/50 to-transparent pointer-events-none" />
@@ -80,7 +81,7 @@ function HomePage() {
             <br />
             The story stays.
           </h1>
-          <p className="mt-10 text-sm md:text-base text-paper/80 leading-relaxed max-w-sm">
+          <p className="mt-10 text-sm md:text-base text-paper/85 leading-relaxed max-w-sm">
             For the miles worth remembering.
           </p>
           <Link
@@ -107,7 +108,7 @@ function HomePage() {
               View all →
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 lg:gap-x-14 gap-y-16 lg:gap-y-24">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 lg:gap-x-14 gap-y-16 lg:gap-y-24">
             {FEATURED.map((p) => (
               <Link
                 key={p.raceId}
@@ -209,36 +210,31 @@ function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 4 — TESTIMONIALS */}
+      {/* SECTION 4 — TRUST MARKERS */}
       <section className="border-t border-rule/60 bg-secondary/40">
-        <div className="mx-auto max-w-5xl px-6 lg:px-10 py-28 lg:py-40">
-          <div className="grid md:grid-cols-2 gap-16 lg:gap-24">
+        <div className="mx-auto max-w-6xl px-6 lg:px-10 py-24 lg:py-32">
+          <div className="grid md:grid-cols-3 gap-10 lg:gap-16">
             {[
               {
-                quote:
-                  "It doesn't feel like a finisher poster. It feels like something I'd buy even if I hadn't run.",
-                name: "Elin Sjöberg",
-                meta: "Stockholm, 2024",
+                title: "Verified routes",
+                desc: "Launch editions use GPX-derived routes reviewed before they enter the archive.",
               },
               {
-                quote:
-                  "Hangs above my reading chair. Three friends asked where the print was from before they noticed it was mine.",
-                name: "Daniel Okafor",
-                meta: "Berlin, 2023",
+                title: "Archival paper",
+                desc: "Printed on heavy matte paper designed to feel like an object, not event merch.",
               },
-            ].map((t) => (
-              <figure key={t.name}>
-                <blockquote className="font-serif text-2xl md:text-3xl leading-[1.25] italic text-ink">
-                  “{t.quote}”
-                </blockquote>
-                <figcaption className="mt-8">
-                  <div className="hairline w-10 mb-5" />
-                  <div className="text-sm">{t.name}</div>
-                  <div className="text-[0.62rem] tracking-[0.24em] uppercase text-muted-foreground mt-1.5">
-                    {t.meta}
-                  </div>
-                </figcaption>
-              </figure>
+              {
+                title: "Checked before print",
+                desc: "Each personalized order is reviewed before production so the final edition feels considered.",
+              },
+            ].map((item) => (
+              <div key={item.title}>
+                <div className="hairline mb-6" />
+                <h3 className="font-serif text-2xl md:text-3xl leading-tight">{item.title}</h3>
+                <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-[34ch]">
+                  {item.desc}
+                </p>
+              </div>
             ))}
           </div>
         </div>
@@ -252,10 +248,10 @@ function HomePage() {
           </h2>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
             <Link
-              to="/create"
+              to="/shop"
               className="inline-flex items-center justify-center h-11 px-8 bg-ink text-paper text-[0.68rem] tracking-[0.24em] uppercase hover:opacity-90 transition-opacity"
             >
-              Create Yours
+              Browse editions
             </Link>
             <Link
               to="/shop"
