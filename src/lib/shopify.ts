@@ -4,14 +4,20 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "sonner";
 
 export const SHOPIFY_API_VERSION = "2025-07";
-export const SHOPIFY_STORE_PERMANENT_DOMAIN =
-  import.meta.env.VITE_SHOPIFY_STORE_DOMAIN ?? "pathorize-flow-iaw9w.myshopify.com";
-export const SHOPIFY_STOREFRONT_TOKEN =
-  import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN ?? "c4b79a36faa8ef4ab6f0b3a914dfb47c";
+export const SHOPIFY_STORE_PERMANENT_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN?.trim();
+export const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN?.trim();
 export const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 
-export const POSTER_PRODUCT_HANDLE =
-  import.meta.env.VITE_SHOPIFY_POSTER_PRODUCT_HANDLE ?? "custom-marathon-poster";
+export const POSTER_PRODUCT_HANDLE = import.meta.env.VITE_SHOPIFY_POSTER_PRODUCT_HANDLE?.trim();
+
+function assertShopifyConfiguration(): void {
+  if (!SHOPIFY_STORE_PERMANENT_DOMAIN || !SHOPIFY_STOREFRONT_TOKEN || !POSTER_PRODUCT_HANDLE) {
+    throw new Error("Shopify storefront configuration is missing.");
+  }
+  if (!/^[a-z0-9][a-z0-9-]*\.myshopify\.com$/i.test(SHOPIFY_STORE_PERMANENT_DOMAIN)) {
+    throw new Error("Shopify store domain is invalid.");
+  }
+}
 
 export interface ShopifyVariant {
   id: string;
@@ -36,10 +42,30 @@ export interface ShopifyProduct {
   node: ShopifyProductNode;
 }
 
-export async function storefrontApiRequest<T = any>(
+export function formatShopifyMoney(price: { amount: string; currencyCode: string }): string {
+  const amount = Number(price.amount);
+
+  if (!Number.isFinite(amount)) {
+    return `${price.currencyCode} ${price.amount}`;
+  }
+
+  try {
+    return new Intl.NumberFormat("sv-SE", {
+      style: "currency",
+      currency: price.currencyCode,
+      minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  } catch {
+    return `${price.currencyCode} ${amount.toFixed(Number.isInteger(amount) ? 0 : 2)}`;
+  }
+}
+
+export async function storefrontApiRequest<T = unknown>(
   query: string,
   variables: Record<string, unknown> = {},
 ): Promise<{ data?: T; errors?: Array<{ message: string }> } | undefined> {
+  assertShopifyConfiguration();
   const response = await fetch(SHOPIFY_STOREFRONT_URL, {
     method: "POST",
     headers: {
@@ -75,20 +101,41 @@ const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       title
       description
       handle
-      priceRange { minVariantPrice { amount currencyCode } }
-      images(first: 5) { edges { node { url altText } } }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      images(first: 5) {
+        edges {
+          node {
+            url
+            altText
+          }
+        }
+      }
       variants(first: 10) {
         edges {
           node {
             id
             title
-            price { amount currencyCode }
+            price {
+              amount
+              currencyCode
+            }
             availableForSale
-            selectedOptions { name value }
+            selectedOptions {
+              name
+              value
+            }
           }
         }
       }
-      options { name values }
+      options {
+        name
+        values
+      }
     }
   }
 `;
@@ -106,7 +153,10 @@ export async function fetchPosterProduct(): Promise<ShopifyProduct | null> {
 
 const CART_QUERY = /* GraphQL */ `
   query cart($id: ID!) {
-    cart(id: $id) { id totalQuantity }
+    cart(id: $id) {
+      id
+      totalQuantity
+    }
   }
 `;
 
@@ -117,10 +167,22 @@ const CART_CREATE_MUTATION = /* GraphQL */ `
         id
         checkoutUrl
         lines(first: 100) {
-          edges { node { id merchandise { ... on ProductVariant { id } } } }
+          edges {
+            node {
+              id
+              merchandise {
+                ... on ProductVariant {
+                  id
+                }
+              }
+            }
+          }
         }
       }
-      userErrors { field message }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `;
@@ -131,10 +193,26 @@ const CART_LINES_ADD_MUTATION = /* GraphQL */ `
       cart {
         id
         lines(first: 100) {
-          edges { node { id merchandise { ... on ProductVariant { id } } } }
+          edges {
+            node {
+              id
+              attributes {
+                key
+                value
+              }
+              merchandise {
+                ... on ProductVariant {
+                  id
+                }
+              }
+            }
+          }
         }
       }
-      userErrors { field message }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `;
@@ -142,8 +220,13 @@ const CART_LINES_ADD_MUTATION = /* GraphQL */ `
 const CART_LINES_UPDATE_MUTATION = /* GraphQL */ `
   mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
     cartLinesUpdate(cartId: $cartId, lines: $lines) {
-      cart { id }
-      userErrors { field message }
+      cart {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `;
@@ -151,8 +234,13 @@ const CART_LINES_UPDATE_MUTATION = /* GraphQL */ `
 const CART_LINES_REMOVE_MUTATION = /* GraphQL */ `
   mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
-      cart { id }
-      userErrors { field message }
+      cart {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `;
@@ -242,7 +330,13 @@ async function addLineToShopifyCart(
     cartLinesAdd: {
       cart: {
         lines: {
-          edges: Array<{ node: { id: string; merchandise: { id: string } } }>;
+          edges: Array<{
+            node: {
+              id: string;
+              attributes: LineAttribute[];
+              merchandise: { id: string };
+            };
+          }>;
         };
       } | null;
       userErrors: Array<{ field: string[] | null; message: string }>;
@@ -265,8 +359,19 @@ async function addLineToShopifyCart(
     return { success: false };
   }
   const lines = data?.data?.cartLinesAdd?.cart?.lines?.edges || [];
-  const newLine = lines.find((l) => l.node.merchandise.id === item.variantId);
-  return { success: true, lineId: newLine?.node?.id };
+  const expectedKey = lineKeyOf(item);
+  const newLine = lines.find(
+    (line) =>
+      lineKeyOf({
+        variantId: line.node.merchandise.id,
+        attributes: line.node.attributes,
+      }) === expectedKey,
+  );
+  if (!newLine) {
+    console.error("Shopify added a cart line but did not return a matching line.");
+    return { success: false };
+  }
+  return { success: true, lineId: newLine.node.id };
 }
 
 async function updateShopifyCartLine(
@@ -318,7 +423,7 @@ interface CartStore {
   checkoutUrl: string | null;
   isLoading: boolean;
   isSyncing: boolean;
-  addItem: (item: Omit<CartItem, "lineId">) => Promise<void>;
+  addItem: (item: Omit<CartItem, "lineId">) => Promise<boolean>;
   updateQuantity: (lineKey: string, quantity: number) => Promise<void>;
   removeItem: (lineKey: string) => Promise<void>;
   clearCart: () => void;
@@ -356,6 +461,7 @@ export const useCartStore = create<CartStore>()(
                 checkoutUrl: result.checkoutUrl,
                 items: [{ ...item, lineId: result.lineId }],
               });
+              return true;
             }
           } else {
             const result = await addLineToShopifyCart(cartId, { ...item, lineId: null });
@@ -364,6 +470,7 @@ export const useCartStore = create<CartStore>()(
               set({
                 items: [...currentItems, { ...item, lineId: result.lineId ?? null }],
               });
+              return true;
             } else if (result.cartNotFound) {
               clearCart();
             }
@@ -373,6 +480,7 @@ export const useCartStore = create<CartStore>()(
         } finally {
           set({ isLoading: false });
         }
+        return false;
       },
 
       updateQuantity: async (lineKey, quantity) => {
@@ -386,9 +494,7 @@ export const useCartStore = create<CartStore>()(
           if (result.success) {
             const current = get().items;
             set({
-              items: current.map((i) =>
-                lineKeyOf(i) === lineKey ? { ...i, quantity } : i,
-              ),
+              items: current.map((i) => (lineKeyOf(i) === lineKey ? { ...i, quantity } : i)),
             });
           } else if (result.cartNotFound) {
             clearCart();

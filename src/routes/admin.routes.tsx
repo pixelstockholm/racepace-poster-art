@@ -12,10 +12,7 @@ import { RACES, findRaceById } from "@/lib/races";
 
 export const Route = createFileRoute("/admin/routes")({
   head: () => ({
-    meta: [
-      { title: "Admin — Import GPX route" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
+    meta: [{ title: "Admin — Import GPX route" }, { name: "robots", content: "noindex, nofollow" }],
   }),
   component: AdminRoutesPage,
 });
@@ -27,8 +24,8 @@ function AdminRoutesPage() {
         <p className="text-xs uppercase tracking-[0.28em] text-neutral-500">Racepace admin</p>
         <h1 className="mt-4 font-serif text-4xl">Private production tool.</h1>
         <p className="mt-4 text-sm leading-relaxed text-neutral-600">
-          Route import and production review tools are not exposed on the public storefront.
-          Orders are handled through the connected production workflow after checkout.
+          Route import and production review tools are not exposed on the public storefront. Order
+          operations require authenticated access to the private Racepace admin system.
         </p>
       </main>
     );
@@ -110,10 +107,13 @@ function AdminRoutesTool() {
         <p className="text-xs uppercase tracking-[0.28em] text-neutral-500">Racepace admin</p>
         <h1 className="mt-2 font-serif text-4xl">Import GPX route</h1>
         <p className="mt-3 max-w-2xl text-sm text-neutral-600">
-          Upload a real GPX file from the official race organiser or a verified finisher.
-          The system simplifies the track, projects it, and normalizes it into the poster
-          route area. Preview, then copy the JSON entry into{" "}
-          <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">src/data/verifiedRoutes.json</code>.
+          Upload a real GPX file from the official race organiser or a verified finisher. The system
+          simplifies the track, projects it, and normalizes it into the poster route area. Preview,
+          then copy the JSON entry into{" "}
+          <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">
+            src/data/verifiedRoutes.json
+          </code>
+          .
         </p>
       </div>
 
@@ -128,7 +128,9 @@ function AdminRoutesTool() {
               className="mt-1 block w-full rounded border border-neutral-300 bg-white px-3 py-2 text-sm"
             >
               {RACES.map((r) => (
-                <option key={r.id} value={r.id}>{r.name}</option>
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
               ))}
             </select>
           </div>
@@ -171,11 +173,7 @@ function AdminRoutesTool() {
 
           <div>
             <Label htmlFor="notes">Notes (optional)</Label>
-            <Input
-              id="notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
+            <Input id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
 
           <div>
@@ -220,11 +218,20 @@ function AdminRoutesTool() {
 
           {result && (
             <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-neutral-700">
-              <dt>Source points</dt><dd className="text-right">{result.sourcePoints.toLocaleString()}</dd>
-              <dt>Simplified</dt><dd className="text-right">{result.pointCount.toLocaleString()}</dd>
-              <dt>Track length</dt><dd className="text-right">{result.distanceKm.toFixed(2)} km</dd>
-              <dt>Lat range</dt><dd className="text-right">{result.bounds.minLat.toFixed(4)} → {result.bounds.maxLat.toFixed(4)}</dd>
-              <dt>Lon range</dt><dd className="text-right">{result.bounds.minLon.toFixed(4)} → {result.bounds.maxLon.toFixed(4)}</dd>
+              <dt>Source points</dt>
+              <dd className="text-right">{result.sourcePoints.toLocaleString()}</dd>
+              <dt>Simplified</dt>
+              <dd className="text-right">{result.pointCount.toLocaleString()}</dd>
+              <dt>Track length</dt>
+              <dd className="text-right">{result.distanceKm.toFixed(2)} km</dd>
+              <dt>Lat range</dt>
+              <dd className="text-right">
+                {result.bounds.minLat.toFixed(4)} → {result.bounds.maxLat.toFixed(4)}
+              </dd>
+              <dt>Lon range</dt>
+              <dd className="text-right">
+                {result.bounds.minLon.toFixed(4)} → {result.bounds.maxLon.toFixed(4)}
+              </dd>
             </dl>
           )}
         </div>
@@ -276,12 +283,7 @@ function AdminRoutesTool() {
                   </Button>
                 </div>
               </div>
-              <Textarea
-                readOnly
-                rows={14}
-                value={entryJson}
-                className="mt-2 font-mono text-xs"
-              />
+              <Textarea readOnly rows={14} value={entryJson} className="mt-2 font-mono text-xs" />
               <p className="mt-2 text-xs text-neutral-500">
                 Append this object to the <code>routes</code> array in{" "}
                 <code>src/data/verifiedRoutes.json</code> and commit.

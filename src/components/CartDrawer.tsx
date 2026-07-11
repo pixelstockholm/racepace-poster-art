@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Minus, Plus, ShoppingBag, Trash2, ExternalLink, Loader2 } from "lucide-react";
-import { useCartStore, lineKeyOf } from "@/lib/shopify";
+import { formatShopifyMoney, useCartStore, lineKeyOf } from "@/lib/shopify";
 
 export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,11 +22,10 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
   const syncCart = useCartStore((s) => s.syncCart);
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, i) => sum + parseFloat(i.price.amount) * i.quantity,
-    0,
-  );
-  const currency = items[0]?.price.currencyCode ?? "";
+  const totalPrice = items.reduce((sum, i) => sum + parseFloat(i.price.amount) * i.quantity, 0);
+  const subtotalPrice = items[0]
+    ? { amount: totalPrice.toString(), currencyCode: items[0].price.currencyCode }
+    : null;
 
   useEffect(() => {
     if (isOpen) syncCart();
@@ -45,7 +44,10 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
       <SheetTrigger asChild>
         <button
           type="button"
-          className={triggerClassName ?? "relative inline-flex items-center gap-2 text-sm tracking-wide text-foreground hover:text-primary transition-colors"}
+          className={
+            triggerClassName ??
+            "relative inline-flex items-center gap-2 text-sm tracking-wide text-foreground hover:text-primary transition-colors"
+          }
           aria-label="Open cart"
         >
           <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />
@@ -71,7 +73,10 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
           {items.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <ShoppingBag className="h-10 w-10 text-muted-foreground mx-auto mb-4" strokeWidth={1} />
+                <ShoppingBag
+                  className="h-10 w-10 text-muted-foreground mx-auto mb-4"
+                  strokeWidth={1}
+                />
                 <p className="text-sm text-muted-foreground">Nothing here yet.</p>
               </div>
             </div>
@@ -131,8 +136,10 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                           </div>
                           <div className="flex items-center gap-3">
                             <span className="text-sm tabular-nums">
-                              {item.price.currencyCode}{" "}
-                              {(parseFloat(item.price.amount) * item.quantity).toFixed(2)}
+                              {formatShopifyMoney({
+                                ...item.price,
+                                amount: (parseFloat(item.price.amount) * item.quantity).toString(),
+                              })}
                             </span>
                             <button
                               type="button"
@@ -156,7 +163,7 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                     Subtotal
                   </span>
                   <span className="font-serif text-xl tabular-nums">
-                    {currency} {totalPrice.toFixed(2)}
+                    {subtotalPrice ? formatShopifyMoney(subtotalPrice) : "—"}
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
