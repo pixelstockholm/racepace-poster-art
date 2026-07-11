@@ -4,15 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2, Check, ChevronsUpDown } from "lucide-react";
 import { toast } from "sonner";
 
-import { PosterPreview, THEMES, type PosterTheme } from "@/components/PosterPreview";
+import { PosterPreview, type PosterTheme } from "@/components/PosterPreview";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -26,7 +22,12 @@ import { cn } from "@/lib/utils";
 import { RACES, findRaceById } from "@/lib/races";
 import { getRoutePath, isRouteVerified } from "@/lib/raceRoutes";
 
-import { fetchPosterProduct, useCartStore, type ShopifyVariant } from "@/lib/shopify";
+import {
+  fetchPosterProduct,
+  formatShopifyMoney,
+  useCartStore,
+  type ShopifyVariant,
+} from "@/lib/shopify";
 
 export const Route = createFileRoute("/create")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -52,8 +53,7 @@ export const Route = createFileRoute("/create")({
 
 function CreatePage() {
   const { race: raceParam } = Route.useSearch();
-  const initialRaceId =
-    raceParam && findRaceById(raceParam) ? raceParam : "berlin";
+  const initialRaceId = raceParam && findRaceById(raceParam) ? raceParam : "berlin";
 
   // Form state
   const [raceId, setRaceId] = useState<string>(initialRaceId);
@@ -75,9 +75,7 @@ function CreatePage() {
     }
   }, [raceId, useCustom]);
 
-  const raceLabel = useCustom
-    ? customRace
-    : currentRace?.name ?? "";
+  const raceLabel = useCustom ? customRace : (currentRace?.name ?? "");
   const routeAvailable = useCustom ? false : isRouteVerified(raceId);
 
   // Shopify product
@@ -116,33 +114,50 @@ function CreatePage() {
       toast.error("Please enter your name.");
       return;
     }
-    if (!/^\d{1,2}:\d{2}:\d{2}$/.test(time.trim())) {
+    const timeMatch = /^(\d{1,2}):(\d{2}):(\d{2})$/.exec(time.trim());
+    if (
+      !timeMatch ||
+      Number(timeMatch[1]) > 23 ||
+      Number(timeMatch[2]) > 59 ||
+      Number(timeMatch[3]) > 59
+    ) {
       toast.error("Time should look like HH:MM:SS (e.g. 03:24:17).");
       return;
     }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(`${date}T00:00:00Z`))) {
+      toast.error("Please enter a valid race date.");
+      return;
+    }
+    if (!selectedVariant.availableForSale) {
+      toast.error("This size is currently unavailable.");
+      return;
+    }
+
+    const raceYear = date.slice(0, 4);
 
     const attributes = [
       { key: "Name", value: name.trim() },
       { key: "Race", value: raceLabel.trim() },
       { key: "Date", value: date || "—" },
       { key: "Finish time", value: time.trim() },
-      { key: "Theme", value: THEMES[theme].label },
       { key: "Size", value: size },
       { key: "_race_id", value: raceId },
       { key: "_race_city", value: currentRace?.city ?? "" },
       { key: "_race_country", value: currentRace?.country ?? "" },
+      { key: "_race_year", value: raceYear },
       { key: "_route_verified", value: String(routeAvailable) },
       { key: "_poster_theme", value: theme },
       { key: "_poster_size", value: size },
       { key: "_design_status", value: "pending_review" },
       { key: "_fulfillment_status", value: "awaiting_admin_approval" },
       { key: "_source", value: "racepace_web" },
+      { key: "_production_schema", value: "1" },
     ];
 
-    await addItem({
+    const added = await addItem({
       variantId: selectedVariant.id,
       variantTitle: selectedVariant.title,
-      productTitle: product.node.title,
+      productTitle: `${currentRace?.city ?? "Racepace"} Marathon Edition ${raceYear}`,
       imageUrl: product.node.images.edges[0]?.node?.url ?? null,
       price: selectedVariant.price,
       quantity: 1,
@@ -150,21 +165,19 @@ function CreatePage() {
       attributes,
     });
 
-    toast.success("Added to cart", {
-      description: `${raceLabel.trim()} · ${size}`,
-    });
+    if (added) {
+      toast.success("Added to cart", {
+        description: `${raceLabel.trim()} · ${size}`,
+      });
+    } else {
+      toast.error("Could not add the poster to your cart.", {
+        description: "Nothing was charged. Please try again.",
+      });
+    }
   };
 
   const sizes = ["A3", "A2", "50x70cm", "70x100cm"];
-  const displayPrices: Record<string, string> = {
-    A3: "SEK 590",
-    A2: "SEK 790",
-    "50x70cm": "SEK 890",
-    "70x100cm": "SEK 1290",
-  };
-  const editionCity = useCustom
-    ? customRace || "Custom race"
-    : currentRace?.city ?? "Race";
+  const editionCity = useCustom ? customRace || "Custom race" : (currentRace?.city ?? "Race");
   const editionLocation = currentRace
     ? `${currentRace.city}, ${currentRace.country}`
     : "Route pending";
@@ -185,7 +198,9 @@ function CreatePage() {
           <span className="border border-border px-3 py-2 text-muted-foreground">
             {editionLocation}
           </span>
-          <span className={`border px-3 py-2 ${routeAvailable ? "border-foreground text-foreground" : "border-border text-muted-foreground"}`}>
+          <span
+            className={`border px-3 py-2 ${routeAvailable ? "border-foreground text-foreground" : "border-border text-muted-foreground"}`}
+          >
             {routeAvailable ? "Verified route" : "Archive queue"}
           </span>
         </div>
@@ -215,7 +230,10 @@ function CreatePage() {
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                  <PopoverContent
+                    className="w-[var(--radix-popover-trigger-width)] p-0"
+                    align="start"
+                  >
                     <Command>
                       <CommandInput placeholder="Search marathons…" />
                       <CommandList>
@@ -279,7 +297,9 @@ function CreatePage() {
               <Label className="eyebrow">Personal details</Label>
             </div>
             <div>
-              <Label htmlFor="name" className="eyebrow">Finisher name</Label>
+              <Label htmlFor="name" className="eyebrow">
+                Finisher name
+              </Label>
               <Input
                 id="name"
                 value={name}
@@ -291,7 +311,9 @@ function CreatePage() {
             </div>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="time" className="eyebrow">Finish time</Label>
+                <Label htmlFor="time" className="eyebrow">
+                  Finish time
+                </Label>
                 <Input
                   id="time"
                   value={time}
@@ -301,7 +323,9 @@ function CreatePage() {
                 />
               </div>
               <div>
-                <Label htmlFor="date" className="eyebrow">Race date</Label>
+                <Label htmlFor="date" className="eyebrow">
+                  Race date
+                </Label>
                 <Input
                   id="date"
                   type="date"
@@ -323,21 +347,23 @@ function CreatePage() {
               {sizes.map((s) => {
                 const v = variantBySize.get(s);
                 const active = size === s;
+                const unavailable = !v?.availableForSale;
                 return (
                   <button
                     type="button"
                     key={s}
                     onClick={() => setSize(s)}
+                    disabled={unavailable}
                     className={cn(
                       "border p-3 flex flex-col items-start text-left transition-colors",
-                      active
+                      active && !unavailable
                         ? "border-foreground"
-                        : "border-border hover:border-foreground/50",
+                        : "border-border hover:border-foreground/50 disabled:cursor-not-allowed disabled:opacity-50",
                     )}
                   >
                     <span className="text-sm">{s}</span>
                     <span className="text-xs text-muted-foreground mt-1 tabular-nums">
-                      {displayPrices[s] ?? (v ? `${v.price.currencyCode} ${parseFloat(v.price.amount).toFixed(0)}` : "—")}
+                      {v?.availableForSale ? formatShopifyMoney(v.price) : "Unavailable"}
                     </span>
                   </button>
                 );
@@ -350,14 +376,14 @@ function CreatePage() {
             <div className="flex items-center justify-between mb-4">
               <span className="eyebrow">Total</span>
               <span className="font-serif text-3xl tabular-nums">
-                {displayPrices[size] ?? (selectedVariant
-                  ? `${selectedVariant.price.currencyCode} ${parseFloat(selectedVariant.price.amount).toFixed(2)}`
-                  : "—")}
+                {selectedVariant ? formatShopifyMoney(selectedVariant.price) : "—"}
               </span>
             </div>
             <Button
               onClick={handleAdd}
-              disabled={!selectedVariant || isAdding || productLoading || !routeAvailable}
+              disabled={
+                !selectedVariant?.availableForSale || isAdding || productLoading || !routeAvailable
+              }
               className="w-full h-14 rounded-none bg-ink text-paper text-sm tracking-widest uppercase hover:bg-ink/90 disabled:bg-muted disabled:text-muted-foreground"
             >
               {isAdding ? (
@@ -398,7 +424,6 @@ function CreatePage() {
                   distanceKm: 42.195,
                 }}
               />
-
             </div>
           </div>
           <p className="mt-4 text-xs text-muted-foreground text-center">

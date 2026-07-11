@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroAsset from "@/assets/featured-posters.jpg";
+import heroAsset from "@/assets/hero-racepace-berlin-v2.jpg";
+import stockholmInterior from "@/assets/interior-stockholm.jpg";
 import { PosterPreview, type PosterConfig } from "@/components/PosterPreview";
 import { getRoutePath } from "@/lib/raceRoutes";
 import { findRaceById } from "@/lib/races";
@@ -7,17 +8,17 @@ import { findRaceById } from "@/lib/races";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Racepace — Marathon posters for your home" },
+      { title: "Racepace — The race, remembered" },
       {
         name: "description",
         content:
-          "Personalized marathon prints, designed as objects to live with. Printed on archival paper and shipped worldwide.",
+          "Personalized marathon editions made from verified race routes. Printed on archival paper and made to live with.",
       },
-      { property: "og:title", content: "Racepace — Marathon posters for your home" },
+      { property: "og:title", content: "Racepace — The race, remembered" },
       {
         property: "og:description",
         content:
-          "Personalized marathon prints, designed as objects to live with. Stockholm, Berlin, Paris, Tokyo, Chicago, Amsterdam.",
+          "Personalized marathon editions made from verified race routes and finished with your result.",
       },
     ],
   }),
@@ -27,12 +28,12 @@ export const Route = createFileRoute("/")({
 const FEATURED_IDS = ["berlin", "nyc"] as const;
 
 const SAMPLE_TIMES: Record<string, { name: string; time: string }> = {
-  stockholm: { name: "E. Sjöberg",  time: "03:24:18" },
-  berlin:    { name: "D. Okafor",   time: "02:58:42" },
-  nyc:        { name: "A. Dumas",    time: "03:28:19" },
-  paris:     { name: "M. Lévesque", time: "03:41:05" },
-  tokyo:     { name: "H. Nakamura", time: "03:12:33" },
-  chicago:   { name: "J. Whitfield",time: "03:06:51" },
+  stockholm: { name: "E. Sjöberg", time: "03:24:18" },
+  berlin: { name: "D. Okafor", time: "02:58:42" },
+  nyc: { name: "A. Dumas", time: "03:28:19" },
+  paris: { name: "M. Lévesque", time: "03:41:05" },
+  tokyo: { name: "H. Nakamura", time: "03:12:33" },
+  chicago: { name: "J. Whitfield", time: "03:06:51" },
   amsterdam: { name: "L. de Vries", time: "03:33:09" },
 };
 
@@ -56,116 +57,80 @@ function buildConfig(id: string): PosterConfig & { city: string; country: string
 
 const FEATURED = FEATURED_IDS.map(buildConfig);
 
-
 function HomePage() {
   return (
     <main className="bg-paper text-ink">
-      {/* SECTION 1 — HERO */}
-      <section className="relative h-screen min-h-[600px] flex items-center justify-start">
-        <img
-          src={heroAsset}
-          alt="Framed marathon editions hanging in warm morning light."
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-        {/* Subtle top gradient for header readability */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/50 to-transparent pointer-events-none" />
-        {/* Overall warmth overlay */}
-        <div className="absolute inset-0 bg-ink/20 pointer-events-none" />
-
-        <div
-          className="relative z-10 text-paper px-6 lg:pl-[16%] max-w-3xl"
-          style={{ textShadow: "0 2px 24px rgba(10,8,4,0.45), 0 1px 2px rgba(10,8,4,0.35)" }}
-        >
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.05] tracking-tight">
-            The race ends.
-            <br />
-            The story stays.
-          </h1>
-          <p className="mt-10 text-sm md:text-base text-paper/85 leading-relaxed max-w-sm">
-            For the miles worth remembering.
-          </p>
-          <Link
-            to="/shop"
-            className="inline-block mt-12 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/40 pb-1 hover:border-paper/80 transition-colors"
-          >
-            Browse Editions →
-          </Link>
+      <section className="home-hero bg-paper">
+        <div className="relative h-[66svh] min-h-[500px] max-h-[760px] overflow-hidden bg-secondary">
+          <img
+            src={heroAsset}
+            alt="The Racepace Berlin edition displayed in a quiet Scandinavian interior."
+            className="absolute inset-0 h-full w-full object-cover object-right"
+          />
+        </div>
+        <div className="px-6 lg:px-10 py-9 lg:py-12 border-b border-rule/60">
+          <div className="grid md:grid-cols-12 gap-8 md:items-end border-t border-ink/30 pt-6 lg:pt-8">
+            <div className="md:col-span-7">
+              <p className="home-kicker text-muted-foreground">Racepace / Stockholm</p>
+              <h1 className="font-serif text-[clamp(3.6rem,7vw,7.5rem)] leading-[0.84] tracking-[-0.055em] mt-6">
+                The race, remembered.
+              </h1>
+            </div>
+            <div className="md:col-span-5 flex flex-col sm:flex-row md:flex-col lg:flex-row md:items-start lg:items-end md:justify-between gap-8">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-[29rem]">
+                Personalized editions composed from the course you ran and the result you earned.
+              </p>
+              <Link
+                to="/shop"
+                className="home-link text-ink border-ink/40 hover:border-ink shrink-0"
+              >
+                View editions <span aria-hidden>↗</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-
-      {/* SECTION 2 — FEATURED POSTERS */}
-      <section>
-        <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-28 lg:pt-36 pb-24 lg:pb-32">
-          <div className="flex flex-wrap items-end justify-between gap-6 mb-14 lg:mb-20">
-            <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl leading-[1.02] tracking-tight">
-              Featured Editions
+      <section className="mx-auto max-w-7xl px-6 lg:px-10 py-28 md:py-40 lg:py-48">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+          <p className="home-kicker text-muted-foreground lg:col-span-3">Made for what remains</p>
+          <div className="lg:col-span-8 lg:col-start-5">
+            <h2 className="font-serif text-[clamp(2.7rem,5.5vw,5.75rem)] leading-[0.98] tracking-[-0.04em] max-w-[13ch]">
+              Not a souvenir.
+              <br />A record of becoming.
             </h2>
-            <Link
-              to="/shop"
-              className="text-[0.68rem] tracking-[0.24em] uppercase border-b border-ink pb-1 hover:opacity-70"
-            >
-              View all →
+            <p className="mt-10 md:mt-14 max-w-xl text-base md:text-lg leading-relaxed text-muted-foreground">
+              The finish line is brief. What it took to reach it is not. Racepace turns the exact
+              details of your race into a considered object for the life that follows.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-rule/60">
+        <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-36">
+          <div className="grid grid-cols-2 items-end gap-8 mb-16 lg:mb-24">
+            <div>
+              <p className="home-kicker text-muted-foreground">The archive / 01</p>
+              <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-[0.95] tracking-[-0.035em] mt-5">
+                Selected races
+              </h2>
+            </div>
+            <Link to="/shop" className="home-link justify-self-end border-ink/40 hover:border-ink">
+              Full archive <span aria-hidden>↗</span>
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 lg:gap-x-14 gap-y-16 lg:gap-y-24">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 lg:gap-x-10 gap-y-16">
             {FEATURED.map((p) => (
-              <Link
-                key={p.raceId}
-                to="/create"
-                search={{ race: p.raceId }}
-                className="group block"
-              >
-                {/* Plastered white wall with framed poster */}
-                <div
-                  className="relative overflow-hidden flex items-center justify-center p-10 lg:p-14"
-                  style={{
-                    aspectRatio: "4 / 5",
-                    background:
-                      "radial-gradient(120% 80% at 22% 14%, #FBF9F4 0%, #F3F0E8 55%, #E8E3D6 100%)",
-                  }}
-                >
-                  {/* Plaster grain */}
-                  <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
-                    <defs>
-                      <filter id={`wall-${p.raceId}`}>
-                        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
-                        <feColorMatrix type="saturate" values="0" />
-                      </filter>
-                    </defs>
-                  </svg>
+              <Link key={p.raceId} to="/create" search={{ race: p.raceId }} className="group block">
+                <div className="edition-stage relative overflow-hidden flex items-center justify-center p-10 md:p-14 lg:p-20 aspect-[4/5]">
                   <div
-                    aria-hidden
-                    className="absolute inset-0 pointer-events-none"
-                    style={{ filter: `url(#wall-${p.raceId})`, opacity: 0.18, mixBlendMode: "multiply" }}
-                  />
-                  {/* Soft directional light */}
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 pointer-events-none"
+                    className="edition-frame relative"
                     style={{
-                      background:
-                        "radial-gradient(90% 60% at 25% 10%, rgba(255,250,235,0.55) 0%, rgba(255,250,235,0) 60%)",
-                    }}
-                  />
-                  {/* Subtle vignette */}
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background:
-                        "radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.08) 100%)",
-                    }}
-                  />
-                  {/* Frame */}
-                  <div
-                    className="relative"
-                    style={{
-                      width: "78%",
+                      width: "76%",
                       padding: "10px",
                       background: "#0B0B0B",
-                      boxShadow:
-                        "inset 0 1px 0 rgba(255,255,255,0.06), 0 30px 50px -22px rgba(30,24,16,0.45), 0 14px 24px -14px rgba(30,24,16,0.28)",
+                      boxShadow: "0 24px 40px -22px rgba(30,24,16,0.35)",
                     }}
                   >
                     {/* Mat */}
@@ -174,11 +139,14 @@ function HomePage() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-5 flex items-baseline justify-between gap-4">
-                  <div className="font-serif text-xl leading-tight">{p.city}</div>
-                  <div className="text-[0.62rem] tracking-[0.24em] uppercase text-muted-foreground">
-                    {p.country}
+                <div className="mt-6 flex items-end justify-between gap-4 border-t border-rule/70 pt-4">
+                  <div>
+                    <div className="home-kicker text-muted-foreground">Edition</div>
+                    <div className="font-serif text-2xl md:text-3xl leading-tight mt-2">
+                      {p.city}
+                    </div>
                   </div>
+                  <div className="home-kicker text-muted-foreground">{p.country}</div>
                 </div>
               </Link>
             ))}
@@ -186,22 +154,58 @@ function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 3 — COLLECTIONS */}
-      <section className="border-t border-rule/60">
-        <div className="mx-auto max-w-6xl px-6 lg:px-10 py-20 lg:py-28">
-          <div className="grid md:grid-cols-3 gap-10 lg:gap-16">
+      <section className="bg-ink text-paper">
+        <div className="grid lg:grid-cols-2 min-h-[42rem]">
+          <div className="relative min-h-[34rem] lg:min-h-full overflow-hidden">
+            <img
+              src={stockholmInterior}
+              alt="A Stockholm marathon edition displayed at home."
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+          <div className="px-6 md:px-12 lg:px-[10vw] py-20 lg:py-28 flex flex-col justify-between">
+            <p className="home-kicker text-paper/55">From race to edition</p>
+            <div className="mt-24 lg:mt-32">
+              <h2 className="font-serif text-4xl md:text-6xl leading-[0.96] tracking-[-0.035em] max-w-[10ch]">
+                Yours in every detail.
+              </h2>
+              <p className="mt-8 max-w-md text-sm md:text-base leading-relaxed text-paper/65">
+                Course, city, date, name and finishing time—brought together with the restraint of a
+                permanent object.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-rule/60">
+        <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-36">
+          <p className="home-kicker text-muted-foreground mb-16">The making / 02</p>
+          <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
             {[
-              { tag: "N°01", name: "Signature", desc: "Editorial-inspired marathon posters." },
-              { tag: "N°02", name: "Performance", desc: "Data-focused race prints." },
-              { tag: "N°03", name: "Archive", desc: "Worldwide marathon editions." },
+              {
+                tag: "N°01",
+                name: "Route",
+                desc: "Drawn from verified race data—not an approximation.",
+              },
+              {
+                tag: "N°02",
+                name: "Result",
+                desc: "Personalized with the details that made the race yours.",
+              },
+              {
+                tag: "N°03",
+                name: "Edition",
+                desc: "Composed, reviewed and printed as an object to keep.",
+              },
             ].map((c) => (
               <div key={c.name}>
                 <div className="text-[0.62rem] tracking-[0.24em] uppercase text-muted-foreground">
                   {c.tag}
                 </div>
-                <div className="hairline mt-5" />
-                <h3 className="font-serif text-2xl md:text-3xl mt-6 leading-tight">{c.name}</h3>
-                <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-[32ch]">
+                <div className="hairline mt-6" />
+                <h3 className="font-serif text-3xl md:text-4xl mt-7 leading-tight">{c.name}</h3>
+                <p className="mt-5 text-sm text-muted-foreground leading-relaxed max-w-[30ch]">
                   {c.desc}
                 </p>
               </div>
@@ -210,22 +214,27 @@ function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 4 — TRUST MARKERS */}
-      <section className="border-t border-rule/60 bg-secondary/40">
-        <div className="mx-auto max-w-6xl px-6 lg:px-10 py-24 lg:py-32">
+      <section className="bg-secondary/45">
+        <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-36">
+          <div className="grid lg:grid-cols-12 gap-12 mb-20">
+            <p className="home-kicker text-muted-foreground lg:col-span-3">Our standard / 03</p>
+            <h2 className="font-serif text-4xl md:text-6xl leading-[0.98] tracking-[-0.035em] lg:col-span-7 lg:col-start-5">
+              Considered before it reaches you.
+            </h2>
+          </div>
           <div className="grid md:grid-cols-3 gap-10 lg:gap-16">
             {[
               {
-                title: "Verified routes",
-                desc: "Launch editions use GPX-derived routes reviewed before they enter the archive.",
+                title: "True to the course",
+                desc: "Every route begins with race data and is reviewed before entering the archive.",
               },
               {
-                title: "Archival paper",
-                desc: "Printed on heavy matte paper designed to feel like an object, not event merch.",
+                title: "Made to live with",
+                desc: "Printed on substantial matte paper, chosen for quiet detail and lasting presence.",
               },
               {
-                title: "Checked before print",
-                desc: "Each personalized order is reviewed before production so the final edition feels considered.",
+                title: "Considered by hand",
+                desc: "Every personalized edition is checked before print. Nothing leaves unfinished.",
               },
             ].map((item) => (
               <div key={item.title}>
@@ -240,24 +249,18 @@ function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 5 — CTA */}
-      <section className="border-t border-rule/60">
-        <div className="mx-auto max-w-3xl px-6 lg:px-10 py-24 lg:py-32 text-center">
-          <h2 className="font-serif text-3xl md:text-5xl leading-tight tracking-tight">
-            Find your race.
+      <section>
+        <div className="mx-auto max-w-5xl px-6 lg:px-10 py-32 lg:py-48 text-center">
+          <p className="home-kicker text-muted-foreground mb-8">The race is already yours</p>
+          <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.92] tracking-[-0.045em]">
+            A finish worth keeping.
           </h2>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+          <div className="mt-12 flex items-center justify-center">
             <Link
               to="/shop"
-              className="inline-flex items-center justify-center h-11 px-8 bg-ink text-paper text-[0.68rem] tracking-[0.24em] uppercase hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-between gap-12 min-w-60 h-13 px-7 bg-ink text-paper text-[0.65rem] tracking-[0.22em] uppercase hover:bg-ink/88 transition-colors"
             >
-              Browse editions
-            </Link>
-            <Link
-              to="/shop"
-              className="text-[0.68rem] tracking-[0.24em] uppercase border-b border-ink pb-1 hover:opacity-70 transition-opacity"
-            >
-              Browse all editions →
+              Find your race <span aria-hidden>↗</span>
             </Link>
           </div>
         </div>
