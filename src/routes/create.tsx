@@ -166,6 +166,11 @@ function CreatePage() {
             Personalize the verified route with your name, finish time and race date. Every order is
             checked before print.
           </p>
+          <div className="mt-5 flex flex-wrap gap-3 text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="border border-border px-3 py-2">Real race route</span>
+            <span className="border border-border px-3 py-2">Preview saved to order</span>
+            <span className="border border-border px-3 py-2">Matte archival print</span>
+          </div>
         </div>
         <div className="flex flex-wrap gap-3 text-[0.62rem] tracking-[0.22em] uppercase">
           <span className="border border-border px-3 py-2 text-muted-foreground">
@@ -327,6 +332,21 @@ function CreatePage() {
 
           {/* Add to cart */}
           <div className="pt-5 border-t border-border">
+            <div className="mb-5 grid gap-px border border-border bg-border text-xs">
+              {[
+                ["Route", "Verified GPX-derived marathon route"],
+                ["Production", "Personalization reviewed before print"],
+                ["Delivery", "Shipping shown securely at checkout"],
+                ["Frame", "Unframed print, standard frame sizes"],
+              ].map(([label, value]) => (
+                <div key={label} className="grid grid-cols-[7rem_1fr] bg-background">
+                  <div className="border-r border-border px-3 py-2.5 uppercase tracking-[0.16em] text-muted-foreground">
+                    {label}
+                  </div>
+                  <div className="px-3 py-2.5 text-foreground/80">{value}</div>
+                </div>
+              ))}
+            </div>
             <div className="flex items-center justify-between mb-4">
               <span className="eyebrow">Total</span>
               <span className="font-serif text-3xl tabular-nums">{selectedPrice}</span>
@@ -347,7 +367,7 @@ function CreatePage() {
               )}
             </Button>
             <div className="mt-4 grid grid-cols-3 gap-3 border-t border-border pt-4 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
-              <span>File reviewed</span>
+              <span>Design reviewed</span>
               <span>Unframed print</span>
               <span>Secure checkout</span>
             </div>
@@ -416,7 +436,8 @@ function CreatePage() {
               </div>
             </div>
             <p className="mt-4 text-xs text-muted-foreground text-center leading-relaxed">
-              Your final file is reviewed for spacing, spelling and route placement before print.
+              Your preview and personalization details are saved with the order before production
+              approval.
             </p>
           </div>
         </div>

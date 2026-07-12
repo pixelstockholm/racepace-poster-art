@@ -113,6 +113,11 @@ function ShopPage() {
           Choose a verified race route, then personalize it with your name, finish time and race
           date.
         </p>
+        <div className="mt-7 flex flex-wrap gap-3 text-[0.62rem] uppercase tracking-[0.2em] text-muted-foreground">
+          <span className="border border-border px-3 py-2">From 590 kr</span>
+          <span className="border border-border px-3 py-2">Real GPX routes</span>
+          <span className="border border-border px-3 py-2">Reviewed before print</span>
+        </div>
       </header>
 
       {/* Toolbar */}
@@ -276,7 +281,8 @@ function ShopPage() {
                     </div>
                   </div>
                   <div className="mt-4">
-                    <div>
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
                       <div className="font-serif text-lg leading-tight">
                         {raceEditionTitle(race)}
                       </div>
@@ -286,9 +292,20 @@ function ShopPage() {
                       <div className="mt-1 text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground/70">
                         {race.country}
                       </div>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <div className="text-[0.58rem] uppercase tracking-[0.18em] text-muted-foreground">
+                          From
+                        </div>
+                        <div className="font-serif text-lg tabular-nums">590 kr</div>
+                      </div>
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-2 text-[0.56rem] uppercase tracking-[0.16em] text-muted-foreground">
+                      <span className="border border-border px-2.5 py-1">Verified route</span>
+                      <span className="border border-border px-2.5 py-1">Name + time + date</span>
                     </div>
                     <span className="mt-4 block text-[0.65rem] tracking-widest uppercase text-muted-foreground group-hover:text-primary transition-colors">
-                      {verified ? "Personalize →" : "Request →"}
+                      {verified ? "Personalize yours →" : "Request →"}
                     </span>
                   </div>
                 </CardShell>

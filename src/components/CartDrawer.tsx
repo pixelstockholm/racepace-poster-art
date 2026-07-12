@@ -36,7 +36,7 @@ function CartPosterThumbnail({ item }: { item: CartItem }) {
   };
 
   return (
-    <div className="w-20 aspect-[3/4] flex-shrink-0 self-start overflow-hidden bg-[#0b0a08] p-[3px] shadow-[0_10px_24px_rgba(18,14,10,0.18)]">
+    <div className="w-24 aspect-[3/4] flex-shrink-0 self-start overflow-hidden bg-[#0b0a08] p-[3px] shadow-[0_10px_24px_rgba(18,14,10,0.18)]">
       <PosterPreview config={config} className="shadow-none" />
     </div>
   );
@@ -120,7 +120,9 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                     <div key={key} className="flex gap-4 border-b border-border pb-6">
                       <CartPosterThumbnail item={item} />
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-serif text-base leading-tight">{item.productTitle}</h4>
+                        <h4 className="font-serif text-base leading-tight">
+                          Your personalized poster
+                        </h4>
                         <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
                           {item.selectedOptions.map((o) => o.value).join(" · ")}
                         </p>
@@ -172,6 +174,9 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                             </button>
                           </div>
                         </div>
+                        <p className="mt-3 text-[0.66rem] leading-relaxed text-muted-foreground">
+                          Preview and personalization details are saved with this order.
+                        </p>
                       </div>
                     </div>
                   );
@@ -188,7 +193,8 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Shipping and taxes calculated at checkout.
+                  Shipping and taxes are calculated at checkout. Every design is reviewed before
+                  production.
                 </p>
                 <Button
                   onClick={handleCheckout}

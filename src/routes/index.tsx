@@ -73,6 +73,16 @@ function HomePage() {
         <div className="absolute inset-y-0 left-0 w-full md:w-[58%] bg-gradient-to-r from-ink/64 via-ink/30 md:from-ink/55 md:via-ink/22 to-transparent pointer-events-none" />
         <div className="absolute left-0 top-[27%] h-[42%] w-full bg-[radial-gradient(ellipse_at_left,rgba(10,8,4,0.38)_0%,rgba(10,8,4,0.2)_38%,rgba(10,8,4,0)_72%)] pointer-events-none md:hidden" />
         <div className="absolute inset-0 bg-ink/[0.06] pointer-events-none" />
+        <div
+          aria-hidden
+          className="absolute hidden md:block pointer-events-none right-[13.2%] top-[8.4%] w-[21.2%] aspect-[3/4] overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(116deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.055) 18%, rgba(255,255,255,0) 43%), linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0) 24%)",
+            mixBlendMode: "screen",
+            opacity: 0.72,
+          }}
+        />
 
         <div
           className="relative z-10 text-paper px-6 lg:pl-[9%] max-w-[21rem] sm:max-w-sm md:max-w-2xl"
@@ -84,13 +94,13 @@ function HomePage() {
             The story stays.
           </h1>
           <p className="mt-8 md:mt-10 text-sm md:text-base text-paper/86 leading-relaxed max-w-[18rem] md:max-w-sm">
-            Personalized marathon prints for the races worth remembering.
+            Personalized marathon prints made from real race routes.
           </p>
           <Link
             to="/shop"
             className="inline-block mt-10 md:mt-12 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/45 pb-1 hover:border-paper/80 transition-colors"
           >
-            Browse Editions →
+            Personalize yours →
           </Link>
         </div>
       </section>
@@ -268,15 +278,27 @@ function HomePage() {
             {[
               {
                 title: "Verified routes",
-                desc: "Launch editions use GPX-derived routes reviewed before they enter the archive.",
+                desc: "Launch editions use real GPX-derived routes reviewed before they enter the archive.",
               },
               {
                 title: "Archival paper",
-                desc: "Printed on heavy matte paper designed to feel like an object, not event merch.",
+                desc: "Printed on heavy matte paper with a quiet, low-gloss gallery finish.",
               },
               {
                 title: "Checked before print",
                 desc: "Each personalized order is reviewed before production so the final edition feels considered.",
+              },
+              {
+                title: "Secure checkout",
+                desc: "Payments are handled through Shopify checkout, with taxes and shipping shown before payment.",
+              },
+              {
+                title: "Made to order",
+                desc: "Every poster is generated for one finisher, one race, one moment.",
+              },
+              {
+                title: "Preview saved",
+                desc: "Your personalization details are attached to the order before production approval.",
               },
             ].map((item) => (
               <div key={item.title}>
