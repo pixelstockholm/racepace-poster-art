@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import type { CSSProperties } from "react";
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { PosterPreview } from "@/components/PosterPreview";
-import { RACES } from "@/lib/races";
+import { RACES, raceEditionSubtitle, raceEditionTitle } from "@/lib/races";
 import { getRoutePath, isRouteVerified } from "@/lib/raceRoutes";
 
 export const Route = createFileRoute("/shop")({
@@ -17,8 +18,7 @@ export const Route = createFileRoute("/shop")({
       { property: "og:title", content: "Shop marathon posters — Racepace" },
       {
         property: "og:description",
-        content:
-          "Verified city marathon editions, printed on archival paper after design review.",
+        content: "Verified city marathon editions, printed on archival paper after design review.",
       },
     ],
   }),
@@ -26,12 +26,27 @@ export const Route = createFileRoute("/shop")({
 });
 
 const CONTINENT_OF: Record<string, string> = {
-  Germany: "Europe", "United Kingdom": "Europe", France: "Europe", Italy: "Europe",
-  Spain: "Europe", Portugal: "Europe", Greece: "Europe", Netherlands: "Europe",
-  Denmark: "Europe", Norway: "Europe", Sweden: "Europe", Finland: "Europe",
-  Iceland: "Europe", Austria: "Europe", Ireland: "Europe", "Czechia": "Europe",
-  Hungary: "Europe", Poland: "Europe", "Türkiye": "Europe",
-  "United States": "Americas", Canada: "Americas",
+  Germany: "Europe",
+  "United Kingdom": "Europe",
+  France: "Europe",
+  Italy: "Europe",
+  Spain: "Europe",
+  Portugal: "Europe",
+  Greece: "Europe",
+  Netherlands: "Europe",
+  Denmark: "Europe",
+  Norway: "Europe",
+  Sweden: "Europe",
+  Finland: "Europe",
+  Iceland: "Europe",
+  Austria: "Europe",
+  Ireland: "Europe",
+  Czechia: "Europe",
+  Hungary: "Europe",
+  Poland: "Europe",
+  Türkiye: "Europe",
+  "United States": "Americas",
+  Canada: "Americas",
   Japan: "Asia",
   Australia: "Oceania",
   "South Africa": "Africa",
@@ -39,6 +54,25 @@ const CONTINENT_OF: Record<string, string> = {
 
 const FILTERS = ["All", "Europe", "Americas", "Asia", "Oceania", "Africa"] as const;
 type Filter = (typeof FILTERS)[number];
+
+const FEATURED_ORDER = [
+  "berlin",
+  "nyc",
+  "london",
+  "stockholm",
+  "san-francisco",
+  "big-sur",
+  "hamburg",
+  "gold-coast",
+  "edinburgh",
+  "knysna",
+  "oulu",
+];
+
+function editionRank(id: string): number {
+  const index = FEATURED_ORDER.indexOf(id);
+  return index === -1 ? 999 : index;
+}
 
 function ShopPage() {
   const [query, setQuery] = useState("");
@@ -54,7 +88,15 @@ function ShopPage() {
         r.city.toLowerCase().includes(q) ||
         r.country.toLowerCase().includes(q)
       );
-    }).sort((a, b) => Number(isRouteVerified(b.id)) - Number(isRouteVerified(a.id)));
+    }).sort((a, b) => {
+      const verifiedRank = Number(isRouteVerified(b.id)) - Number(isRouteVerified(a.id));
+      if (verifiedRank !== 0) return verifiedRank;
+
+      const curatedRank = editionRank(a.id) - editionRank(b.id);
+      if (curatedRank !== 0) return curatedRank;
+
+      return a.city.localeCompare(b.city);
+    });
   }, [query, filter]);
   const availableEditions = filtered.filter((race) => isRouteVerified(race.id));
   const archiveQueue = filtered.filter((race) => !isRouteVerified(race.id));
@@ -65,11 +107,11 @@ function ShopPage() {
       <header className="mb-12">
         <p className="eyebrow">The collection</p>
         <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl mt-4 leading-[0.95] tracking-tight">
-          The verified archive.
+          Find your marathon edition.
         </h1>
         <p className="mt-5 max-w-xl text-muted-foreground leading-relaxed">
-          Available launch editions are built from reviewed race routes. More cities are
-          added as each course is verified and prepared for print.
+          Choose a verified race route, then personalize it with your name, finish time and race
+          date.
         </p>
       </header>
 
@@ -104,131 +146,188 @@ function ShopPage() {
         <p className="text-muted-foreground py-20 text-center">No marathons match your search.</p>
       ) : (
         <>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-14">
-          {availableEditions.map((race) => {
-            const verified = isRouteVerified(race.id);
-            const CardShell = verified ? Link : "div";
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-7 gap-y-12">
+            {availableEditions.map((race) => {
+              const verified = isRouteVerified(race.id);
+              const CardShell = verified ? Link : "div";
 
-            return (
-            <CardShell
-              key={race.id}
-              {...(verified ? { to: "/create", search: { race: race.id } } : {})}
-              className={`group block ${verified ? "" : "cursor-not-allowed opacity-70"}`}
-            >
-              {/* Plastered white wall with framed poster */}
-              <div
-                className="relative overflow-hidden flex items-center justify-center p-10 lg:p-14 transition-transform group-hover:-translate-y-1"
-                style={{
-                  aspectRatio: "4 / 5",
-                  background:
-                    "radial-gradient(120% 80% at 22% 14%, #FBF9F4 0%, #F3F0E8 55%, #E8E3D6 100%)",
-                }}
-              >
-                <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
-                  <defs>
-                    <filter id={`wall-shop-${race.id}`}>
-                      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
-                      <feColorMatrix type="saturate" values="0" />
-                    </filter>
-                  </defs>
-                </svg>
-                <div
-                  aria-hidden
-                  className="absolute inset-0 pointer-events-none"
-                  style={{ filter: `url(#wall-shop-${race.id})`, opacity: 0.18, mixBlendMode: "multiply" }}
-                />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      "radial-gradient(90% 60% at 25% 10%, rgba(255,250,235,0.55) 0%, rgba(255,250,235,0) 60%)",
-                  }}
-                />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      "radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.08) 100%)",
-                  }}
-                />
-                {!verified && (
-                  <div className="absolute right-4 top-4 z-10 bg-paper/90 px-3 py-1 text-[0.58rem] tracking-[0.22em] uppercase text-foreground shadow-sm">
-                    Coming soon
-                  </div>
-                )}
-                <div
-                  className="relative"
-                  style={{
-                    width: "78%",
-                    padding: "10px",
-                    background: "#0B0B0B",
-                    boxShadow:
-                      "inset 0 1px 0 rgba(255,255,255,0.06), 0 30px 50px -22px rgba(30,24,16,0.45), 0 14px 24px -14px rgba(30,24,16,0.28)",
-                  }}
+              return (
+                <CardShell
+                  key={race.id}
+                  {...(verified ? { to: "/create", search: { race: race.id } } : {})}
+                  className={`group block ${verified ? "" : "cursor-not-allowed opacity-70"}`}
                 >
-                  <div style={{ background: "#FFFFFF", padding: "10px" }}>
-                    <PosterPreview
-                      config={{
-                        name: "Your Name",
-                        race: race.name,
-                        date: race.date,
-                        time: "03:24:17",
-                        theme: "cream",
-                        routePath: getRoutePath(race.id),
-                        raceId: race.id,
-                        location: `${race.city}, ${race.country}`,
-                        distanceKm: race.distanceKm,
+                  {/* Studio wall product shot */}
+                  <div
+                    className="relative overflow-hidden flex items-center justify-center p-8 lg:p-9 transition-transform group-hover:-translate-y-1"
+                    style={{
+                      aspectRatio: "4 / 5",
+                      containerType: "inline-size",
+                      "--frame-size": "clamp(3.5px, 1.05cqw, 6px)",
+                      "--frame-highlight": "clamp(1.5px, 0.42cqw, 3px)",
+                      background: "linear-gradient(180deg, #F8F6F0 0%, #F1EEE6 100%)",
+                    } as CSSProperties}
+                  >
+                    <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
+                      <defs>
+                        <filter id={`wall-shop-${race.id}`}>
+                          <feTurbulence
+                            type="fractalNoise"
+                            baseFrequency="0.58"
+                            numOctaves="3"
+                            stitchTiles="stitch"
+                          />
+                          <feColorMatrix type="saturate" values="0" />
+                        </filter>
+                      </defs>
+                    </svg>
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        filter: `url(#wall-shop-${race.id})`,
+                        opacity: 0.11,
+                        mixBlendMode: "multiply",
                       }}
                     />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          "radial-gradient(75% 52% at 33% 18%, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.2) 42%, rgba(255,255,255,0) 72%)",
+                      }}
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, rgba(120,104,82,0.06), rgba(255,255,255,0) 28%, rgba(60,48,36,0.045) 100%), radial-gradient(95% 70% at 50% 52%, rgba(0,0,0,0) 58%, rgba(48,38,24,0.07) 100%)",
+                      }}
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute left-[12%] right-[12%] top-[17%] h-px opacity-40"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(96,78,55,0.16), transparent)",
+                      }}
+                    />
+                    {!verified && (
+                      <div className="absolute right-4 top-4 z-10 bg-paper/90 px-3 py-1 text-[0.58rem] tracking-[0.22em] uppercase text-foreground shadow-sm">
+                        Coming soon
+                      </div>
+                    )}
+                    <div className="relative w-[76%]">
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 translate-x-[5%] translate-y-[6%]"
+                        style={{
+                          background:
+                            "radial-gradient(80% 80% at 50% 50%, rgba(31,25,18,0.28) 0%, rgba(31,25,18,0.16) 46%, rgba(31,25,18,0) 78%)",
+                          filter: "blur(14px)",
+                        }}
+                      />
+                      <div
+                        className="relative"
+                        style={{
+                          padding: "var(--frame-size)",
+                          background:
+                            "linear-gradient(135deg, #050505 0%, #151515 52%, #050505 100%)",
+                          boxShadow:
+                            "inset 0 1px 0 rgba(255,255,255,0.12), inset 1px 0 0 rgba(255,255,255,0.06), 0 16px 30px -24px rgba(28,22,14,0.72)",
+                        }}
+                      >
+                        <div
+                          aria-hidden
+                          className="absolute left-0 top-0 bottom-0"
+                          style={{
+                            width: "var(--frame-highlight)",
+                            background:
+                              "linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0.02) 35%, rgba(0,0,0,0.35))",
+                          }}
+                        />
+                        <div className="relative overflow-hidden">
+                          <PosterPreview
+                            config={{
+                              name: "Your Name",
+                              race: race.name,
+                              date: race.date,
+                              time: "03:24:17",
+                              theme: "cream",
+                              routePath: getRoutePath(race.id),
+                              raceId: race.id,
+                              location: `${race.city}, ${race.country}`,
+                              distanceKm: race.distanceKm,
+                            }}
+                          />
+                          <div
+                            aria-hidden
+                            className="absolute inset-0 pointer-events-none"
+                            style={{
+                              background:
+                                "linear-gradient(115deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.06) 18%, rgba(255,255,255,0) 42%), linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0) 24%)",
+                              mixBlendMode: "screen",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="mt-4 flex items-baseline justify-between gap-4">
-                <div>
-                  <div className="font-serif text-lg leading-tight">{race.city}</div>
-                  <div className="text-xs text-muted-foreground tracking-wide uppercase mt-1">
-                    {race.country}
+                  <div className="mt-4">
+                    <div>
+                      <div className="font-serif text-lg leading-tight">
+                        {raceEditionTitle(race)}
+                      </div>
+                      <div className="mt-1 text-xs tracking-[0.08em] text-muted-foreground">
+                        {raceEditionSubtitle(race)}
+                      </div>
+                      <div className="mt-1 text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground/70">
+                        {race.country}
+                      </div>
+                    </div>
+                    <span className="mt-4 block text-[0.65rem] tracking-widest uppercase text-muted-foreground group-hover:text-primary transition-colors">
+                      {verified ? "Personalize →" : "Request →"}
+                    </span>
                   </div>
-                </div>
-                <span className="text-xs tracking-widest uppercase text-muted-foreground group-hover:text-primary transition-colors">
-                  {verified ? "Personalize →" : "Request →"}
-                </span>
-              </div>
-            </CardShell>
-          )})}
-        </div>
+                </CardShell>
+              );
+            })}
+          </div>
 
-        {archiveQueue.length > 0 && (
-          <section className="mt-24 border-t border-border pt-14">
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <div>
-                <p className="eyebrow">Archive queue</p>
-                <h2 className="mt-3 font-serif text-3xl md:text-4xl tracking-tight">
-                  More races, currently being prepared.
-                </h2>
-              </div>
-              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-                These editions are listed for demand signals only. Checkout opens after
-                the route has been verified and reviewed for print.
-              </p>
-            </div>
-            <div className="mt-10 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-              {archiveQueue.map((race) => (
-                <div key={race.id} className="bg-background p-5">
-                  <div className="font-serif text-xl leading-tight">{race.city}</div>
-                  <div className="mt-1 text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground">
-                    {race.country}
-                  </div>
-                  <div className="mt-5 text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground">
-                    Request edition →
-                  </div>
+          {archiveQueue.length > 0 && (
+            <section className="mt-24 border-t border-border pt-14">
+              <div className="flex flex-wrap items-end justify-between gap-6">
+                <div>
+                  <p className="eyebrow">Archive queue</p>
+                  <h2 className="mt-3 font-serif text-3xl md:text-4xl tracking-tight">
+                    More races, currently being prepared.
+                  </h2>
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
+                <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+                  These editions are listed for demand signals only. Checkout opens after the route
+                  has been verified and reviewed for print.
+                </p>
+              </div>
+              <div className="mt-10 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+                {archiveQueue.map((race) => (
+                  <div key={race.id} className="bg-background p-5">
+                    <div className="font-serif text-xl leading-tight">{raceEditionTitle(race)}</div>
+                    <div className="mt-1 text-xs tracking-[0.08em] text-muted-foreground">
+                      {raceEditionSubtitle(race)}
+                    </div>
+                    <div className="mt-1 text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground/70">
+                      {race.country}
+                    </div>
+                    <div className="mt-5 text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground">
+                      Request edition →
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </>
       )}
     </main>

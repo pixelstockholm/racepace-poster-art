@@ -1,7 +1,5 @@
 import { useId, useMemo } from "react";
 
-import { getRaceIdentity, type RaceIdentity } from "@/lib/raceIdentities";
-
 export type PosterTheme = "midnight" | "ember" | "forest" | "cream" | "noir" | "sky";
 
 export interface PosterConfig {
@@ -28,12 +26,54 @@ interface ThemeTokens {
 }
 
 export const THEMES: Record<PosterTheme, ThemeTokens> = {
-  cream:    { label: "Bone",     paper: "#EFE7D6", ink: "#0E1A12", accent: "#C8102E", support: "#1F3A2E", mark: "#0E1A12" },
-  midnight: { label: "Midnight", paper: "#0B1B2B", ink: "#F2EDE1", accent: "#F58220", support: "#3A6EA5", mark: "#F2EDE1" },
-  ember:    { label: "Ember",    paper: "#1A0F0A", ink: "#F4E8D0", accent: "#E25822", support: "#E0B83C", mark: "#F4E8D0" },
-  forest:   { label: "Forest",   paper: "#0E2418", ink: "#EFE7D6", accent: "#E2B45F", support: "#7FB28C", mark: "#EFE7D6" },
-  noir:     { label: "Noir",     paper: "#0A0A0B", ink: "#F2EFE7", accent: "#BF1B2C", support: "#F2EFE7", mark: "#F2EFE7" },
-  sky:      { label: "Steel",    paper: "#E6EAF0", ink: "#0B1F3A", accent: "#1F4FA8", support: "#0B1F3A", mark: "#0B1F3A" },
+  cream: {
+    label: "Bone",
+    paper: "#EFE7D6",
+    ink: "#0E1A12",
+    accent: "#C8102E",
+    support: "#1F3A2E",
+    mark: "#0E1A12",
+  },
+  midnight: {
+    label: "Midnight",
+    paper: "#0B1B2B",
+    ink: "#F2EDE1",
+    accent: "#F58220",
+    support: "#3A6EA5",
+    mark: "#F2EDE1",
+  },
+  ember: {
+    label: "Ember",
+    paper: "#1A0F0A",
+    ink: "#F4E8D0",
+    accent: "#E25822",
+    support: "#E0B83C",
+    mark: "#F4E8D0",
+  },
+  forest: {
+    label: "Forest",
+    paper: "#0E2418",
+    ink: "#EFE7D6",
+    accent: "#E2B45F",
+    support: "#7FB28C",
+    mark: "#EFE7D6",
+  },
+  noir: {
+    label: "Noir",
+    paper: "#0A0A0B",
+    ink: "#F2EFE7",
+    accent: "#BF1B2C",
+    support: "#F2EFE7",
+    mark: "#F2EFE7",
+  },
+  sky: {
+    label: "Steel",
+    paper: "#E6EAF0",
+    ink: "#0B1F3A",
+    accent: "#1F4FA8",
+    support: "#0B1F3A",
+    mark: "#0B1F3A",
+  },
 };
 
 function formatDate(iso: string): string {
@@ -58,45 +98,73 @@ interface Props {
 
 // Per-city neighborhood lists — curated, real, not filler.
 const NEIGHBORHOODS: Record<string, string[]> = {
-  berlin:     ["Tiergarten", "Mitte", "Kreuzberg", "Charlottenburg", "Brandenburg Gate"],
-  nyc:        ["Staten Island", "Brooklyn", "Queens", "Bronx", "Manhattan", "Central Park"],
-  london:     ["Greenwich", "Tower Bridge", "Canary Wharf", "Westminster", "The Mall"],
-  boston:     ["Hopkinton", "Ashland", "Heartbreak Hill", "Brookline", "Boylston Street"],
-  chicago:    ["Grant Park", "River North", "The Loop", "Lincoln Park", "Chinatown"],
-  tokyo:      ["Shinjuku", "Asakusa", "Ginza", "Tokyo Bay", "Nihonbashi"],
-  paris:      ["Bois de Vincennes", "Bastille", "Seine", "Eiffel", "Champs-Élysées"],
-  stockholm:  ["Södermalm", "Djurgården", "Kungsholmen", "Östermalm", "Gamla Stan"],
-  valencia:   ["Ciutat Vella", "Russafa", "Cabanyal", "Turia", "Ciudad de las Artes"],
-  amsterdam:  ["Olympisch Stadion", "Vondelpark", "Amstel", "Centrum", "Oud-Zuid"],
+  berlin: ["Tiergarten", "Mitte", "Kreuzberg", "Charlottenburg", "Brandenburg Gate"],
+  nyc: ["Staten Island", "Brooklyn", "Queens", "Bronx", "Manhattan", "Central Park"],
+  london: ["Greenwich", "Tower Bridge", "Canary Wharf", "Westminster", "The Mall"],
+  boston: ["Hopkinton", "Ashland", "Heartbreak Hill", "Brookline", "Boylston Street"],
+  chicago: ["Grant Park", "River North", "The Loop", "Lincoln Park", "Chinatown"],
+  tokyo: ["Shinjuku", "Asakusa", "Ginza", "Tokyo Bay", "Nihonbashi"],
+  paris: ["Bois de Vincennes", "Bastille", "Seine", "Eiffel", "Champs-Élysées"],
+  stockholm: ["Södermalm", "Djurgården", "Kungsholmen", "Östermalm", "Gamla Stan"],
+  hamburg: ["Karolinenviertel", "Alster", "Eppendorf", "HafenCity", "Messe"],
+  "big-sur": ["Big Sur", "Bixby Bridge", "Hurricane Point", "Carmel Highlands", "Highway 1"],
+  "gold-coast": ["Southport", "Broadwater", "Surfers Paradise", "Burleigh", "Runaway Bay"],
+  "san-francisco": [
+    "Embarcadero",
+    "Fisherman's Wharf",
+    "Golden Gate",
+    "Haight Street",
+    "Oracle Park",
+  ],
+  knysna: ["Knysna Forest", "Gouna", "Simola", "Estuary", "Knysna Heads"],
+  oulu: ["Kuusisaari", "Tuiranranta", "Oulu River", "Raatinsaari", "Athletics Stadium"],
+  valencia: ["Ciutat Vella", "Russafa", "Cabanyal", "Turia", "Ciudad de las Artes"],
+  amsterdam: ["Olympisch Stadion", "Vondelpark", "Amstel", "Centrum", "Oud-Zuid"],
   copenhagen: ["Nørrebro", "Frederiksberg", "Christianshavn", "Islands Brygge", "Vesterbro"],
-  vienna:     ["Innere Stadt", "Ringstraße", "Prater", "Leopoldstadt", "Wieden"],
-  sydney:     ["North Sydney", "The Rocks", "CBD", "Domain", "Opera House"],
+  vienna: ["Innere Stadt", "Ringstraße", "Prater", "Leopoldstadt", "Wieden"],
+  sydney: ["North Sydney", "The Rocks", "CBD", "Domain", "Opera House"],
 };
 
 // Approximate city coordinates for the small bottom-left detail.
 const COORDS: Record<string, { lat: string; lon: string }> = {
-  berlin:     { lat: "52.5200° N", lon: "13.4050° E" },
-  nyc:        { lat: "40.7128° N", lon: "74.0060° W" },
-  london:     { lat: "51.5074° N", lon: "0.1278° W" },
-  boston:     { lat: "42.3601° N", lon: "71.0589° W" },
-  chicago:    { lat: "41.8781° N", lon: "87.6298° W" },
-  tokyo:      { lat: "35.6762° N", lon: "139.6503° E" },
-  paris:      { lat: "48.8566° N", lon: "2.3522° E" },
-  stockholm:  { lat: "59.3293° N", lon: "18.0686° E" },
-  valencia:   { lat: "39.4699° N", lon: "0.3763° W" },
-  amsterdam:  { lat: "52.3676° N", lon: "4.9041° E" },
+  berlin: { lat: "52.5200° N", lon: "13.4050° E" },
+  nyc: { lat: "40.7128° N", lon: "74.0060° W" },
+  london: { lat: "51.5074° N", lon: "0.1278° W" },
+  boston: { lat: "42.3601° N", lon: "71.0589° W" },
+  chicago: { lat: "41.8781° N", lon: "87.6298° W" },
+  tokyo: { lat: "35.6762° N", lon: "139.6503° E" },
+  paris: { lat: "48.8566° N", lon: "2.3522° E" },
+  stockholm: { lat: "59.3293° N", lon: "18.0686° E" },
+  hamburg: { lat: "53.5511° N", lon: "9.9937° E" },
+  "big-sur": { lat: "36.2704° N", lon: "121.8081° W" },
+  "gold-coast": { lat: "27.9719° S", lon: "153.4063° E" },
+  "san-francisco": { lat: "37.7749° N", lon: "122.4194° W" },
+  knysna: { lat: "34.0351° S", lon: "23.0465° E" },
+  oulu: { lat: "65.0201° N", lon: "25.4618° E" },
+  valencia: { lat: "39.4699° N", lon: "0.3763° W" },
+  amsterdam: { lat: "52.3676° N", lon: "4.9041° E" },
   copenhagen: { lat: "55.6761° N", lon: "12.5683° E" },
-  vienna:     { lat: "48.2082° N", lon: "16.3738° E" },
-  sydney:     { lat: "33.8688° S", lon: "151.2093° E" },
+  vienna: { lat: "48.2082° N", lon: "16.3738° E" },
+  sydney: { lat: "33.8688° S", lon: "151.2093° E" },
+};
+
+const CITY_PALETTES: Record<string, { paper: string; ink: string; muted: string; line: string }> = {
+  berlin: { paper: "#1B1713", ink: "#F4EADC", muted: "#D1C2AF", line: "#F4EADC" },
+  nyc: { paper: "#F1C84B", ink: "#17130C", muted: "#5C4C19", line: "#17130C" },
+  london: { paper: "#B01828", ink: "#FFF4E8", muted: "#F1C9C6", line: "#FFF4E8" },
+  stockholm: { paper: "#2474E8", ink: "#FFFFFF", muted: "#D7E7FF", line: "#FFFFFF" },
+  hamburg: { paper: "#214B5F", ink: "#F5E8D7", muted: "#C6D2D4", line: "#F5E8D7" },
+  "big-sur": { paper: "#40563B", ink: "#F3E9D8", muted: "#D3DBC8", line: "#F3E9D8" },
+  "gold-coast": { paper: "#E1A83C", ink: "#17120B", muted: "#604816", line: "#17120B" },
+  "san-francisco": { paper: "#C34A2E", ink: "#FFF0DF", muted: "#F3C8B8", line: "#FFF0DF" },
+  knysna: { paper: "#0E4A42", ink: "#F2E7D4", muted: "#BBD2C8", line: "#F2E7D4" },
+  oulu: { paper: "#D9E7F2", ink: "#142536", muted: "#5B7285", line: "#142536" },
+  edinburgh: { paper: "#4A314F", ink: "#F5E8D8", muted: "#D8C4D6", line: "#F5E8D8" },
+  amsterdam: { paper: "#E75B2C", ink: "#FFF0E5", muted: "#FFD0BB", line: "#FFF0E5" },
+  paris: { paper: "#E8DED1", ink: "#151515", muted: "#5D554B", line: "#151515" },
 };
 
 export function PosterPreview({ config, className }: Props) {
-  const identity: RaceIdentity | null = getRaceIdentity(config.raceId);
-  const themeFallback = THEMES[config.theme] ?? THEMES.cream;
-  const palette = identity
-    ? { paper: identity.paper, ink: identity.ink, accent: identity.accent, support: identity.support, mark: identity.mark }
-    : themeFallback;
-
   const displayName = (config.name?.trim() || "Your Name").toUpperCase();
   const displayTime = config.time?.trim() || "00:00:00";
   const displayDate = formatDate(config.date);
@@ -109,9 +177,10 @@ export function PosterPreview({ config, className }: Props) {
     }
     return (config.race || "CITY").split(/\s+/)[0]?.toUpperCase() || "CITY";
   })();
-  const countryLine = config.location && config.location.includes(",")
-    ? config.location.split(",").slice(1).join(",").trim().toUpperCase()
-    : "";
+  const countryLine =
+    config.location && config.location.includes(",")
+      ? config.location.split(",").slice(1).join(",").trim().toUpperCase()
+      : "";
 
   const editionNo = useMemo(() => {
     const seed = `${config.raceId ?? config.race}-${year}`;
@@ -131,13 +200,20 @@ export function PosterPreview({ config, className }: Props) {
     const m = config.routePath.match(/-?\d+(?:\.\d+)?/g);
     if (!m || m.length < 4) return empty;
     const nums = m.map(parseFloat);
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
     for (let i = 0; i < nums.length - 1; i += 2) {
-      const x = nums[i], y = nums[i + 1];
-      if (x < minX) minX = x; if (x > maxX) maxX = x;
-      if (y < minY) minY = y; if (y > maxY) maxY = y;
+      const x = nums[i],
+        y = nums[i + 1];
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
     }
-    const w = maxX - minX, h = maxY - minY;
+    const w = maxX - minX,
+      h = maxY - minY;
     const pad = Math.max(w, h) * 0.03;
     return {
       vb: `${minX - pad} ${minY - pad} ${w + pad * 2} ${h + pad * 2}`,
@@ -148,19 +224,21 @@ export function PosterPreview({ config, className }: Props) {
     };
   }, [config.routePath]);
 
-  // Editorial warm paper
-  const paper = "#F1EBDD";
-  const ink = "#16130E";
-  const inkSoft = "rgba(22,19,14,0.62)";
-  const inkFaint = "rgba(22,19,14,0.42)";
-  const hairline = "rgba(22,19,14,0.28)";
-  const accent = palette.accent;
+  const cityPalette = (config.raceId && CITY_PALETTES[config.raceId]) || CITY_PALETTES.berlin;
+  const paper = cityPalette.paper;
+  const ink = cityPalette.ink;
+  const inkSoft = cityPalette.muted;
+  const inkFaint = cityPalette.muted;
+  const hairline = colorWithAlpha(cityPalette.ink, 0.36);
+  const routeInk = cityPalette.line;
+  const routeInkSoft = cityPalette.muted;
 
   const reactId = useId();
   const grainId = `grain-${reactId.replace(/:/g, "")}`;
 
-  const serif = '"Fraunces", "Canela", "Tiempos", "Playfair Display", Georgia, "Times New Roman", serif';
-  const sans  = '"Inter", system-ui, sans-serif';
+  const serif =
+    '"Fraunces", "Canela", "Tiempos", "Playfair Display", Georgia, "Times New Roman", serif';
+  const sans = '"Inter", system-ui, sans-serif';
 
   return (
     <div
@@ -175,19 +253,36 @@ export function PosterPreview({ config, className }: Props) {
         overflow: "hidden",
         fontFamily: serif,
         containerType: "inline-size",
-        boxShadow: "0 1px 1px rgba(0,0,0,0.06), 0 30px 70px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(0,0,0,0.05)",
+        boxShadow:
+          "0 1px 1px rgba(0,0,0,0.06), 0 30px 70px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.12)",
       }}
     >
       {/* Paper grain */}
       <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
         <defs>
           <filter id={grainId}>
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.9"
+              numOctaves="2"
+              stitchTiles="stitch"
+            />
             <feColorMatrix type="saturate" values="0" />
           </filter>
         </defs>
       </svg>
-      <div aria-hidden style={{ position: "absolute", inset: 0, filter: `url(#${grainId})`, opacity: 0.14, mixBlendMode: "multiply", pointerEvents: "none", zIndex: 0 }} />
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          filter: `url(#${grainId})`,
+          opacity: 0.1,
+          mixBlendMode: isLightPalette(paper) ? "multiply" : "screen",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
 
       <div
         style={{
@@ -224,7 +319,7 @@ export function PosterPreview({ config, className }: Props) {
             fontWeight: 700,
             fontSize: "13cqw",
             lineHeight: 0.92,
-            letterSpacing: "-0.02em",
+            letterSpacing: "0.01em",
             margin: "1.8cqw 0 0",
             textAlign: "center",
             textTransform: "uppercase",
@@ -256,7 +351,7 @@ export function PosterPreview({ config, className }: Props) {
               letterSpacing: "0.06em",
               textAlign: "center",
               marginTop: "0.8cqw",
-              color: accent,
+              color: inkSoft,
               fontWeight: 500,
             }}
           >
@@ -298,7 +393,15 @@ export function PosterPreview({ config, className }: Props) {
               ))}
             </div>
             {coords && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.2em", color: inkFaint, letterSpacing: "0.12em" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.2em",
+                  color: inkFaint,
+                  letterSpacing: "0.12em",
+                }}
+              >
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>{coords.lat}</span>
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>{coords.lon}</span>
               </div>
@@ -316,13 +419,20 @@ export function PosterPreview({ config, className }: Props) {
               <path
                 d={config.routePath ?? ""}
                 fill="none"
-                stroke={accent}
-                strokeWidth="1.7"
+                stroke={routeInk}
+                strokeWidth="1.35"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
-              <circle cx={routeBox.startX} cy={routeBox.startY} r="1.4" fill="none" stroke={accent} strokeWidth="1" />
-              <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={accent} />
+              <circle
+                cx={routeBox.startX}
+                cy={routeBox.startY}
+                r="1.4"
+                fill="none"
+                stroke={routeInk}
+                strokeWidth="1"
+              />
+              <circle cx={routeBox.endX} cy={routeBox.endY} r="1.6" fill={routeInk} />
             </svg>
           ) : (
             <div
@@ -359,7 +469,7 @@ export function PosterPreview({ config, className }: Props) {
               fontSize: "8cqw",
               letterSpacing: "0.04em",
               lineHeight: 1,
-              color: `color-mix(in oklab, ${accent} 78%, #16130E)`,
+              color: routeInkSoft,
               fontVariantNumeric: "tabular-nums",
             }}
           >
@@ -389,10 +499,27 @@ export function PosterPreview({ config, className }: Props) {
               fontWeight: 500,
             }}
           >
-            {displayDate}{countryLine ? ` · ${countryLine}` : ""}
+            {displayDate}
+            {countryLine ? ` · ${countryLine}` : ""}
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+function colorWithAlpha(hex: string, alpha: number): string {
+  const value = hex.replace("#", "");
+  const r = parseInt(value.slice(0, 2), 16);
+  const g = parseInt(value.slice(2, 4), 16);
+  const b = parseInt(value.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function isLightPalette(hex: string): boolean {
+  const value = hex.replace("#", "");
+  const r = parseInt(value.slice(0, 2), 16);
+  const g = parseInt(value.slice(2, 4), 16);
+  const b = parseInt(value.slice(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 190;
 }

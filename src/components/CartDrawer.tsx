@@ -34,7 +34,7 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
   const handleCheckout = () => {
     const url = getCheckoutUrl();
     if (url) {
-      window.open(url, "_blank");
+      window.location.href = url;
       setIsOpen(false);
     }
   };
