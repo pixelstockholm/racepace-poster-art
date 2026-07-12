@@ -6,7 +6,7 @@
 
 /*
  * Racepace — editorial light theme.
- * Off-white paper, ink black text, ink blue accent.
+ * Off-white paper, deep ink text, quiet warm accents.
  * Serif headlines (Fraunces), clean sans body (Inter).
  */
 
@@ -64,16 +64,16 @@
   --popover: oklch(0.985 0.008 85);
   --popover-foreground: oklch(0.18 0.01 60);
 
-  /* Primary = ink blue accent */
-  --primary: oklch(0.34 0.13 265);
+  /* Primary = deep ink. City colors belong inside the posters, not the UI chrome. */
+  --primary: oklch(0.18 0.01 60);
   --primary-foreground: oklch(0.975 0.012 85);
 
   --secondary: oklch(0.93 0.012 80);
   --secondary-foreground: oklch(0.22 0.01 60);
   --muted: oklch(0.94 0.011 80);
   --muted-foreground: oklch(0.48 0.01 70);
-  --accent: oklch(0.34 0.13 265);
-  --accent-foreground: oklch(0.975 0.012 85);
+  --accent: oklch(0.91 0.014 78);
+  --accent-foreground: oklch(0.18 0.01 60);
 
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.985 0 0);
@@ -81,16 +81,16 @@
   --border: oklch(0.88 0.012 80);
   --rule: oklch(0.82 0.014 75);
   --input: oklch(0.88 0.012 80);
-  --ring: oklch(0.34 0.13 265);
+  --ring: oklch(0.38 0.025 65);
 
   --sidebar: oklch(0.975 0.012 85);
   --sidebar-foreground: oklch(0.18 0.01 60);
-  --sidebar-primary: oklch(0.34 0.13 265);
+  --sidebar-primary: oklch(0.18 0.01 60);
   --sidebar-primary-foreground: oklch(0.975 0.012 85);
   --sidebar-accent: oklch(0.93 0.012 80);
   --sidebar-accent-foreground: oklch(0.22 0.01 60);
   --sidebar-border: oklch(0.88 0.012 80);
-  --sidebar-ring: oklch(0.34 0.13 265);
+  --sidebar-ring: oklch(0.38 0.025 65);
 }
 
 @layer base {

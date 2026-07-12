@@ -9,7 +9,38 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Minus, Plus, ShoppingBag, Trash2, ExternalLink, Loader2 } from "lucide-react";
-import { formatShopifyMoney, useCartStore, lineKeyOf } from "@/lib/shopify";
+import { PosterPreview, type PosterConfig } from "@/components/PosterPreview";
+import { getRoutePath } from "@/lib/raceRoutes";
+import { formatShopifyMoney, useCartStore, lineKeyOf, type CartItem } from "@/lib/shopify";
+
+function attributeValue(item: CartItem, key: string): string {
+  return item.attributes.find((attribute) => attribute.key === key)?.value ?? "";
+}
+
+function CartPosterThumbnail({ item }: { item: CartItem }) {
+  const raceId = attributeValue(item, "_race_id");
+  const city = attributeValue(item, "_race_city");
+  const country = attributeValue(item, "_race_country");
+  const race = attributeValue(item, "Race") || city || item.productTitle;
+  const location = city ? [city, country].filter(Boolean).join(", ") : undefined;
+
+  const config: PosterConfig = {
+    name: attributeValue(item, "Name") || "Your Name",
+    race,
+    date: attributeValue(item, "Date"),
+    time: attributeValue(item, "Finish time"),
+    theme: "cream",
+    routePath: getRoutePath(raceId),
+    location,
+    raceId,
+  };
+
+  return (
+    <div className="w-20 flex-shrink-0 bg-[#0b0a08] p-[3px] shadow-[0_10px_24px_rgba(18,14,10,0.18)]">
+      <PosterPreview config={config} className="shadow-none" />
+    </div>
+  );
+}
 
 export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,14 +77,14 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
           type="button"
           className={
             triggerClassName ??
-            "relative inline-flex items-center gap-2 text-sm tracking-wide text-foreground hover:text-primary transition-colors"
+            "relative inline-flex items-center gap-2 text-sm tracking-wide text-foreground/80 hover:text-foreground transition-colors"
           }
           aria-label="Open cart"
         >
           <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />
           <span className="hidden sm:inline">Cart</span>
           {totalItems > 0 && (
-            <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-medium text-primary-foreground">
+            <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1.5 text-[11px] font-medium text-background">
               {totalItems}
             </span>
           )}
@@ -87,17 +118,7 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                   const key = lineKeyOf(item);
                   return (
                     <div key={key} className="flex gap-4 border-b border-border pb-6">
-                      <div className="w-20 h-28 bg-secondary flex-shrink-0 overflow-hidden">
-                        {item.imageUrl ? (
-                          <img
-                            src={item.imageUrl}
-                            alt={item.productTitle}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full" style={{ backgroundColor: "#E8EEF6" }} />
-                        )}
-                      </div>
+                      <CartPosterThumbnail item={item} />
                       <div className="flex-1 min-w-0">
                         <h4 className="font-serif text-base leading-tight">{item.productTitle}</h4>
                         <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
@@ -171,7 +192,7 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                 </p>
                 <Button
                   onClick={handleCheckout}
-                  className="w-full rounded-none h-12 text-sm tracking-widest uppercase"
+                  className="w-full rounded-none h-12 bg-foreground text-background text-sm tracking-widest uppercase hover:bg-foreground/90"
                   disabled={items.length === 0 || isLoading || isSyncing}
                 >
                   {isLoading || isSyncing ? (
