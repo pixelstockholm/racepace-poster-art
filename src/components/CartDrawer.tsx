@@ -36,7 +36,7 @@ function CartPosterThumbnail({ item }: { item: CartItem }) {
   };
 
   return (
-    <div className="w-20 flex-shrink-0 bg-[#0b0a08] p-[3px] shadow-[0_10px_24px_rgba(18,14,10,0.18)]">
+    <div className="w-20 aspect-[3/4] flex-shrink-0 self-start overflow-hidden bg-[#0b0a08] p-[3px] shadow-[0_10px_24px_rgba(18,14,10,0.18)]">
       <PosterPreview config={config} className="shadow-none" />
     </div>
   );
