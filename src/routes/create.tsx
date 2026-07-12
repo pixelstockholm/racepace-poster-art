@@ -166,21 +166,13 @@ function CreatePage() {
             Personalize the verified route with your name, finish time and race date. Every order is
             checked before print.
           </p>
-          <div className="mt-5 flex flex-wrap gap-3 text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-            <span className="border border-border px-3 py-2">Real race route</span>
-            <span className="border border-border px-3 py-2">Preview saved to order</span>
-            <span className="border border-border px-3 py-2">Matte archival print</span>
+          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground">
+            <span>{routeAvailable ? "Verified route" : "Archive queue"}</span>
+            <span>Reviewed before print</span>
           </div>
         </div>
-        <div className="flex flex-wrap gap-3 text-[0.62rem] tracking-[0.22em] uppercase">
-          <span className="border border-border px-3 py-2 text-muted-foreground">
-            {editionLocation}
-          </span>
-          <span
-            className={`border px-3 py-2 ${routeAvailable ? "border-foreground text-foreground" : "border-border text-muted-foreground"}`}
-          >
-            {routeAvailable ? "Verified route" : "Archive queue"}
-          </span>
+        <div className="hidden lg:block text-right text-[0.62rem] tracking-[0.22em] uppercase text-muted-foreground">
+          {editionLocation}
         </div>
       </div>
 
@@ -196,25 +188,26 @@ function CreatePage() {
               </span>
             </div>
             <div className="mt-3">
-              <div className="border border-border px-4 py-3">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="font-serif text-xl leading-none">
-                      {currentRace ? raceEditionTitle(currentRace) : "Selected edition"}
+              <div className="flex items-start justify-between gap-4 py-1">
+                <div>
+                  <p className="font-serif text-xl leading-tight">
+                    {currentRace ? raceEditionTitle(currentRace) : "Selected edition"} ·{" "}
+                    <span className="text-foreground/70">
+                      {currentRace ? raceEditionSubtitle(currentRace) : editionLocation}
+                    </span>
+                  </p>
+                  {currentRace && (
+                    <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                      {currentRace.country}
                     </p>
-                    {currentRace && (
-                      <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                        {raceEditionSubtitle(currentRace)} · {currentRace.country}
-                      </p>
-                    )}
-                  </div>
-                  <a
-                    href="/shop"
-                    className="shrink-0 text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    Change
-                  </a>
+                  )}
                 </div>
+                <a
+                  href="/shop"
+                  className="shrink-0 text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Change
+                </a>
               </div>
               {!routeAvailable && (
                 <p className="text-xs text-muted-foreground leading-relaxed">
@@ -332,18 +325,16 @@ function CreatePage() {
 
           {/* Add to cart */}
           <div className="pt-5 border-t border-border">
-            <div className="mb-5 grid gap-px border border-border bg-border text-xs">
+            <div className="mb-5 space-y-2.5 text-xs text-muted-foreground">
               {[
-                ["Route", "Verified GPX-derived marathon route"],
-                ["Production", "Personalization reviewed before print"],
-                ["Delivery", "Shipping shown securely at checkout"],
-                ["Frame", "Unframed print, standard frame sizes"],
-              ].map(([label, value]) => (
-                <div key={label} className="grid grid-cols-[7rem_1fr] bg-background">
-                  <div className="border-r border-border px-3 py-2.5 uppercase tracking-[0.16em] text-muted-foreground">
-                    {label}
-                  </div>
-                  <div className="px-3 py-2.5 text-foreground/80">{value}</div>
+                "Verified GPX-derived marathon route",
+                "Personalization reviewed before print",
+                "Unframed print in standard frame sizes",
+                "Shipping shown securely at checkout",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-3">
+                  <span className="h-px w-5 bg-border" />
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
