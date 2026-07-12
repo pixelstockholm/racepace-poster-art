@@ -163,13 +163,8 @@ function CreatePage() {
             {editionCity} Edition
           </h1>
           <p className="mt-3 text-muted-foreground max-w-2xl leading-relaxed">
-            Personalize the verified route with your name, finish time and race date. Every order is
-            checked before print.
+            Personalize the route with your name, finish time and race date.
           </p>
-          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground">
-            <span>{routeAvailable ? "Verified route" : "Archive queue"}</span>
-            <span>Reviewed before print</span>
-          </div>
         </div>
         <div className="hidden lg:block text-right text-[0.62rem] tracking-[0.22em] uppercase text-muted-foreground">
           {editionLocation}
@@ -327,8 +322,8 @@ function CreatePage() {
           <div className="pt-5 border-t border-border">
             <div className="mb-5 space-y-2.5 text-xs text-muted-foreground">
               {[
-                "Verified GPX-derived marathon route",
-                "Personalization reviewed before print",
+                routeAvailable ? "Verified race route" : "Route pending verification",
+                "Matte archival paper",
                 "Unframed print in standard frame sizes",
                 "Shipping shown securely at checkout",
               ].map((item) => (
@@ -358,7 +353,7 @@ function CreatePage() {
               )}
             </Button>
             <div className="mt-4 grid grid-cols-3 gap-3 border-t border-border pt-4 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
-              <span>Design reviewed</span>
+              <span>Preview saved</span>
               <span>Unframed print</span>
               <span>Secure checkout</span>
             </div>
