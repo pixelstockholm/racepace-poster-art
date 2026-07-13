@@ -48,6 +48,18 @@ function normalizeSizeValue(value: string): string {
   return value.toLowerCase().replace(/[×x]/g, "x").replace(/\s/g, "");
 }
 
+function variantSizeKey(variant: ShopifyVariant): string | null {
+  const candidates = [
+    variant.title,
+    ...variant.selectedOptions.flatMap((option) => [option.name, option.value]),
+  ].map(normalizeSizeValue);
+
+  if (candidates.some((value) => value.includes("70x100"))) return "70x100cm";
+  if (candidates.some((value) => value.includes("50x70"))) return "50x70cm";
+  if (candidates.some((value) => value.includes("30x40") || value === "a3")) return "30x40cm";
+  return null;
+}
+
 function CreatePage() {
   const { race: raceParam } = Route.useSearch();
   const initialRaceId = raceParam && findRaceById(raceParam) ? raceParam : "berlin";
@@ -64,17 +76,22 @@ function CreatePage() {
   const routeAvailable = isRouteVerified(raceId);
 
   // Shopify product
-  const { data: product, isLoading: productLoading } = useQuery({
+  const {
+    data: product,
+    isLoading: productLoading,
+    error: productError,
+  } = useQuery({
     queryKey: ["poster-product"],
     queryFn: fetchPosterProduct,
     enabled: routeAvailable,
+    retry: false,
   });
 
   const variantBySize = useMemo(() => {
     const map = new Map<string, ShopifyVariant>();
     product?.node.variants.edges.forEach((e) => {
-      const sizeOpt = e.node.selectedOptions.find((o) => o.name.toLowerCase() === "size");
-      if (sizeOpt) map.set(normalizeSizeValue(sizeOpt.value), e.node);
+      const key = variantSizeKey(e.node);
+      if (key) map.set(key, e.node);
     });
     return map;
   }, [product]);
@@ -149,7 +166,11 @@ function CreatePage() {
     ? `${currentRace.city}, ${currentRace.country}`
     : "Route pending";
 
-  const selectedPrice = selectedVariant ? formatVariantPrice(selectedVariant) : "Preparing";
+  const selectedPrice = selectedVariant
+    ? formatVariantPrice(selectedVariant)
+    : productError
+      ? "Setup needed"
+      : "Preparing";
 
   return (
     <main className="mx-auto max-w-7xl px-6 lg:px-10 pt-6 pb-24">
@@ -317,7 +338,9 @@ function CreatePage() {
                     >
                       {v
                         ? formatVariantPrice(v)
-                        : productLoading
+                        : productError
+                          ? "Setup needed"
+                          : productLoading
                           ? "Checking"
                           : "Unavailable"}
                     </span>
@@ -362,12 +385,19 @@ function CreatePage() {
                 "Route coming soon"
               ) : productLoading ? (
                 "Preparing checkout..."
+              ) : productError ? (
+                "Shopify setup missing"
               ) : selectedVariantUnavailable ? (
                 "Try checkout"
               ) : (
                 "Add personalized print"
               )}
             </Button>
+            {productError && (
+              <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+                Shopify storefront configuration is not available in this environment.
+              </p>
+            )}
             <div className="mt-4 grid grid-cols-3 gap-3 border-t border-border pt-4 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
               <span>Preview saved</span>
               <span>Unframed print</span>
