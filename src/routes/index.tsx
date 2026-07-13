@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Personalized marathon prints, designed as objects to live with. Stockholm, Berlin, Paris, Tokyo, Chicago, Amsterdam.",
+          "Personalized marathon prints, designed as objects to live with. Printed on archival paper and shipped worldwide.",
       },
     ],
   }),
