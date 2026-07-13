@@ -23,6 +23,7 @@ function CartPosterThumbnail({ item }: { item: CartItem }) {
   const country = attributeValue(item, "_race_country");
   const race = attributeValue(item, "Race") || city || item.productTitle;
   const location = city ? [city, country].filter(Boolean).join(", ") : undefined;
+  const size = attributeValue(item, "Size") || attributeValue(item, "_poster_size");
 
   const config: PosterConfig = {
     name: attributeValue(item, "Name") || "Your Name",
@@ -33,6 +34,7 @@ function CartPosterThumbnail({ item }: { item: CartItem }) {
     routePath: getRoutePath(raceId),
     location,
     raceId,
+    size,
   };
 
   return (

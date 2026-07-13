@@ -14,6 +14,7 @@ export interface PosterConfig {
   elevationM?: number;
   raceId?: string;
   bib?: string;
+  size?: string;
 }
 
 interface ThemeTokens {
@@ -246,7 +247,7 @@ export function PosterPreview({ config, className }: Props) {
       data-racepace-poster
       style={{
         width: "100%",
-        aspectRatio: "3 / 4",
+        aspectRatio: aspectRatioForSize(config.size),
         backgroundColor: paper,
         color: ink,
         position: "relative",
@@ -506,6 +507,14 @@ export function PosterPreview({ config, className }: Props) {
       </div>
     </div>
   );
+}
+
+export function aspectRatioForSize(size?: string): string {
+  const normalized = (size || "").toLowerCase().replace(/[×x]/g, "x").replace(/\s/g, "");
+  if (normalized.includes("70x100")) return "7 / 10";
+  if (normalized.includes("50x70")) return "5 / 7";
+  if (normalized.includes("30x40")) return "3 / 4";
+  return "3 / 4";
 }
 
 function colorWithAlpha(hex: string, alpha: number): string {

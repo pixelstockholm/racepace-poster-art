@@ -456,6 +456,7 @@ function CreatePage() {
                         theme: "cream",
                         routePath: getRoutePath(raceId),
                         raceId,
+                        size,
                         location: (() => {
                           const r = findRaceById(raceId);
                           return r ? `${r.city}, ${r.country}` : undefined;
