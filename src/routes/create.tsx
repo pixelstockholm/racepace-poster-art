@@ -80,7 +80,7 @@ function CreatePage() {
   }, [product]);
 
   const selectedVariant = variantBySize.get(normalizeSizeValue(size));
-  const selectedVariantAvailable = Boolean(selectedVariant?.availableForSale);
+  const selectedVariantUnavailable = Boolean(selectedVariant && !selectedVariant.availableForSale);
   const addItem = useCartStore((s) => s.addItem);
   const isAdding = useCartStore((s) => s.isLoading);
 
@@ -92,12 +92,6 @@ function CreatePage() {
       return;
     }
     if (!product || !selectedVariant) return;
-    if (!selectedVariant.availableForSale) {
-      toast.error("This size is unavailable in Shopify.", {
-        description: "Enable continue selling or add inventory for this print size.",
-      });
-      return;
-    }
     if (!raceLabel.trim()) {
       toast.error("Please choose an available edition.");
       return;
@@ -322,9 +316,7 @@ function CreatePage() {
                       )}
                     >
                       {v
-                        ? v.availableForSale
-                          ? formatVariantPrice(v)
-                          : "Unavailable in Shopify"
+                        ? formatVariantPrice(v)
                         : productLoading
                           ? "Checking"
                           : "Unavailable"}
@@ -358,7 +350,6 @@ function CreatePage() {
               onClick={handleAdd}
               disabled={
                 !selectedVariant ||
-                !selectedVariantAvailable ||
                 isAdding ||
                 productLoading ||
                 !routeAvailable
@@ -371,8 +362,8 @@ function CreatePage() {
                 "Route coming soon"
               ) : productLoading ? (
                 "Preparing checkout..."
-              ) : !selectedVariantAvailable ? (
-                "Unavailable in Shopify"
+              ) : selectedVariantUnavailable ? (
+                "Try checkout"
               ) : (
                 "Add personalized print"
               )}
