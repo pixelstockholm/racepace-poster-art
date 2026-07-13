@@ -44,6 +44,10 @@ function formatVariantPrice(variant?: ShopifyVariant): string {
   return `${currency} ${Number.isFinite(amount) ? amount.toFixed(0) : variant.price.amount}`;
 }
 
+function normalizeSizeValue(value: string): string {
+  return value.toLowerCase().replace(/[×x]/g, "x").replace(/\s/g, "");
+}
+
 function CreatePage() {
   const { race: raceParam } = Route.useSearch();
   const initialRaceId = raceParam && findRaceById(raceParam) ? raceParam : "berlin";
@@ -70,12 +74,13 @@ function CreatePage() {
     const map = new Map<string, ShopifyVariant>();
     product?.node.variants.edges.forEach((e) => {
       const sizeOpt = e.node.selectedOptions.find((o) => o.name.toLowerCase() === "size");
-      if (sizeOpt) map.set(sizeOpt.value, e.node);
+      if (sizeOpt) map.set(normalizeSizeValue(sizeOpt.value), e.node);
     });
     return map;
   }, [product]);
 
-  const selectedVariant = variantBySize.get(size);
+  const selectedVariant = variantBySize.get(normalizeSizeValue(size));
+  const selectedVariantAvailable = Boolean(selectedVariant?.availableForSale);
   const addItem = useCartStore((s) => s.addItem);
   const isAdding = useCartStore((s) => s.isLoading);
 
@@ -87,6 +92,12 @@ function CreatePage() {
       return;
     }
     if (!product || !selectedVariant) return;
+    if (!selectedVariant.availableForSale) {
+      toast.error("This size is unavailable in Shopify.", {
+        description: "Enable continue selling or add inventory for this print size.",
+      });
+      return;
+    }
     if (!raceLabel.trim()) {
       toast.error("Please choose an available edition.");
       return;
@@ -106,13 +117,13 @@ function CreatePage() {
       { key: "Date", value: date || "—" },
       { key: "Finish time", value: time.trim() },
       { key: "Edition color", value: currentRace ? `${currentRace.city} palette` : "Custom" },
-      { key: "Size", value: size },
+      { key: "Size", value: normalizeSizeValue(size) },
       { key: "_race_id", value: raceId },
       { key: "_race_city", value: currentRace?.city ?? "" },
       { key: "_race_country", value: currentRace?.country ?? "" },
       { key: "_route_verified", value: String(routeAvailable) },
       { key: "_poster_theme", value: "city_palette" },
-      { key: "_poster_size", value: size },
+      { key: "_poster_size", value: normalizeSizeValue(size) },
       { key: "_design_status", value: "pending_review" },
       { key: "_fulfillment_status", value: "awaiting_admin_approval" },
       { key: "_source", value: "racepace_web" },
@@ -135,7 +146,7 @@ function CreatePage() {
   };
 
   const sizes = [
-    { value: "A3", label: "Classic", detail: "30x40 cm" },
+    { value: "30x40cm", label: "Classic", detail: "30x40 cm" },
     { value: "50x70cm", label: "Gallery", detail: "50x70 cm", badge: "Most popular" },
     { value: "70x100cm", label: "Statement", detail: "70x100 cm" },
   ];
@@ -271,7 +282,7 @@ function CreatePage() {
             </div>
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
               {sizes.map((s) => {
-                const v = variantBySize.get(s.value);
+                const v = variantBySize.get(normalizeSizeValue(s.value));
                 const active = size === s.value;
                 return (
                   <button
@@ -310,7 +321,13 @@ function CreatePage() {
                         active ? "text-background/70" : "text-muted-foreground",
                       )}
                     >
-                      {v ? formatVariantPrice(v) : productLoading ? "Checking" : "Unavailable"}
+                      {v
+                        ? v.availableForSale
+                          ? formatVariantPrice(v)
+                          : "Unavailable in Shopify"
+                        : productLoading
+                          ? "Checking"
+                          : "Unavailable"}
                     </span>
                   </button>
                 );
@@ -339,7 +356,13 @@ function CreatePage() {
             </div>
             <Button
               onClick={handleAdd}
-              disabled={!selectedVariant || isAdding || productLoading || !routeAvailable}
+              disabled={
+                !selectedVariant ||
+                !selectedVariantAvailable ||
+                isAdding ||
+                productLoading ||
+                !routeAvailable
+              }
               className="w-full h-14 rounded-none bg-ink text-paper text-sm tracking-widest uppercase hover:bg-ink/90 disabled:bg-muted disabled:text-muted-foreground"
             >
               {isAdding ? (
@@ -348,6 +371,8 @@ function CreatePage() {
                 "Route coming soon"
               ) : productLoading ? (
                 "Preparing checkout..."
+              ) : !selectedVariantAvailable ? (
+                "Unavailable in Shopify"
               ) : (
                 "Add personalized print"
               )}
