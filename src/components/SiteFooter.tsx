@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { openCookieSettings } from "@/lib/analytics";
 
 export function SiteFooter() {
   return (
@@ -16,6 +17,14 @@ export function SiteFooter() {
             <FooterLink to="/about" label="About" />
             <FooterLink to="/faq" label="FAQ" />
             <FooterLink to="/contact" label="Contact" />
+            <FooterLink to="/privacy" label="Privacy" />
+            <button
+              type="button"
+              onClick={openCookieSettings}
+              className="text-left text-[0.65rem] tracking-[0.22em] uppercase text-muted-foreground hover:text-ink"
+            >
+              Cookie settings
+            </button>
           </nav>
         </div>
       </div>

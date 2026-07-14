@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { Minus, Plus, ShoppingBag, Trash2, ExternalLink, Loader2 } from "lucide-react";
 import { formatShopifyMoney, useCartStore, lineKeyOf } from "@/lib/shopify";
+import { trackInitiateCheckout } from "@/lib/analytics";
 
 export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +35,13 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
   const handleCheckout = () => {
     const url = getCheckoutUrl();
     if (url) {
+      trackInitiateCheckout({
+        content_ids: items.map((item) => item.variantId),
+        content_type: "product",
+        value: totalPrice,
+        currency: items[0]?.price.currencyCode ?? "SEK",
+        num_items: totalItems,
+      });
       window.open(url, "_blank");
       setIsOpen(false);
     }

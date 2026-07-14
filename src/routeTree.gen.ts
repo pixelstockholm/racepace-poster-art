@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as CreateRouteImport } from './routes/create'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -26,6 +27,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
   '/faq': typeof FaqRoute
+  '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/routes': typeof AdminRoutesRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
   '/faq': typeof FaqRoute
+  '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/routes': typeof AdminRoutesRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
   '/faq': typeof FaqRoute
+  '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/routes': typeof AdminRoutesRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/create'
     | '/faq'
+    | '/privacy'
     | '/shop'
     | '/sitemap.xml'
     | '/admin/routes'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/create'
     | '/faq'
+    | '/privacy'
     | '/shop'
     | '/sitemap.xml'
     | '/admin/routes'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/create'
     | '/faq'
+    | '/privacy'
     | '/shop'
     | '/sitemap.xml'
     | '/admin/routes'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   CreateRoute: typeof CreateRoute
   FaqRoute: typeof FaqRoute
+  PrivacyRoute: typeof PrivacyRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminRoutesRoute: typeof AdminRoutesRoute
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   CreateRoute: CreateRoute,
   FaqRoute: FaqRoute,
+  PrivacyRoute: PrivacyRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminRoutesRoute: AdminRoutesRoute,

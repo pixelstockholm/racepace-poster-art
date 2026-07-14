@@ -15,7 +15,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useCartSync } from "@/hooks/useCartSync";
 import { Toaster } from "@/components/ui/sonner";
-
+import { Analytics } from "@/components/Analytics";
+import { CookieConsent } from "@/components/CookieConsent";
 
 function NotFoundComponent() {
   return (
@@ -138,8 +139,9 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <SiteFooter />
+      <Analytics />
+      <CookieConsent />
       <Toaster position="top-center" />
     </QueryClientProvider>
   );
 }
-

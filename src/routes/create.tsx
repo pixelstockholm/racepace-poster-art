@@ -28,6 +28,7 @@ import {
   useCartStore,
   type ShopifyVariant,
 } from "@/lib/shopify";
+import { trackAddToCart, trackViewContent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/create")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -98,6 +99,17 @@ function CreatePage() {
   const addItem = useCartStore((s) => s.addItem);
   const isAdding = useCartStore((s) => s.isLoading);
 
+  useEffect(() => {
+    if (!selectedVariant || !currentRace) return;
+    trackViewContent({
+      content_ids: [selectedVariant.id],
+      content_name: `${currentRace.city} Marathon Edition`,
+      content_type: "product",
+      value: Number(selectedVariant.price.amount),
+      currency: selectedVariant.price.currencyCode,
+    });
+  }, [currentRace, selectedVariant]);
+
   const handleAdd = async () => {
     if (!routeAvailable) {
       toast.error("This route is not ready yet.", {
@@ -166,6 +178,14 @@ function CreatePage() {
     });
 
     if (added) {
+      trackAddToCart({
+        content_ids: [selectedVariant.id],
+        content_name: `${currentRace?.city ?? "Racepace"} Marathon Edition ${raceYear}`,
+        content_type: "product",
+        value: Number(selectedVariant.price.amount),
+        currency: selectedVariant.price.currencyCode,
+        num_items: 1,
+      });
       toast.success("Added to cart", {
         description: `${raceLabel.trim()} · ${size}`,
       });
