@@ -82,23 +82,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Racepace — Marathon posters for your home" },
+      { title: "Racepace — Personalized Marathon Posters" },
       {
         name: "description",
         content:
-          "Personalized marathon prints, designed as objects to live with. Printed on archival paper and shipped worldwide.",
+          "Personalized marathon posters made from real race routes, your name and finish time. Printed on archival paper and shipped worldwide.",
       },
       { name: "author", content: "Racepace" },
-      { property: "og:title", content: "Racepace — Marathon posters for your home" },
+      { property: "og:title", content: "Racepace — Personalized Marathon Posters" },
       {
         property: "og:description",
         content:
-          "Personalized marathon prints, designed as objects to live with. Printed on archival paper and shipped worldwide.",
+          "Personalized marathon posters made from real race routes, your name and finish time. Printed on archival paper and shipped worldwide.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Racepace — Marathon posters for your home" },
-      { name: "twitter:description", content: "Personalized marathon prints, designed as objects to live with. Printed on archival paper and shipped worldwide." },
+      { name: "twitter:title", content: "Racepace — Personalized Marathon Posters" },
+      { name: "twitter:description", content: "Personalized marathon posters made from real race routes, your name and finish time. Printed on archival paper and shipped worldwide." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bf4a7cd9-5f2e-4e65-9b74-771ac3f7cfd6/id-preview-cafa90dd--f630e770-06ac-4d12-8cb9-7774e3c9b7dd.lovable.app-1783894103060.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bf4a7cd9-5f2e-4e65-9b74-771ac3f7cfd6/id-preview-cafa90dd--f630e770-06ac-4d12-8cb9-7774e3c9b7dd.lovable.app-1783894103060.png" },
     ],

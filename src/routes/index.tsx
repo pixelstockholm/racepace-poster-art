@@ -8,17 +8,17 @@ import { findRaceById } from "@/lib/races";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Racepace — Marathon posters for your home" },
+      { title: "Racepace — Personalized Marathon Posters" },
       {
         name: "description",
         content:
-          "Personalized marathon prints, designed as objects to live with. Printed on archival paper and shipped worldwide.",
+          "Personalized marathon posters made from real race routes, your name and finish time. Printed on archival paper and shipped worldwide.",
       },
-      { property: "og:title", content: "Racepace — Marathon posters for your home" },
+      { property: "og:title", content: "Racepace — Personalized Marathon Posters" },
       {
         property: "og:description",
         content:
-          "Personalized marathon prints, designed as objects to live with. Printed on archival paper and shipped worldwide.",
+          "Personalized marathon posters made from real race routes, your name and finish time. Printed on archival paper and shipped worldwide.",
       },
     ],
   }),
