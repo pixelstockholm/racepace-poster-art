@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
-import heroAsset from "@/assets/hero-berlin-interior.png";
+import heroAsset from "@/assets/hero-berlin-interior.jpg";
 import { PosterPreview, type PosterConfig } from "@/components/PosterPreview";
 import { getRoutePath } from "@/lib/raceRoutes";
 import { findRaceById } from "@/lib/races";

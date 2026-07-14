@@ -314,7 +314,7 @@ export function PosterPreview({ config, className }: Props) {
         </div>
 
         {/* MASTHEAD */}
-        <h1
+        <div
           style={{
             fontFamily: serif,
             fontWeight: 700,
@@ -327,7 +327,7 @@ export function PosterPreview({ config, className }: Props) {
           }}
         >
           {cityName}
-        </h1>
+        </div>
 
         <div
           style={{
