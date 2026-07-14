@@ -1,18 +1,31 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { CartDrawer } from "./CartDrawer";
+import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const navClass =
-    "hidden md:inline text-[0.62rem] tracking-[0.22em] uppercase transition-opacity text-foreground/65 hover:text-foreground";
+  const navClass = cn(
+    "hidden md:inline text-[0.62rem] tracking-[0.22em] uppercase transition-colors",
+    isHome ? "text-paper/72 hover:text-paper" : "text-foreground/65 hover:text-foreground",
+  );
 
   return (
-    <header className="relative inset-x-0 z-40 bg-background border-b border-rule/60">
+    <header
+      className={cn(
+        "inset-x-0 z-40",
+        isHome
+          ? "absolute top-0 bg-transparent text-paper"
+          : "relative bg-background text-foreground border-b border-rule/60",
+      )}
+    >
       <div className="px-6 lg:px-10 h-20 flex items-center justify-between">
         <Link
           to="/"
-          className="font-serif text-xl tracking-[-0.03em] transition-opacity text-foreground hover:opacity-60"
+          className={cn(
+            "font-serif text-xl tracking-[-0.03em] transition-opacity hover:opacity-65",
+            isHome ? "text-paper" : "text-foreground",
+          )}
         >
           Racepace
         </Link>
@@ -31,7 +44,7 @@ export function SiteHeader() {
           <CartDrawer
             triggerClassName={
               isHome
-                ? "relative inline-flex items-center gap-2 text-sm tracking-wide text-foreground hover:text-foreground/65 transition-colors"
+                ? "relative inline-flex items-center gap-2 text-sm tracking-wide text-paper hover:text-paper/72 transition-colors"
                 : undefined
             }
           />

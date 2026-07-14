@@ -27,16 +27,24 @@ export const Route = createFileRoute("/faq")({
 
 const FAQS: Array<{ q: string; a: string }> = [
   {
+    q: "Are the race routes accurate?",
+    a: "Yes. Checkout-enabled editions use real GPX-derived route data that has been reviewed before entering the Racepace archive. We do not use AI-generated route shapes for purchasable posters.",
+  },
+  {
+    q: "Will my preview be used for the order?",
+    a: "Yes. Your race, name, finish time, date, size and route details are saved with the order. The production file is reviewed before it is approved for print.",
+  },
+  {
     q: "How long does shipping take?",
     a: "Orders are reviewed before production, then printed and shipped via the selected production partner. Expected delivery windows are shown at checkout once your shipping country is selected.",
   },
   {
     q: "What sizes do you offer?",
-    a: "A3 (29.7 × 42 cm), A2 (42 × 59.4 cm), 50 × 70 cm, and 70 × 100 cm. A2 is the default size because it feels substantial without overpowering a room.",
+    a: "A3 / 30 × 40 cm, 50 × 70 cm, and 70 × 100 cm. 50 × 70 cm is the default gallery size because it feels substantial without overpowering a room.",
   },
   {
     q: "What paper do you print on?",
-    a: "Racepace editions are intended for archival matte paper with a refined, low-gloss finish. Final paper specifications are confirmed in the product details at checkout.",
+    a: "Racepace editions are printed on heavyweight archival matte paper with a refined, low-gloss finish. Final paper and production details are confirmed with the selected print partner before launch.",
   },
   {
     q: "Do posters come framed?",
