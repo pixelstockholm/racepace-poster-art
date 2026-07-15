@@ -178,6 +178,14 @@ export function PosterPreview({ config, className }: Props) {
     }
     return (config.race || "CITY").split(/\s+/)[0]?.toUpperCase() || "CITY";
   })();
+  const mastheadFontSize =
+    cityName.length <= 7
+      ? "13cqw"
+      : cityName.length <= 9
+        ? "11.5cqw"
+        : cityName.length <= 11
+          ? "9.8cqw"
+          : "8.4cqw";
   const countryLine =
     config.location && config.location.includes(",")
       ? config.location.split(",").slice(1).join(",").trim().toUpperCase()
@@ -318,7 +326,7 @@ export function PosterPreview({ config, className }: Props) {
           style={{
             fontFamily: serif,
             fontWeight: 700,
-            fontSize: "13cqw",
+            fontSize: mastheadFontSize,
             lineHeight: 0.92,
             letterSpacing: "0.01em",
             margin: "1.8cqw 0 0",
