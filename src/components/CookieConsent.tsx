@@ -8,8 +8,10 @@ import {
 } from "@/lib/analytics";
 
 export function CookieConsent() {
-  const [consent, setConsent] = useState<AnalyticsConsent | null>("declined");
-  const [isOpen, setIsOpen] = useState(false);
+  // Render the banner in the initial HTML so first-time visitors do not get a
+  // late overlay that becomes the page's LCP element after hydration.
+  const [consent, setConsent] = useState<AnalyticsConsent | null>(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     const current = getAnalyticsConsent();
@@ -71,4 +73,3 @@ export function CookieConsent() {
     </section>
   );
 }
-
