@@ -14,7 +14,8 @@ import { findRaceById, raceEditionSubtitle, raceEditionTitle } from "@/lib/races
 import { getRoutePath, isRouteVerified } from "@/lib/raceRoutes";
 
 import { fetchPosterProduct, useCartStore, type ShopifyVariant } from "@/lib/shopify";
-import { trackAddToCart, trackViewContent } from "@/lib/analytics";
+import { onAnalyticsConsentChange, trackAddToCart, trackViewContent } from "@/lib/analytics";
+import { getCampaignLineAttributes } from "@/lib/attribution";
 
 export const Route = createFileRoute("/create")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -104,12 +105,17 @@ function CreatePage() {
 
   useEffect(() => {
     if (!selectedVariant || !currentRace) return;
-    trackViewContent({
+    const eventData = {
       content_ids: [selectedVariant.id],
       content_name: `${currentRace.city} Marathon Edition`,
       content_type: "product",
       value: Number(selectedVariant.price.amount),
       currency: selectedVariant.price.currencyCode,
+    };
+
+    trackViewContent(eventData);
+    return onAnalyticsConsentChange((consent) => {
+      if (consent === "accepted") trackViewContent(eventData);
     });
   }, [currentRace, selectedVariant]);
 
@@ -150,6 +156,7 @@ function CreatePage() {
       { key: "_design_status", value: "pending_review" },
       { key: "_fulfillment_status", value: "awaiting_admin_approval" },
       { key: "_source", value: "racepace_web" },
+      ...getCampaignLineAttributes(),
     ];
 
     const added = await addItem({
@@ -367,8 +374,8 @@ function CreatePage() {
                         : productError
                           ? "Setup needed"
                           : productLoading
-                          ? "Checking"
-                          : "Unavailable"}
+                            ? "Checking"
+                            : "Unavailable"}
                     </span>
                   </button>
                 );
@@ -397,12 +404,7 @@ function CreatePage() {
             </div>
             <Button
               onClick={handleAdd}
-              disabled={
-                !selectedVariant ||
-                isAdding ||
-                productLoading ||
-                !routeAvailable
-              }
+              disabled={!selectedVariant || isAdding || productLoading || !routeAvailable}
               className="w-full h-14 rounded-none bg-ink text-paper text-sm tracking-widest uppercase hover:bg-ink/90 disabled:bg-muted disabled:text-muted-foreground"
             >
               {isAdding ? (

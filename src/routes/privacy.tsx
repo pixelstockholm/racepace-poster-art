@@ -19,7 +19,9 @@ function PrivacyPage() {
     <main className="mx-auto max-w-3xl px-6 py-20 lg:px-10 lg:py-28">
       <p className="eyebrow">Privacy & cookies</p>
       <h1 className="mt-6 font-serif text-5xl leading-[1.02] md:text-6xl">Your data, clearly.</h1>
-      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">Last updated 14 July 2026.</p>
+      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
+        Last updated 30 July 2026.
+      </p>
 
       <div className="mt-14 space-y-10 text-sm leading-7 text-muted-foreground">
         <PolicySection title="What we collect">
@@ -38,10 +40,12 @@ function PrivacyPage() {
           to perform their part of the service.
         </PolicySection>
         <PolicySection title="Analytics and advertising">
-          If you choose “Accept analytics”, Meta technology records events such as page views,
-          product views, cart activity and checkout starts. Shopify may also send checkout and
-          purchase events to Meta. We use these events to measure advertising and improve the store.
-          Analytics does not load on this storefront when you choose “Necessary only”.
+          Cloudflare Web Analytics measures anonymous page views and page performance without
+          cookies, persistent browser storage or personal profiles. If you choose “Accept
+          analytics”, Meta technology records events such as page views, product views, cart
+          activity and checkout starts. Shopify may also send checkout and purchase events to Meta.
+          We use these events to measure advertising and improve the store. Meta advertising
+          analytics does not load on this storefront when you choose “Necessary only”.
         </PolicySection>
         <PolicySection title="Cookies and local storage">
           Necessary local storage keeps your cart and privacy preference available between visits.
@@ -80,4 +84,3 @@ function PolicySection({ title, children }: { title: string; children: React.Rea
     </section>
   );
 }
-

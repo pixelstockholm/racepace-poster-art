@@ -13,6 +13,7 @@ import { PosterPreview, type PosterConfig } from "@/components/PosterPreview";
 import { getRoutePath } from "@/lib/raceRoutes";
 import { formatShopifyMoney, useCartStore, lineKeyOf, type CartItem } from "@/lib/shopify";
 import { trackInitiateCheckout } from "@/lib/analytics";
+import { addCampaignAttributionToUrl } from "@/lib/attribution";
 
 function attributeValue(item: CartItem, key: string): string {
   return item.attributes.find((attribute) => attribute.key === key)?.value ?? "";
@@ -47,6 +48,7 @@ function CartPosterThumbnail({ item }: { item: CartItem }) {
 
 export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const items = useCartStore((s) => s.items);
   const isLoading = useCartStore((s) => s.isLoading);
   const isSyncing = useCartStore((s) => s.isSyncing);
@@ -67,7 +69,8 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
 
   const handleCheckout = () => {
     const url = getCheckoutUrl();
-    if (url) {
+    if (url && !isRedirecting) {
+      setIsRedirecting(true);
       trackInitiateCheckout({
         content_ids: items.map((item) => item.variantId),
         content_type: "product",
@@ -75,8 +78,10 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
         currency: items[0]?.price.currencyCode ?? "SEK",
         num_items: totalItems,
       });
-      window.location.href = url;
       setIsOpen(false);
+      window.setTimeout(() => {
+        window.location.assign(addCampaignAttributionToUrl(url));
+      }, 180);
     }
   };
 
@@ -209,9 +214,9 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                 <Button
                   onClick={handleCheckout}
                   className="w-full rounded-none h-12 bg-foreground text-background text-sm tracking-widest uppercase hover:bg-foreground/90"
-                  disabled={items.length === 0 || isLoading || isSyncing}
+                  disabled={items.length === 0 || isLoading || isSyncing || isRedirecting}
                 >
-                  {isLoading || isSyncing ? (
+                  {isLoading || isSyncing || isRedirecting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <>
