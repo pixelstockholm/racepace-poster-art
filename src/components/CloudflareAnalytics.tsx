@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 
-const CLOUDFLARE_TOKEN = import.meta.env.VITE_CLOUDFLARE_WEB_ANALYTICS_TOKEN?.trim();
+// Cloudflare's site token is public by design and appears in the browser snippet.
+const CLOUDFLARE_TOKEN =
+  import.meta.env.VITE_CLOUDFLARE_WEB_ANALYTICS_TOKEN?.trim() ?? "933bdaad372e418897d6b543463d6a55";
 
 export function CloudflareAnalytics() {
   useEffect(() => {
