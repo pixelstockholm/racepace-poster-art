@@ -17,6 +17,7 @@ export function SiteFooter() {
             <FooterLink to="/about" label="About" />
             <FooterLink to="/faq" label="FAQ" />
             <FooterLink to="/contact" label="Contact" />
+            <FooterLink to="/terms" label="Shipping & terms" />
             <FooterLink to="/privacy" label="Privacy" />
             <button
               type="button"

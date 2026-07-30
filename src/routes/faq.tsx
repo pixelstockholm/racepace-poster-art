@@ -40,11 +40,11 @@ const FAQS: Array<{ q: string; a: string }> = [
   },
   {
     q: "What sizes do you offer?",
-    a: "A3 / 30 × 40 cm, 50 × 70 cm, and 70 × 100 cm. 50 × 70 cm is the default gallery size because it feels substantial without overpowering a room.",
+    a: "30 × 40 cm, 50 × 70 cm, and 70 × 100 cm. 50 × 70 cm is the default gallery size because it feels substantial without overpowering a room.",
   },
   {
     q: "What paper do you print on?",
-    a: "Racepace editions are printed on heavyweight archival matte paper with a refined, low-gloss finish. Final paper and production details are confirmed with the selected print partner before launch.",
+    a: "Racepace editions are printed on heavyweight archival matte paper with a refined, low-gloss finish.",
   },
   {
     q: "Do posters come framed?",
@@ -56,11 +56,11 @@ const FAQS: Array<{ q: string; a: string }> = [
   },
   {
     q: "What if I made a typo?",
-    a: "If your poster arrives with an error caused by us, we'll reprint and ship a new one for free. If the typo was in the order itself, contact us within 14 days — we'll always work with you on a fair solution.",
+    a: "If your poster arrives with an error caused by us, we'll reprint and ship a new one for free. If the typo was entered with the order, contact us immediately. We can usually change it until the order is approved for production.",
   },
   {
     q: "Do you offer returns?",
-    a: "Because each poster is made to order, we don't accept returns for change of mind. We do replace any poster damaged in transit or misprinted by us — just send a photo within 14 days of delivery.",
+    a: "Each poster is made to your specifications, so the statutory right of withdrawal does not apply to a completed personalized order. This never limits your legal right to complain about a damaged, defective or incorrectly produced item. Contact us as soon as you notice a problem and we will make it right.",
   },
   {
     q: "My race isn't on the list. Can I still order?",
@@ -72,9 +72,7 @@ function FaqPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 lg:px-10 py-20 lg:py-28">
       <p className="eyebrow">FAQ</p>
-      <h1 className="font-serif text-5xl md:text-6xl mt-6 leading-[1.02]">
-        Questions, answered.
-      </h1>
+      <h1 className="font-serif text-5xl md:text-6xl mt-6 leading-[1.02]">Questions, answered.</h1>
       <p className="mt-6 text-lg text-muted-foreground max-w-xl">
         Anything we missed? Drop us a line — we read every email.
       </p>

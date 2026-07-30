@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, ArrowLeft } from "lucide-react";
@@ -232,7 +232,7 @@ function CreatePage() {
 
       <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
         {/* Form */}
-        <div className="lg:col-span-5 space-y-7">
+        <div className="order-2 space-y-7 lg:order-1 lg:col-span-5">
           {/* Edition */}
           <div>
             <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
@@ -281,7 +281,7 @@ function CreatePage() {
             </div>
             <div>
               <Label htmlFor="name" className="eyebrow">
-                Finisher name
+                Finisher name <span className="text-muted-foreground">(required)</span>
               </Label>
               <Input
                 id="name"
@@ -290,6 +290,7 @@ function CreatePage() {
                 placeholder="e.g. Alexander Müller"
                 className="mt-3 h-12 rounded-none border-border bg-transparent shadow-none"
                 maxLength={40}
+                required
               />
             </div>
             <div className="grid grid-cols-2 gap-6">
@@ -418,7 +419,7 @@ function CreatePage() {
               ) : selectedVariantUnavailable ? (
                 "Try checkout"
               ) : (
-                "Add personalized print"
+                `Add to cart · ${selectedPrice}`
               )}
             </Button>
             {productError && (
@@ -427,15 +428,23 @@ function CreatePage() {
               </p>
             )}
             <div className="mt-4 grid grid-cols-3 gap-3 border-t border-border pt-4 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
-              <span>Preview saved</span>
-              <span>Unframed print</span>
-              <span>Secure checkout</span>
+              <span>Reviewed before print</span>
+              <span>Free damage reprint</span>
+              <span>Shopify checkout</span>
             </div>
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+              Personalized and printed to order. If it arrives damaged or with a production error,
+              we replace it.{" "}
+              <Link className="text-foreground underline underline-offset-2" to="/terms">
+                Shipping, returns & terms
+              </Link>
+              .
+            </p>
           </div>
         </div>
 
         {/* Live preview */}
-        <div className="lg:col-span-7 lg:sticky lg:top-24">
+        <div className="order-1 lg:order-2 lg:col-span-7 lg:sticky lg:top-24">
           <div className="border border-border bg-secondary/30 p-5 sm:p-6 lg:p-7">
             <div className="mb-4 flex items-center justify-between gap-4 text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground">
               <span>Live preview</span>
@@ -499,6 +508,9 @@ function CreatePage() {
             <p className="mt-4 text-xs text-muted-foreground text-center leading-relaxed">
               Your preview and personalization details are saved with the order before production
               approval.
+            </p>
+            <p className="mt-2 text-center text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground lg:hidden">
+              Personalize your edition below
             </p>
           </div>
         </div>
