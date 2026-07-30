@@ -391,7 +391,7 @@ function CreatePage() {
                 routeAvailable ? "Verified race route" : "Route pending verification",
                 "Matte archival paper",
                 "Unframed print in standard frame sizes",
-                "Shipping shown securely at checkout",
+                "Free standard shipping in Sweden",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3">
                   <span className="h-px w-5 bg-border" />
@@ -430,7 +430,7 @@ function CreatePage() {
             <div className="mt-4 grid grid-cols-3 gap-3 border-t border-border pt-4 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
               <span>Reviewed before print</span>
               <span>Free damage reprint</span>
-              <span>Shopify checkout</span>
+              <span>Klarna · Card · Google Pay</span>
             </div>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
               Personalized and printed to order. If it arrives damaged or with a production error,

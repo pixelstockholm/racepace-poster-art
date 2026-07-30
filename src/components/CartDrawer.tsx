@@ -208,8 +208,8 @@ export function CartDrawer({ triggerClassName }: { triggerClassName?: string }) 
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Shipping and taxes are calculated at checkout. Every design is reviewed before
-                  production.
+                  Free standard shipping in Sweden. Express delivery is available at checkout. Every
+                  design is reviewed before production.
                 </p>
                 <Button
                   onClick={handleCheckout}
