@@ -27,10 +27,15 @@ function TermsPage() {
 
       <div className="mt-14 space-y-10 text-sm leading-7 text-muted-foreground">
         <TermsSection title="Seller">
-          Racepace is a trading name based in Stockholm, Sweden. For order questions, complaints or
+          Racepace is operated by Alex Kullenberg Nieminen, organisation number 080317-8474,
+          Nybohovsbacken 63, Lgh 1302, 117 64 Stockholm, Sweden. For order questions, complaints or
           other support, email{" "}
           <a className="text-ink underline underline-offset-2" href="mailto:hello@racepace.shop">
             hello@racepace.shop
+          </a>{" "}
+          or call{" "}
+          <a className="text-ink underline underline-offset-2" href="tel:+46709671242">
+            +46 70 967 12 42
           </a>
           .
         </TermsSection>
