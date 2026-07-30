@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -72,6 +72,7 @@ function CreatePage() {
   const [time, setTime] = useState("03:24:17");
   const [date, setDate] = useState(findRaceById(initialRaceId)?.date ?? "");
   const [size, setSize] = useState<string>("50x70cm");
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const currentRace = findRaceById(raceId);
 
   const raceLabel = currentRace?.name ?? "";
@@ -133,6 +134,8 @@ function CreatePage() {
     }
     if (!name.trim()) {
       toast.error("Please enter your name.");
+      nameInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      nameInputRef.current?.focus({ preventScroll: true });
       return;
     }
     if (!/^\d{1,2}:\d{2}:\d{2}$/.test(time.trim())) {
@@ -204,9 +207,19 @@ function CreatePage() {
     : productError
       ? "Setup needed"
       : "Preparing";
+  const purchaseDisabled = !selectedVariant || isAdding || productLoading || !routeAvailable;
+  const purchaseLabel = !routeAvailable
+    ? "Route coming soon"
+    : productLoading
+      ? "Preparing checkout..."
+      : productError
+        ? "Shopify setup missing"
+        : selectedVariantUnavailable
+          ? "Try checkout"
+          : `Add to cart · ${selectedPrice}`;
 
   return (
-    <main className="mx-auto max-w-7xl px-6 lg:px-10 pt-6 pb-24">
+    <main className="mx-auto max-w-7xl px-6 lg:px-10 pt-6 pb-36 lg:pb-24">
       <a
         href="/shop"
         className="mb-6 inline-flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.22em] text-muted-foreground transition-colors hover:text-foreground"
@@ -225,8 +238,23 @@ function CreatePage() {
             Personalize the route with your name, finish time and race date.
           </p>
         </div>
-        <div className="hidden lg:block text-right text-[0.62rem] tracking-[0.22em] uppercase text-muted-foreground">
-          {editionLocation}
+        <div className="hidden lg:flex items-end gap-5">
+          <div className="text-right">
+            <p className="text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">
+              {editionLocation} · {size.replace("cm", " cm")}
+            </p>
+            <p className="mt-1 font-serif text-2xl tabular-nums">{selectedPrice}</p>
+            <p className="mt-1 text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground">
+              Free shipping in Sweden
+            </p>
+          </div>
+          <Button
+            onClick={handleAdd}
+            disabled={purchaseDisabled}
+            className="h-12 min-w-56 rounded-none bg-ink px-5 text-paper text-[0.68rem] uppercase tracking-[0.16em] hover:bg-ink/90 disabled:bg-muted disabled:text-muted-foreground"
+          >
+            {isAdding ? <Loader2 className="h-4 w-4 animate-spin" /> : purchaseLabel}
+          </Button>
         </div>
       </div>
 
@@ -284,6 +312,7 @@ function CreatePage() {
                 Finisher name <span className="text-muted-foreground">(required)</span>
               </Label>
               <Input
+                ref={nameInputRef}
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -405,22 +434,10 @@ function CreatePage() {
             </div>
             <Button
               onClick={handleAdd}
-              disabled={!selectedVariant || isAdding || productLoading || !routeAvailable}
+              disabled={purchaseDisabled}
               className="w-full h-14 rounded-none bg-ink text-paper text-sm tracking-widest uppercase hover:bg-ink/90 disabled:bg-muted disabled:text-muted-foreground"
             >
-              {isAdding ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : !routeAvailable ? (
-                "Route coming soon"
-              ) : productLoading ? (
-                "Preparing checkout..."
-              ) : productError ? (
-                "Shopify setup missing"
-              ) : selectedVariantUnavailable ? (
-                "Try checkout"
-              ) : (
-                `Add to cart · ${selectedPrice}`
-              )}
+              {isAdding ? <Loader2 className="h-4 w-4 animate-spin" /> : purchaseLabel}
             </Button>
             {productError && (
               <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
@@ -513,6 +530,24 @@ function CreatePage() {
               Personalize your edition below
             </p>
           </div>
+        </div>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-paper/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-12px_30px_rgba(20,18,14,0.08)] backdrop-blur lg:hidden">
+        <div className="mx-auto flex max-w-lg items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[0.58rem] uppercase tracking-[0.15em] text-muted-foreground">
+              {editionCity} · {size.replace("cm", " cm")}
+            </p>
+            <p className="mt-0.5 font-serif text-xl tabular-nums">{selectedPrice}</p>
+          </div>
+          <Button
+            onClick={handleAdd}
+            disabled={purchaseDisabled}
+            className="h-12 min-w-[12rem] rounded-none bg-ink px-4 text-paper text-[0.64rem] uppercase tracking-[0.14em] hover:bg-ink/90 disabled:bg-muted disabled:text-muted-foreground"
+          >
+            {isAdding ? <Loader2 className="h-4 w-4 animate-spin" /> : purchaseLabel}
+          </Button>
         </div>
       </div>
     </main>

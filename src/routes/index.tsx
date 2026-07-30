@@ -96,9 +96,16 @@ function HomePage() {
           <p className="mt-8 md:mt-10 text-sm md:text-base text-paper/86 leading-relaxed max-w-[18rem] md:max-w-sm">
             Personalized marathon prints made from real race routes.
           </p>
+          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.62rem] uppercase tracking-[0.16em] text-paper/78">
+            <span>From 590 kr</span>
+            <span aria-hidden className="hidden h-0.5 w-0.5 rounded-full bg-paper/60 sm:block" />
+            <span>Free shipping in Sweden</span>
+            <span aria-hidden className="hidden h-0.5 w-0.5 rounded-full bg-paper/60 sm:block" />
+            <span>Klarna available</span>
+          </div>
           <Link
             to="/shop"
-            className="inline-block mt-10 md:mt-12 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/45 pb-1 hover:border-paper/80 transition-colors"
+            className="inline-block mt-8 md:mt-10 text-[0.68rem] tracking-[0.24em] uppercase text-paper border-b border-paper/45 pb-1 hover:border-paper/80 transition-colors"
           >
             Personalize yours →
           </Link>
@@ -125,13 +132,15 @@ function HomePage() {
                 {/* Studio wall product shot */}
                 <div
                   className="relative overflow-hidden flex items-center justify-center p-8 lg:p-10 transition-transform group-hover:-translate-y-1"
-                  style={{
-                    aspectRatio: "4 / 5",
-                    containerType: "inline-size",
-                    "--frame-size": "clamp(4px, 1.05cqw, 6px)",
-                    "--frame-highlight": "clamp(1.5px, 0.42cqw, 3px)",
-                    background: "linear-gradient(180deg, #F8F6F0 0%, #F1EEE6 100%)",
-                  } as CSSProperties}
+                  style={
+                    {
+                      aspectRatio: "4 / 5",
+                      containerType: "inline-size",
+                      "--frame-size": "clamp(4px, 1.05cqw, 6px)",
+                      "--frame-highlight": "clamp(1.5px, 0.42cqw, 3px)",
+                      background: "linear-gradient(180deg, #F8F6F0 0%, #F1EEE6 100%)",
+                    } as CSSProperties
+                  }
                 >
                   <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
                     <defs>
